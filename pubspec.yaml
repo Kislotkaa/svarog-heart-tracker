@@ -1,0 +1,103 @@
+name: svarog_heart_tracker
+description: A new Flutter project.
+
+publish_to: 'none' 
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.19.2 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Вспомогающие
+  uuid: ^3.0.4
+  async: ^2.8.2
+  collection: ^1.15.0-nullsafety.4
+  dartx: ^1.0.0
+  flutter_dotenv: ^5.0.2
+  package_info: ^2.0.2
+  cupertino_icons: ^1.0.2
+  mask_text_input_formatter: ^2.4.0
+  flutter_secure_storage: ^8.0.0
+
+
+  # Виджеты
+  flutter_svg: ^2.0.0+1
+  flutter_launcher_icons: ^0.11.0
+  aligned_dialog: ^0.0.6
+
+  # Анимации
+  lottie: ^2.2.0
+  spring: ^2.0.2 
+
+  # Кодо-генерация
+  artemis: ^7.1.1-beta.1
+  json_annotation: ^4.0.1
+  json_serializable: ^6.5.4
+
+  # GetX
+  get: ^4.6.5
+  get_cli: ^1.8.1
+  get_storage: ^2.0.3
+
+  # Основные
+  flutter_blue_plus: ^1.4.0
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/appIcon.png"
+  min_sdk_android: 19
+
+flutter: 
+  assets: 
+    - .env
+    - assets/images/
+    - assets/icons/
+    - assets/locales/
+
+  fonts: 
+    - family: Robot
+      fonts: 
+        - asset: assets/fonts/Roboto-Regular.ttf
+    # - family: BaseIcons
+    #   fonts: 
+    #     - asset: assets/icons/BaseIcons.ttf
+
+  uses-material-design: true
+
+analyzer: 
+  plugins: 
+    - dart_code_metrics
+
+dart_code_metrics: 
+  metrics: 
+    cyclomatic-complexity: 20
+    maximum-nesting-level: 5
+    number-of-parameters: 4
+    source-lines-of-code: 50
+  anti-patterns: 
+    - long-method
+    - long-parameter-list
+  metrics-exclude: 
+    - test/**
+  rules: 
+    - newline-before-return
+    - no-boolean-literal-compare
+    - no-empty-block
+    - prefer-trailing-comma
+    - prefer-conditional-expressions
+    - no-equal-then-else
+
