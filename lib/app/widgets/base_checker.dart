@@ -27,7 +27,7 @@ class BaseChecker extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(
                   color: isActive
-                      ? AppColors.primaryActiveConst
+                      ? AppColors.primaryConst
                       : Theme.of(context).backgroundColor,
                   width: isActive
                       ? sizeBorderActive.value

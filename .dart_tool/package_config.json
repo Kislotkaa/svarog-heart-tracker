@@ -674,6 +674,54 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "url_launcher",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher-6.1.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "url_launcher_android",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_android-6.0.24",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "url_launcher_ios",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_ios-6.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "url_launcher_linux",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_linux-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "url_launcher_macos",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_macos-3.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "url_launcher_platform_interface",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_platform_interface-2.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "url_launcher_web",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_web-2.0.15",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "url_launcher_windows",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/url_launcher_windows-3.0.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "uuid",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/uuid-3.0.7",
       "packageUri": "lib/",
@@ -746,7 +794,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-02-28T17:08:09.064682Z",
+  "generated": "2023-03-01T09:20:30.866947Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

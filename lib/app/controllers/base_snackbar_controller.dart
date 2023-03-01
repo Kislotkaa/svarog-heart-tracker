@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +11,40 @@ class BaseSnackbarController extends GetxController {
   void show(String text, String title, {required SnackStatusEnum status}) {
     if (!Get.isSnackbarOpen) {
       switch (status) {
+        case SnackStatusEnum.error:
+          Get.rawSnackbar(
+            boxShadows: [
+              BoxShadow(
+                offset: const Offset(0, 8),
+                blurRadius: 25,
+                spreadRadius: 0,
+                color: Get.theme.primaryColor.withOpacity(0.12),
+              )
+            ],
+            titleText: Text(
+              title,
+              style: Get.textTheme.bodyText2!.copyWith(
+                color: AppColors.textColorDark,
+              ),
+            ),
+            messageText: Text(
+              text,
+              style: Get.textTheme.subtitle1!.copyWith(
+                color: AppColors.textColorDark,
+              ),
+            ),
+            icon: const Icon(
+              BaseIcons.warning_shield,
+              color: AppColors.redConst,
+            ),
+            snackPosition: SnackPosition.TOP,
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppConst.paddingAll),
+            borderRadius: AppConst.borderRadius,
+            backgroundColor: Get.theme.primaryColor,
+            onTap: (snack) => Get.closeCurrentSnackbar(),
+          );
+          break;
         case SnackStatusEnum.warning:
           Get.rawSnackbar(
             boxShadows: [
@@ -25,25 +58,25 @@ class BaseSnackbarController extends GetxController {
             titleText: Text(
               title,
               style: Get.textTheme.bodyText2!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             messageText: Text(
               text,
               style: Get.textTheme.subtitle1!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             icon: const Icon(
               BaseIcons.warning_shield,
-              color: AppColors.textColorLight,
+              color: AppColors.orangeConst,
             ),
             snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(AppConst.paddingAll),
             borderRadius: AppConst.borderRadius,
             backgroundColor: Get.theme.primaryColor,
-            duration: const Duration(seconds: 2),
+            onTap: (snack) => Get.closeCurrentSnackbar(),
           );
           break;
         case SnackStatusEnum.access:
@@ -59,25 +92,25 @@ class BaseSnackbarController extends GetxController {
             titleText: Text(
               title,
               style: Get.textTheme.bodyText2!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             messageText: Text(
               text,
               style: Get.textTheme.subtitle1!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             icon: const Icon(
               Icons.check_rounded,
-              color: AppColors.textColorLight,
+              color: AppColors.greenConst,
             ),
             snackPosition: SnackPosition.TOP,
             margin: const EdgeInsets.all(8),
             padding: const EdgeInsets.all(AppConst.paddingAll),
             borderRadius: AppConst.borderRadius,
             backgroundColor: Get.theme.primaryColor,
-            duration: const Duration(seconds: 2),
+            onTap: (snack) => Get.closeCurrentSnackbar(),
           );
           break;
         default:
@@ -93,13 +126,13 @@ class BaseSnackbarController extends GetxController {
             titleText: Text(
               title,
               style: Get.textTheme.bodyText2!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             messageText: Text(
               text,
               style: Get.textTheme.subtitle1!.copyWith(
-                color: AppColors.textColorLight,
+                color: AppColors.textColorDark,
               ),
             ),
             icon: null,
@@ -108,7 +141,7 @@ class BaseSnackbarController extends GetxController {
             padding: const EdgeInsets.all(AppConst.paddingAll),
             borderRadius: AppConst.borderRadius,
             backgroundColor: Get.theme.primaryColor,
-            duration: const Duration(seconds: 2),
+            onTap: (snack) => Get.closeCurrentSnackbar(),
           );
           break;
       }
@@ -126,4 +159,4 @@ void showSnackbar(
   BaseSnackbarController.to.show(text, title, status: status);
 }
 
-enum SnackStatusEnum { warning, access, normal }
+enum SnackStatusEnum { warning, access, normal, error }

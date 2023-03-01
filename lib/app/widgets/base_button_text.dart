@@ -25,7 +25,7 @@ class BaseButtonText extends StatelessWidget {
               ? Theme.of(context)
                   .textTheme
                   .bodyText2!
-                  .copyWith(color: AppColors.textColorLight)
+                  .copyWith(color: AppColors.textColorDark)
               : Theme.of(context).textTheme.bodyText2),
       overflow: TextOverflow.ellipsis,
       maxLines: maxLines,

@@ -80,8 +80,8 @@ class BaseButton extends StatelessWidget {
         side: MaterialStateProperty.all(
           BorderSide(
             color: onPressed == null
-                ? AppColors.primaryActiveConst.withOpacity(0.3)
-                : AppColors.primaryActiveConst.withOpacity(0.8),
+                ? AppColors.primaryConst.withOpacity(0.3)
+                : AppColors.primaryConst.withOpacity(0.8),
           ),
         ),
         enableFeedback: false,

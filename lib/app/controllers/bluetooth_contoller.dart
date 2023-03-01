@@ -1,7 +1,6 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 
-import '../cache/language_cache_datasource.dart';
 import '../helper/error_handler.dart';
 import 'base_snackbar_controller.dart';
 
@@ -73,14 +72,26 @@ class BluetoothController extends GetxController {
 
   Future<bool> validBlue() async {
     if ((await flutterBlue.isAvailable) == false) {
-      showSnackbar('Устройство не подерживается', 'Ошибка');
+      showSnackbar(
+        'Устройство не подерживается',
+        'Ошибка',
+        status: SnackStatusEnum.error,
+      );
 
       return false;
     } else if ((await flutterBlue.isOn) == false) {
-      showSnackbar('Блютуз модуль устройства отключен', 'Ошибка');
+      getDisabledSnackBar();
 
       return false;
     }
     return true;
+  }
+
+  void getDisabledSnackBar() {
+    showSnackbar(
+      'Bluetooth модуль устройства выключен',
+      'Статус: Выключен',
+      status: SnackStatusEnum.warning,
+    );
   }
 }

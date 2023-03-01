@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/about/bindings/about_binding.dart';
+import '../modules/about/views/about_view.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/auth_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -43,6 +45,13 @@ class AppPages {
       name: _Paths.NEW_DEVICES,
       page: () => const NewDevicesView(),
       binding: NewDevicesBinding(),
+    ),
+    GetPage(
+      name: _Paths.ABOUT,
+      page: () => const AboutView(),
+      binding: AboutBinding(),
+      transition: Transition.downToUp,
+      transitionDuration: AppDuration.fast,
     ),
   ];
 }

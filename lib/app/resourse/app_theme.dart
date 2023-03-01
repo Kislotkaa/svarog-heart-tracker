@@ -15,7 +15,7 @@ class AppTheme {
       actionsIconTheme: IconThemeData(color: AppColors.textColorDark),
       iconTheme: IconThemeData(color: AppColors.textColorDark),
     ),
-    canvasColor: AppColors.lightGrayColorDark,
+    canvasColor: AppColors.grayColorDark,
     highlightColor: Colors.transparent,
     iconTheme: const IconThemeData(color: AppColors.textColorDark),
     primaryColorDark: AppColors.textColorDark,
@@ -32,8 +32,8 @@ class AppTheme {
     ),
     primaryColor: AppColors.primaryConst,
     backgroundColor: AppColors.backGroundColorDark,
-    dividerColor: AppColors.darkerGrayColorDark,
-    cardColor: AppColors.cardColorDark,
+    dividerColor: AppColors.grayColorDark,
+    cardColor: AppColors.darkGrayColorDark,
     hintColor: AppColors.darkGrayColorDark,
     textTheme: const TextTheme(
       subtitle1: TextStyle(
@@ -117,13 +117,13 @@ class AppTheme {
       ),
     ),
     progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppColors.primaryActiveConst,
+      color: AppColors.primaryConst,
       circularTrackColor: Colors.transparent,
     ),
     primaryColor: AppColors.primaryConst,
     backgroundColor: AppColors.backGroundColorLight,
-    canvasColor: AppColors.lightGrayColorLight,
-    dividerColor: AppColors.darkGrayColorLight,
+    canvasColor: AppColors.grayColorLight,
+    dividerColor: AppColors.grayColorLight,
     hintColor: AppColors.darkGrayColorLight,
     cardColor: AppColors.whiteConst,
     textTheme: const TextTheme(
@@ -135,7 +135,7 @@ class AppTheme {
       subtitle2: TextStyle(
         fontSize: 10,
         fontWeight: FontWeight.normal,
-        color: AppColors.darkerGrayColorLight,
+        color: AppColors.darkGrayColorLight,
       ),
       bodyText1: TextStyle(
         fontSize: 12,
@@ -158,22 +158,22 @@ class AppTheme {
         color: AppColors.textColorLight,
       ),
       headline3: TextStyle(
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: FontWeight.normal,
         color: AppColors.textColorLight,
       ),
       headline4: TextStyle(
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: AppColors.textColorLight,
       ),
       headline5: TextStyle(
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: FontWeight.normal,
         color: AppColors.textColorLight,
       ),
       headline6: TextStyle(
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
         color: AppColors.textColorLight,
       ),
