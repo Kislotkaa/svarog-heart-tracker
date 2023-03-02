@@ -10,10 +10,12 @@ class NewDevicesController extends GetxController {
   final BluetoothController bluetoothController;
 
   final RxBool isLoadingLinier = false.obs;
+  final RxBool isGlobalLoading = false.obs;
+
   final String textStatusDefault = 'Список доступных устройств';
   final RxString textStatus = RxString('');
 
-  List<ScanResult> get list => bluetoothController.scanResult.value;
+  RxList<ScanResult> get list => bluetoothController.scanResult;
 
   Future<void> scanDevices() async {
     isLoadingLinier.value = true;
@@ -23,10 +25,21 @@ class NewDevicesController extends GetxController {
     isLoadingLinier.value = false;
   }
 
+  Future<void> connectOrDisconnect(ScanResult blueDevice) async {
+    isGlobalLoading.value = true;
+    await bluetoothController.connectOrDisconnect(blueDevice);
+    await bluetoothController.getConnectedDevices();
+    list.refresh();
+
+    isGlobalLoading.value = false;
+  }
+
   @override
   Future<void> onInit() async {
+    await bluetoothController.getConnectedDevices();
     await scanDevices();
-    textStatus.value = textStatusDefault;
+
+    textStatus.value = '$textStatusDefault: ${list.length}';
     super.onInit();
   }
 }

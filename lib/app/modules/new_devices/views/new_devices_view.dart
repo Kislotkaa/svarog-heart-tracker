@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
+import 'package:svarog_heart_tracker/app/widgets/base_checker.dart';
 import 'package:svarog_heart_tracker/app/widgets/base_divider.dart';
+import 'package:svarog_heart_tracker/app/widgets/base_handler.dart';
 
 import '../../../resourse/app_const.dart';
-import '../../../widgets/base_animation_appbar.dart';
-import '../../../widgets/base_handler.dart';
+import '../../../widgets/base_global_loading.dart';
 import '../../../widgets/base_loading.dart';
 import '../controllers/new_devices_controller.dart';
 
@@ -46,16 +46,63 @@ class NewDevicesView extends GetView<NewDevicesController> {
               bottom: false,
               child: Column(
                 children: [
-                  Obx(() => BaseAppBar(
-                        backgroundColor: false,
-                        boxShadow: [],
-                        onTapBack: () => Get.back(),
-                        height: 55,
-                        title: controller.textStatus.value,
-                        titleAlight: TextAlign.start,
-                      )),
-                  const BaseDivider()
-                      .paddingSymmetric(horizontal: AppConst.paddingAll),
+                  BaseHandle(
+                    color: Theme.of(context).canvasColor,
+                  ),
+                  Container(
+                    height: 55,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          controller.textStatus.value,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.headline2,
+                        ),
+                        GestureDetector(
+                          onTap: () => controller.scanDevices(),
+                          child: Icon(
+                            Icons.refresh_rounded,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const BaseDivider().paddingSymmetric(
+                    horizontal: AppConst.paddingAll,
+                  ),
+                  Obx(
+                    () => Expanded(
+                      child: ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: controller.list.length,
+                        itemBuilder: (context, i) {
+                          return InkWell(
+                            onTap: () => controller.connectOrDisconnect(
+                              controller.list[i],
+                            ),
+                            child: ListTile(
+                              leading: BaseChecker(
+                                isActive: controller.bluetoothController
+                                    .haveConnectDevice(
+                                  controller.list[i],
+                                ),
+                              ),
+                              title: Text(
+                                controller.list[i].device.name,
+                              ),
+                              subtitle: Text(
+                                controller.list[i].device.id.id,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -64,7 +111,12 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     alignment: Alignment.bottomCenter,
                     child: BaseLinearLoading(),
                   )
-                : const SizedBox()
+                : const SizedBox(),
+            Obx(
+              () => controller.isGlobalLoading.value
+                  ? const BaseGlobalLoading()
+                  : const SizedBox(),
+            ),
           ],
         ),
       ),

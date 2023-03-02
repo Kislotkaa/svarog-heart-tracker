@@ -14,7 +14,7 @@ class BaseHandle extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 6, bottom: 8),
+            margin: const EdgeInsets.only(top: 12),
             width: 42,
             height: 4,
             decoration: BoxDecoration(
