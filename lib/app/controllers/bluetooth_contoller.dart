@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
-import 'package:svarog_heart_tracker/app/controllers/device_connected_controller.dart';
+import 'package:svarog_heart_tracker/app/controllers/device_controller.dart';
 
 import '../helper/error_handler.dart';
 import '../widgets/base_dialog.dart';
@@ -12,8 +12,7 @@ class BluetoothController extends GetxController {
 
   RxList<ScanResult> scanResult = RxList<ScanResult>();
   RxList<BluetoothDevice> connectedDevices = RxList<BluetoothDevice>();
-  RxList<DeviceConnectedController> activeDevices =
-      RxList<DeviceConnectedController>();
+  RxList<DeviceController> activeDevices = RxList<DeviceController>();
 
   Future<void> scanDevice() async {
     try {
@@ -65,14 +64,14 @@ class BluetoothController extends GetxController {
           'Отмена',
         );
       } else {
-        DeviceConnectedController? model;
+        DeviceController? model;
         TextEditingController controller = TextEditingController();
         showBaseAddNameDialog(
           'Кто это?',
           controller,
           () async {
             if (controller.text.isNotEmpty) {
-              DeviceConnectedController model = DeviceConnectedController(
+              DeviceController model = DeviceController(
                 bluetoothDevice: blueDevice.device,
                 name: controller.text,
                 heartAvg: 0,
@@ -91,7 +90,7 @@ class BluetoothController extends GetxController {
     } finally {}
   }
 
-  Future<void> _connectToDevice(DeviceConnectedController model) async {
+  Future<void> _connectToDevice(DeviceController model) async {
     await model.bluetoothDevice.connect();
     await getConnectedDevices();
     activeDevices.add(model);
@@ -131,7 +130,7 @@ class BluetoothController extends GetxController {
   Future<bool> validBlue() async {
     if ((await flutterBlue.isAvailable) == false) {
       showSnackbar(
-        'Устройство не подерживается',
+        'Устройство не может получить доступ к Bluetooth',
         'Ошибка',
         status: SnackStatusEnum.error,
       );
@@ -157,5 +156,10 @@ class BluetoothController extends GetxController {
   Future<void> onClose() async {
     await _disconnectDeviceAll();
     super.onClose();
+  }
+
+  @override
+  Future<void> onReady() async {
+    super.onReady();
   }
 }

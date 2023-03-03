@@ -1,7 +1,7 @@
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
-class DeviceConnectedController {
-  DeviceConnectedController({
+class DeviceController {
+  DeviceController({
     required this.bluetoothDevice,
     required this.name,
     this.heartAvg = 0,
@@ -12,12 +12,10 @@ class DeviceConnectedController {
   late int heartAvg;
 
   void onInit() {
-    print(
-        'initializing DeviceConnectedController = ${name}/${bluetoothDevice.name}');
+    print('initializing DeviceController = ${name}/${bluetoothDevice.name}');
   }
 
   void onClose() {
-    print(
-        'onClosed DeviceConnectedController = ${name}/${bluetoothDevice.name}');
+    print('onClosed DeviceController = ${name}/${bluetoothDevice.name}');
   }
 }

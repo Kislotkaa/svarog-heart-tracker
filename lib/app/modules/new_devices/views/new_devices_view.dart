@@ -13,7 +13,7 @@ Future<void> showNewDevices() async {
   await showModalBottomSheet(
     context: Get.context!,
     isScrollControlled: true,
-    constraints: BoxConstraints.expand(height: Get.height * 0.9),
+    constraints: BoxConstraints.expand(height: Get.height * 0.85),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(AppConst.borderRadius),

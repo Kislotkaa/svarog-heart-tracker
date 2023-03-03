@@ -50,6 +50,12 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "auto_size_text",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_size_text-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "boolean_selector",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/boolean_selector-2.1.1",
       "packageUri": "lib/",
@@ -794,7 +800,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-03-01T09:52:29.521568Z",
+  "generated": "2023-03-02T14:56:58.035046Z",
   "generator": "pub",
   "generatorVersion": "2.19.2"
 }

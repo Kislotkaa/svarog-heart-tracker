@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../resourse/app_colors.dart';
 import '../resourse/app_const.dart';
@@ -43,26 +45,40 @@ class BaseCardPeople extends StatelessWidget {
           color: Theme.of(context).canvasColor,
         ),
       ),
-      padding: const EdgeInsets.all(AppConst.paddingAll),
+      padding: const EdgeInsets.all(12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            name,
-            style: Theme.of(context).textTheme.headline5,
+          Expanded(
+            flex: 1,
+            child: AutoSizeText(
+              name,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.headline5,
+            ),
           ),
-          iconHeart,
-          RichText(
-            text: TextSpan(
-              text: heartRate.toString(),
-              style: Theme.of(context).textTheme.headline3,
-              children: <TextSpan>[
-                TextSpan(
-                  text: ' уд/м',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-              ],
+          Expanded(
+            flex: 2,
+            child: FittedBox(child: iconHeart),
+          ),
+          Expanded(
+            flex: 1,
+            child: AutoSizeText.rich(
+              TextSpan(
+                text: heartRate.toString(),
+                style: Theme.of(context).textTheme.headline3,
+                children: <TextSpan>[
+                  TextSpan(
+                    text: ' уд/м',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+              minFontSize: 10,
+              maxLines: 1,
             ),
           ),
         ],
@@ -91,16 +107,11 @@ class BaseCapCardPeople extends StatelessWidget {
             color: Theme.of(context).canvasColor,
           ),
         ),
-        padding: const EdgeInsets.all(AppConst.paddingAll),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Добавить',
-              style: Theme.of(context).textTheme.headline1,
-            ),
-            const SizedBox(height: 4),
             const Icon(
               Icons.add,
               size: 28,

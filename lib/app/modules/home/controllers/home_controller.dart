@@ -28,7 +28,6 @@ class HomeController extends GetxController {
   @override
   Future<void> onReady() async {
     super.onReady();
-    await bluetoothController.validBlue();
   }
 
   @override
