@@ -22,6 +22,7 @@ Future<void> showNewDevices() async {
     builder: (context) => GetBuilder(
       init: NewDevicesController(
         bluetoothController: Get.find(),
+        homeController: Get.find(),
       ),
       builder: (dynamic _) => const NewDevicesView(),
     ),
@@ -56,11 +57,13 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          controller.textStatus.value,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.headline2,
+                        Obx(
+                          () => Text(
+                            controller.textStatus.value,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.headline2,
+                          ),
                         ),
                         GestureDetector(
                           onTap: () => controller.scanDevices(),
@@ -78,24 +81,27 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     () => Expanded(
                       child: ListView.builder(
                         physics: const ClampingScrollPhysics(),
-                        itemCount: controller.list.length,
+                        itemCount: controller.scanResult.length,
                         itemBuilder: (context, i) {
                           return InkWell(
                             onTap: () => controller.connectOrDisconnect(
-                              controller.list[i],
+                              controller.scanResult[i].blueDevice,
                             ),
                             child: ListTile(
                               leading: BaseChecker(
-                                isActive: controller.bluetoothController
-                                    .haveConnectDevice(
-                                  controller.list[i],
+                                isActive: controller.haveConnect(
+                                  controller.scanResult[i].blueDevice,
                                 ),
                               ),
+                              horizontalTitleGap: 4,
+                              minVerticalPadding: 4,
                               title: Text(
-                                controller.list[i].device.name,
+                                controller.scanResult[i].deviceName,
+                                style: Theme.of(context).textTheme.bodyText2,
                               ),
                               subtitle: Text(
-                                controller.list[i].device.id.id,
+                                controller.scanResult[i].deviceNumber,
+                                style: Theme.of(context).textTheme.caption,
                               ),
                             ),
                           );
@@ -112,11 +118,6 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     child: BaseLinearLoading(),
                   )
                 : const SizedBox(),
-            Obx(
-              () => controller.isGlobalLoading.value
-                  ? const BaseGlobalLoading()
-                  : const SizedBox(),
-            ),
           ],
         ),
       ),

@@ -8,6 +8,7 @@ class NewDevicesBinding extends Bindings {
     Get.lazyPut<NewDevicesController>(
       () => NewDevicesController(
         bluetoothController: Get.find(),
+        homeController: Get.find(),
       ),
     );
   }

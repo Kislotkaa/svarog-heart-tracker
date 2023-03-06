@@ -26,30 +26,18 @@ class HomeView extends GetView<HomeController> {
           SafeArea(
             child: Stack(
               children: [
-                BaseGridPeople(
-                  children: [
-                    BaseCardPeople(
-                      name: 'Иван',
-                      heartRate: 112,
-                    ),
-                    BaseCardPeople(
-                      name: 'Максим',
-                      heartRate: 149,
-                    ),
-                    BaseCardPeople(
-                      name: 'Иван',
-                      heartRate: 160,
-                    ),
-                    BaseCardPeople(
-                      name: 'Иван',
-                      heartRate: 98,
-                    ),
-                    BaseCapCardPeople(
+                Obx(
+                  () => BaseGridPeople(
+                    list: controller.list.value,
+                    onRemove: (device) {
+                      controller.removeDevice(device);
+                    },
+                    capCard: BaseCapCardPeople(
                       onTap: () {
-                        controller.addDeviceBluetooth();
+                        controller.goToNewDevice();
                       },
-                    )
-                  ],
+                    ),
+                  ),
                 ).paddingOnly(top: topHeight),
                 BaseAppBar(
                   height: topHeight,

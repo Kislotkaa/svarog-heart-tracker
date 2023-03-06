@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../resourse/app_colors.dart';
 import '../resourse/app_const.dart';
 
-class BaseCardPeople extends StatelessWidget {
+class BaseCardPeople extends StatefulWidget {
   const BaseCardPeople({
     super.key,
     required this.name,
@@ -16,15 +16,44 @@ class BaseCardPeople extends StatelessWidget {
   final int heartRate;
 
   @override
+  State<BaseCardPeople> createState() => _BaseCardPeopleState();
+}
+
+class _BaseCardPeopleState extends State<BaseCardPeople>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  final Tween<double> _tween = Tween(begin: 0.65, end: 0.85);
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.stop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Widget iconHeart = SizedBox();
-    if (heartRate < 145) {
+    if (widget.heartRate == 0) {
+      iconHeart = Icon(
+        Icons.favorite,
+        color: Theme.of(context).dividerColor,
+        size: 62,
+      );
+    } else if (widget.heartRate < 145) {
       iconHeart = const Icon(
         Icons.favorite,
         color: AppColors.greenConst,
         size: 62,
       );
-    } else if (heartRate < 160) {
+    } else if (widget.heartRate < 160) {
       iconHeart = const Icon(
         Icons.favorite,
         color: AppColors.orangeConst,
@@ -53,7 +82,7 @@ class BaseCardPeople extends StatelessWidget {
           Expanded(
             flex: 1,
             child: AutoSizeText(
-              name,
+              widget.name,
               maxLines: 1,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
@@ -62,13 +91,23 @@ class BaseCardPeople extends StatelessWidget {
           ),
           Expanded(
             flex: 2,
-            child: FittedBox(child: iconHeart),
+            child: FittedBox(
+              child: ScaleTransition(
+                scale: _tween.animate(
+                  CurvedAnimation(
+                    parent: _controller,
+                    curve: Curves.elasticOut,
+                  ),
+                ),
+                child: iconHeart,
+              ),
+            ),
           ),
           Expanded(
             flex: 1,
             child: AutoSizeText.rich(
               TextSpan(
-                text: heartRate.toString(),
+                text: widget.heartRate.toString(),
                 style: Theme.of(context).textTheme.headline3,
                 children: <TextSpan>[
                   TextSpan(

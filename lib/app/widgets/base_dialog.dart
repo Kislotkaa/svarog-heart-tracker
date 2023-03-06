@@ -52,12 +52,12 @@ void showBaseAddNameDialog(
   Get.defaultDialog(
     content: BaseTextFieldWidget(
       textAlign: TextAlign.center,
+      type: TextInputType.name,
+      maxLength: 16,
       controller: controller,
-      hintText: 'Введите имя тут...',
+      hintText: 'Введите имя...',
       titleCenter: true,
-      autocorrect: false,
-      autofocus: false,
-      isAccentTitle: true,
+      autofocus: true,
       maxLines: 1,
     ),
     title: title ?? 'title',

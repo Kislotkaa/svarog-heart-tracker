@@ -1,133 +1,56 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
-import 'package:svarog_heart_tracker/app/controllers/device_controller.dart';
 
-import '../helper/error_handler.dart';
-import '../widgets/base_dialog.dart';
 import 'base_snackbar_controller.dart';
 
 class BluetoothController extends GetxController {
   final FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
-  RxList<ScanResult> scanResult = RxList<ScanResult>();
-  RxList<BluetoothDevice> connectedDevices = RxList<BluetoothDevice>();
-  RxList<DeviceController> activeDevices = RxList<DeviceController>();
+  StreamSubscription<List<ScanResult>> Function(
+          void Function(List<ScanResult> event)? onData,
+          {bool? cancelOnError,
+          void Function()? onDone,
+          Function? onError})
+      get scanResultListen => flutterBlue.scanResults.listen;
 
-  Future<void> scanDevice() async {
-    try {
-      if (await validBlue()) {
-        await flutterBlue.startScan(
-          scanMode: ScanMode.lowLatency,
-          timeout: const Duration(seconds: 4),
-        );
+  Stream<List<BluetoothDevice>> get streamConnected =>
+      flutterBlue.connectedDevices.asStream();
 
-        await getConnectedDevices();
-
-        flutterBlue.scanResults.listen((results) {
-          var filterResilt = results.where((element) =>
-              element.advertisementData.serviceUuids.contains('180D'));
-          scanResult.clear();
-          scanResult.addAll(filterResilt);
-        });
-      }
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    } finally {}
-  }
-
-  Future<void> getConnectedDevices() async {
-    try {
-      var result = await flutterBlue.connectedDevices;
-      connectedDevices.clear();
-      connectedDevices.addAll(result);
-      scanResult.refresh();
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
+  Future<void> startScanDevice() async {
+    if (await _validBlue()) {
+      await flutterBlue.startScan(
+        scanMode: ScanMode.lowLatency,
+        timeout: const Duration(seconds: 4),
+      );
     }
   }
 
-  Future<void> connectOrDisconnect(ScanResult blueDevice) async {
-    try {
-      var result = connectedDevices.firstWhereOrNull(
-          (element) => element.id.id == blueDevice.device.id.id);
-      if (result != null) {
-        showBaseDialog(
-          'Разорвать соединение?',
-          'Вы действительно хотите разорвать соединение?',
-          () async {
-            Get.back();
-            await _disconnectDevice(blueDevice);
-          },
-          () => Get.back(),
-          'Подтвердить',
-          'Отмена',
-        );
-      } else {
-        DeviceController? model;
-        TextEditingController controller = TextEditingController();
-        showBaseAddNameDialog(
-          'Кто это?',
-          controller,
-          () async {
-            if (controller.text.isNotEmpty) {
-              DeviceController model = DeviceController(
-                bluetoothDevice: blueDevice.device,
-                name: controller.text,
-                heartAvg: 0,
-              );
-              Get.back();
-              await _connectToDevice(model);
-            }
-          },
-          () => Get.back(),
-          'Подтвердить',
-          'Отмена',
-        );
-      }
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    } finally {}
+  Future<List<BluetoothDevice>> getConnectedDevices() async {
+    List<BluetoothDevice> connectedDevices = [];
+    var result = await flutterBlue.connectedDevices;
+    connectedDevices.clear();
+    connectedDevices.addAll(result);
+    return connectedDevices;
   }
 
-  Future<void> _connectToDevice(DeviceController model) async {
-    await model.bluetoothDevice.connect();
-    await getConnectedDevices();
-    activeDevices.add(model);
-    model.onInit();
+  Future<void> connectToDevice(BluetoothDevice blueDevice) async {
+    await blueDevice.connect();
   }
 
-  Future<void> _disconnectDevice(ScanResult blueDevice) async {
-    await blueDevice.device.disconnect();
-
-    await getConnectedDevices();
-
-    activeDevices.forEach((element) {
-      if (element.bluetoothDevice.id.id == blueDevice.device.id.id) {
-        element.onClose();
-      }
-    });
-
-    activeDevices.removeWhere(
-        (element) => element.bluetoothDevice.id.id == blueDevice.device.id.id);
+  Future<void> disconnectDevice(BluetoothDevice blueDevice) async {
+    await blueDevice.disconnect();
   }
 
   Future<void> _disconnectDeviceAll() async {
-    await getConnectedDevices();
-    connectedDevices.forEach((element) async {
+    var connectedDevices = await getConnectedDevices();
+    for (var element in connectedDevices) {
       await element.disconnect();
-    });
-    await getConnectedDevices();
+    }
   }
 
-  bool haveConnectDevice(ScanResult blueDevice) {
-    var result = connectedDevices
-        .firstWhereOrNull((element) => blueDevice.device.id == element.id);
-    if (result == null) return false;
-    return true;
-  }
-
-  Future<bool> validBlue() async {
+  Future<bool> _validBlue() async {
     if ((await flutterBlue.isAvailable) == false) {
       showSnackbar(
         'Устройство не может получить доступ к Bluetooth',
@@ -153,13 +76,14 @@ class BluetoothController extends GetxController {
   }
 
   @override
-  Future<void> onClose() async {
+  Future<void> onInit() async {
     await _disconnectDeviceAll();
-    super.onClose();
+    super.onInit();
   }
 
   @override
-  Future<void> onReady() async {
-    super.onReady();
+  Future<void> onClose() async {
+    await _disconnectDeviceAll();
+    super.onClose();
   }
 }
