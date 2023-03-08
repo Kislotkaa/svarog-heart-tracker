@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
-import 'package:svarog_heart_tracker/app/helper/characteristic.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
 import 'package:svarog_heart_tracker/app/models/new_device_model.dart';
 import 'package:svarog_heart_tracker/app/modules/home/controllers/home_controller.dart';
-import 'package:dartx/dartx.dart';
 
 import '../../../controllers/device_controller.dart';
 import '../../../widgets/base_dialog.dart';

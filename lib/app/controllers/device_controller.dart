@@ -22,22 +22,45 @@ class DeviceController extends GetxController {
 
   Future<void> getServiceDevice() async {
     services = await device.discoverServices();
-    BluetoothService? serviceTracker;
-    BluetoothCharacteristic? heartRateCharacteristics;
+    BluetoothService? service;
+    BluetoothCharacteristic? characteristics;
 
-    serviceTracker = services.firstWhereOrNull(
-        (element) => element.uuid.toString() == ble_service_tracker);
-    if (serviceTracker != null) {
-      heartRateCharacteristics = serviceTracker.characteristics
-          .firstWhereOrNull(
-              (element) => element.uuid.toString() == ble_heart_rate);
-    }
-    if (heartRateCharacteristics != null) {
-      await heartRateCharacteristics.setNotifyValue(true);
-      streamSubscription = heartRateCharacteristics.value.listen((value) {
+    await Future.delayed(Duration(seconds: 1));
+    services.forEach((service) {
+      Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
+      service.characteristics.forEach((characteristic) async {
+        Get.printInfo(info: 'CHARACTERISTIC_ID: ${characteristic.uuid}');
+        Get.printInfo(info: 'CHARACTERISTIC: ${await characteristic.read()}');
+        Get.printInfo(
+            info:
+                'CHARACTERISTIC_READ: ${String.fromCharCodes(await characteristic.read())}');
+      });
+    });
+
+    service = getService(ble_service_tracker);
+    characteristics = getCharacteristic(ble_heart_rate, service);
+    if (characteristics != null) {
+      await characteristics.setNotifyValue(true);
+      streamSubscription = characteristics.value.listen((value) {
         heartAvg.value = value[1] ?? 0;
       });
     }
+  }
+
+  BluetoothService? getService(String serviceId) {
+    return services
+        .firstWhereOrNull((element) => element.uuid.toString() == serviceId);
+  }
+
+  BluetoothCharacteristic? getCharacteristic(
+    String characteristicId,
+    BluetoothService? serviceTracker,
+  ) {
+    if (serviceTracker != null) {
+      return serviceTracker.characteristics.firstWhereOrNull(
+          (element) => element.uuid.toString() == characteristicId);
+    }
+    return null;
   }
 
   @override
