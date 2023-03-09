@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:svarog_heart_tracker/app/controllers/base_snackbar_controller.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
 import 'package:svarog_heart_tracker/app/resourse/app_colors.dart';
 
@@ -49,6 +48,14 @@ class BaseStatusBluetooth extends StatelessWidget {
                         iconStatus = getDisabledBluetooth();
                         break;
 
+                      case BluetoothState.unavailable:
+                        iconStatus = getEmptyBluetooth(context);
+                        break;
+
+                      case BluetoothState.unauthorized:
+                        iconStatus = getPermissionBluetooth(context);
+                        break;
+
                       case BluetoothState.turningOn:
                         iconStatus = getDefaultBluetooth();
                         break;
@@ -80,14 +87,34 @@ class BaseStatusBluetooth extends StatelessWidget {
     );
   }
 
+  Widget getEmptyBluetooth(context) {
+    return GestureDetector(
+      onTap: () {
+        bluetoothController.getEmptySnackBar();
+      },
+      child: Icon(
+        Icons.bluetooth_disabled_rounded,
+        color: Theme.of(context).iconTheme.color!.withOpacity(0.3),
+      ),
+    );
+  }
+
+  Widget getPermissionBluetooth(context) {
+    return GestureDetector(
+      onTap: () {
+        bluetoothController.getPermissionSnackBar(context);
+      },
+      child: Icon(
+        Icons.bluetooth_disabled_rounded,
+        color: AppColors.orangeConst,
+      ),
+    );
+  }
+
   Widget getConnectedBluetooth() {
     return GestureDetector(
       onTap: () {
-        showSnackbar(
-          'В данный момент модуль Bluetooth используется',
-          'Статус: Используется',
-          status: SnackStatusEnum.access,
-        );
+        bluetoothController.getConnectedSnackBar();
       },
       child: Icon(Icons.bluetooth_connected),
     );
@@ -96,11 +123,7 @@ class BaseStatusBluetooth extends StatelessWidget {
   Widget getDefaultBluetooth() {
     return GestureDetector(
       onTap: () {
-        showSnackbar(
-          'Модуль Bluetooth включён но не используется',
-          'Статус: Включён',
-          status: SnackStatusEnum.access,
-        );
+        bluetoothController.getDefaultSnackBar();
       },
       child: Icon(Icons.bluetooth_rounded),
     );
@@ -109,11 +132,7 @@ class BaseStatusBluetooth extends StatelessWidget {
   Widget getSearchingBluetooth() {
     return GestureDetector(
       onTap: () {
-        showSnackbar(
-          'Модуль Bluetooth ищет устройства побблизости',
-          'Статус: Поиск',
-          status: SnackStatusEnum.access,
-        );
+        bluetoothController.getSearchingSnackBar();
       },
       child: Icon(Icons.bluetooth_searching_rounded),
     );

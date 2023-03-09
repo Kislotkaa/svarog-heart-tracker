@@ -22,7 +22,7 @@ class HomeController extends GetxController {
     if ((await bluetoothController.flutterBlue.isOn)) {
       showNewDevices();
     } else {
-      bluetoothController.getDisabledSnackBar();
+      bluetoothController.validBlue();
     }
   }
 

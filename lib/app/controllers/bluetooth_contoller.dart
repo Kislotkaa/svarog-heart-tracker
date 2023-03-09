@@ -19,7 +19,7 @@ class BluetoothController extends GetxController {
       flutterBlue.connectedDevices.asStream();
 
   Future<void> startScanDevice() async {
-    if (await _validBlue()) {
+    if (await validBlue()) {
       await flutterBlue.startScan(
         scanMode: ScanMode.lowLatency,
         timeout: const Duration(seconds: 4),
@@ -50,13 +50,9 @@ class BluetoothController extends GetxController {
     }
   }
 
-  Future<bool> _validBlue() async {
+  Future<bool> validBlue() async {
     if ((await flutterBlue.isAvailable) == false) {
-      showSnackbar(
-        'Устройство не может получить доступ к Bluetooth',
-        'Ошибка',
-        status: SnackStatusEnum.error,
-      );
+      getEmptySnackBar();
 
       return false;
     } else if ((await flutterBlue.isOn) == false) {
@@ -67,11 +63,51 @@ class BluetoothController extends GetxController {
     return true;
   }
 
+  void getEmptySnackBar() {
+    showSnackbar(
+      'Устройство Bluetooth не обнаружено',
+      'Ошибка',
+      status: SnackStatusEnum.error,
+    );
+  }
+
   void getDisabledSnackBar() {
     showSnackbar(
       'Bluetooth модуль устройства выключен',
       'Статус: Выключен',
       status: SnackStatusEnum.warning,
+    );
+  }
+
+  void getPermissionSnackBar(context) {
+    showSnackbar(
+      'Устройство не получило доступ к Bluetooth',
+      'Ошибка доступа',
+      status: SnackStatusEnum.warning,
+    );
+  }
+
+  void getConnectedSnackBar() {
+    showSnackbar(
+      'В данный момент Bluetooth используется',
+      'Статус: Используется',
+      status: SnackStatusEnum.access,
+    );
+  }
+
+  void getDefaultSnackBar() {
+    showSnackbar(
+      'Модуль Bluetooth включён но не используется',
+      'Статус: Включён',
+      status: SnackStatusEnum.access,
+    );
+  }
+
+  void getSearchingSnackBar() {
+    showSnackbar(
+      'Модуль Bluetooth ищет устройства побблизости',
+      'Статус: Поиск',
+      status: SnackStatusEnum.access,
     );
   }
 

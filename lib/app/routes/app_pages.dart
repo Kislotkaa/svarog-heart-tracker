@@ -6,6 +6,8 @@ import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/auth_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/how_to_use/bindings/how_to_use_binding.dart';
+import '../modules/how_to_use/views/how_to_use_view.dart';
 import '../modules/new_devices/bindings/new_devices_binding.dart';
 import '../modules/new_devices/views/new_devices_view.dart';
 import '../modules/settings/bindings/settings_binding.dart';
@@ -52,6 +54,11 @@ class AppPages {
       binding: AboutBinding(),
       transition: Transition.downToUp,
       transitionDuration: AppDuration.fast,
+    ),
+    GetPage(
+      name: _Paths.HOW_TO_USE,
+      page: () => const HowToUseView(),
+      binding: HowToUseBinding(),
     ),
   ];
 }

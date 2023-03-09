@@ -198,4 +198,9 @@ class NewDevicesController extends GetxController {
     _unSubscribeConnectedDevices();
     super.onClose();
   }
+
+  @override
+  void onReady() {
+    super.onReady();
+  }
 }

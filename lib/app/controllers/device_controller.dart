@@ -25,7 +25,7 @@ class DeviceController extends GetxController {
     BluetoothService? service;
     BluetoothCharacteristic? characteristics;
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     services.forEach((service) {
       Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
       service.characteristics.forEach((characteristic) async {
@@ -67,10 +67,5 @@ class DeviceController extends GetxController {
   Future<void> onReady() async {
     await getServiceDevice();
     super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

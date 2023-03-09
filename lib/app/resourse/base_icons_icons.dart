@@ -21,6 +21,7 @@ class BaseIcons {
   static const _kFontFam = 'BaseIcons';
   static const String? _kFontPkg = null;
 
+  static const IconData hide = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData warning_shield = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData trash_full = IconData(0xe81f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

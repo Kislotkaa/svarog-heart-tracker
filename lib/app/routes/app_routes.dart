@@ -8,6 +8,7 @@ abstract class Routes {
   static const AUTH = _Paths.AUTH;
   static const NEW_DEVICES = _Paths.NEW_DEVICES;
   static const ABOUT = _Paths.ABOUT;
+  static const HOW_TO_USE = _Paths.HOW_TO_USE;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const AUTH = '/auth';
   static const NEW_DEVICES = '/new-devices';
   static const ABOUT = '/about';
+  static const HOW_TO_USE = '/how-to-use';
 }

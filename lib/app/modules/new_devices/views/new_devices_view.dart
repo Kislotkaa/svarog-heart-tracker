@@ -5,6 +5,8 @@ import 'package:svarog_heart_tracker/app/widgets/base_divider.dart';
 import 'package:svarog_heart_tracker/app/widgets/base_handler.dart';
 
 import '../../../resourse/app_const.dart';
+import '../../../resourse/base_icons_icons.dart';
+import '../../../widgets/base_cap.dart';
 import '../../../widgets/base_global_loading.dart';
 import '../../../widgets/base_loading.dart';
 import '../controllers/new_devices_controller.dart';
@@ -78,37 +80,67 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     horizontal: AppConst.paddingAll,
                   ),
                   Obx(
-                    () => Expanded(
-                      child: ListView.builder(
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: controller.scanResult.length,
-                        itemBuilder: (context, i) {
-                          return InkWell(
-                            onTap: () => controller.connectOrDisconnect(
-                              controller.scanResult[i].blueDevice,
+                    () => controller.scanResult.isNotEmpty
+                        ? Expanded(
+                            child: ListView.builder(
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: controller.scanResult.length,
+                              padding: const EdgeInsets.only(
+                                left: AppConst.paddingAll,
+                                right: AppConst.paddingAll,
+                                top: AppConst.paddingAll,
+                                bottom: 100,
+                              ),
+                              itemBuilder: (context, i) {
+                                return InkWell(
+                                    onTap: () => controller.connectOrDisconnect(
+                                          controller.scanResult[i].blueDevice,
+                                        ),
+                                    child: Row(
+                                      children: [
+                                        BaseChecker(
+                                          isActive: controller.haveConnect(
+                                            controller.scanResult[i].blueDevice,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              controller
+                                                  .scanResult[i].deviceName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2,
+                                            ),
+                                            const SizedBox(height: 6),
+                                            Text(
+                                              controller
+                                                  .scanResult[i].deviceNumber,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption,
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ).paddingOnly(bottom: 16));
+                              },
                             ),
-                            child: ListTile(
-                              leading: BaseChecker(
-                                isActive: controller.haveConnect(
-                                  controller.scanResult[i].blueDevice,
-                                ),
-                              ),
-                              horizontalTitleGap: 4,
-                              minVerticalPadding: 4,
-                              title: Text(
-                                controller.scanResult[i].deviceName,
-                                style: Theme.of(context).textTheme.bodyText2,
-                              ),
-                              subtitle: Text(
-                                controller.scanResult[i].deviceNumber,
-                                style: Theme.of(context).textTheme.caption,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  )
+                          )
+                        : BaseCapScreen(
+                            title: 'Список доступных устройст пуст.',
+                            caption: 'Как подключить устройство?',
+                            // textLink: 'Жмак!',
+                            icon: BaseIcons.hide,
+                            onRefresh: () {
+                              controller.scanDevices();
+                            },
+                            onTap: () {},
+                          ),
+                  ),
                 ],
               ),
             ),
