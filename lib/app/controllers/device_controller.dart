@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:ffi';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/helper/characteristic.dart';
@@ -24,21 +26,13 @@ class DeviceController extends GetxController {
     services = await device.discoverServices();
     BluetoothService? service;
     BluetoothCharacteristic? characteristics;
+    BluetoothDescriptor? descriptor;
 
-    await Future.delayed(const Duration(seconds: 1));
-    services.forEach((service) {
-      Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
-      service.characteristics.forEach((characteristic) async {
-        Get.printInfo(info: 'CHARACTERISTIC_ID: ${characteristic.uuid}');
-        Get.printInfo(info: 'CHARACTERISTIC: ${await characteristic.read()}');
-        Get.printInfo(
-            info:
-                'CHARACTERISTIC_READ: ${String.fromCharCodes(await characteristic.read())}');
-      });
-    });
+    _getConsoleService(kDebugMode); // показать все доступные сервисы
 
     service = getService(ble_service_tracker);
-    characteristics = getCharacteristic(ble_heart_rate, service);
+    characteristics = getCharacteristic(ble_character_heart_rate, service);
+
     if (characteristics != null) {
       await characteristics.setNotifyValue(true);
       streamSubscription = characteristics.value.listen((value) {
@@ -52,6 +46,22 @@ class DeviceController extends GetxController {
         .firstWhereOrNull((element) => element.uuid.toString() == serviceId);
   }
 
+  Future<void> _getConsoleService(bool isActive) async {
+    if (isActive) {
+      await Future.delayed(const Duration(seconds: 1));
+      services.forEach((service) {
+        Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
+        service.characteristics.forEach((characteristic) async {
+          Get.printInfo(info: 'CHARACTERISTIC_ID: ${characteristic.uuid}');
+          Get.printInfo(info: 'CHARACTERISTIC: ${await characteristic.read()}');
+          Get.printInfo(
+              info:
+                  'CHARACTERISTIC_READ: ${String.fromCharCodes(await characteristic.read())}');
+        });
+      });
+    }
+  }
+
   BluetoothCharacteristic? getCharacteristic(
     String characteristicId,
     BluetoothService? serviceTracker,
@@ -59,6 +69,17 @@ class DeviceController extends GetxController {
     if (serviceTracker != null) {
       return serviceTracker.characteristics.firstWhereOrNull(
           (element) => element.uuid.toString() == characteristicId);
+    }
+    return null;
+  }
+
+  BluetoothDescriptor? getDescriptor(
+    String descriptorId,
+    BluetoothCharacteristic? characteristic,
+  ) {
+    if (characteristic != null) {
+      return characteristic.descriptors.firstWhereOrNull(
+          (element) => element.uuid.toString() == descriptorId);
     }
     return null;
   }
