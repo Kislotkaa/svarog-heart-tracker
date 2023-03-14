@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/device_controller.dart';
 
+import '../helper/screan_helper.dart';
 import '../resourse/app_const.dart';
 import 'base_card_people.dart';
 
@@ -18,9 +19,11 @@ class BaseGridPeople extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int countItem = getItemCountGrid();
+
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: countItem,
         crossAxisSpacing: 12,
         mainAxisSpacing: 12,
         mainAxisExtent: Get.width * 0.3,
@@ -50,5 +53,15 @@ class BaseGridPeople extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  int getItemCountGrid() {
+    if (isMobile) {
+      return 2;
+    } else if (isTable) {
+      return 3;
+    } else {
+      return 1;
+    }
   }
 }

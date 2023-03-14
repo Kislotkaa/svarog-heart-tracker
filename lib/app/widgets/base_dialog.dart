@@ -20,7 +20,7 @@ void showBaseDialog(
     titleStyle: Theme.of(Get.context!).textTheme.headline4,
     middleTextStyle: Theme.of(Get.context!).textTheme.bodyText2,
     contentPadding:
-        const EdgeInsets.only(top: 8, right: 16, bottom: 16, left: 16),
+        const EdgeInsets.only(top: 16, right: 24, bottom: 32, left: 24),
     titlePadding: const EdgeInsets.only(top: 16),
     radius: 16,
     confirm: BaseButton(
@@ -65,7 +65,7 @@ void showBaseAddNameDialog(
     titleStyle: Theme.of(Get.context!).textTheme.headline4,
     middleTextStyle: Theme.of(Get.context!).textTheme.bodyText2,
     contentPadding:
-        const EdgeInsets.only(top: 8, right: 16, bottom: 16, left: 16),
+        const EdgeInsets.only(top: 16, right: 24, bottom: 32, left: 24),
     titlePadding: const EdgeInsets.only(top: 16),
     radius: 16,
     confirm: BaseButton(

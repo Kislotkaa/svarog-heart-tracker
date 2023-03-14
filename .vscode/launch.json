@@ -8,7 +8,7 @@
             "name": "release",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
         },
         {
             "name": "degug",

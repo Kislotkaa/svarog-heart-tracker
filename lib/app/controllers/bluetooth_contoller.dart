@@ -21,7 +21,7 @@ class BluetoothController extends GetxController {
   Future<void> startScanDevice() async {
     if (await validBlue()) {
       await flutterBlue.startScan(
-        scanMode: ScanMode.lowLatency,
+        scanMode: ScanMode.lowPower,
         timeout: const Duration(seconds: 4),
       );
     }
@@ -36,14 +36,14 @@ class BluetoothController extends GetxController {
   }
 
   Future<void> connectToDevice(BluetoothDevice blueDevice) async {
-    await blueDevice.connect();
+    await blueDevice.connect(autoConnect: false);
   }
 
   Future<void> disconnectDevice(BluetoothDevice blueDevice) async {
     await blueDevice.disconnect();
   }
 
-  Future<void> _disconnectDeviceAll() async {
+  Future<void> disconnectDeviceAll() async {
     var connectedDevices = await getConnectedDevices();
     for (var element in connectedDevices) {
       await element.disconnect();
@@ -113,13 +113,13 @@ class BluetoothController extends GetxController {
 
   @override
   Future<void> onInit() async {
-    await _disconnectDeviceAll();
+    await disconnectDeviceAll();
     super.onInit();
   }
 
   @override
   Future<void> onClose() async {
-    await _disconnectDeviceAll();
+    await disconnectDeviceAll();
     super.onClose();
   }
 }

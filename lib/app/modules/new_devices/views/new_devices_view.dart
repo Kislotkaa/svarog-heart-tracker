@@ -6,8 +6,8 @@ import 'package:svarog_heart_tracker/app/widgets/base_handler.dart';
 
 import '../../../resourse/app_const.dart';
 import '../../../resourse/base_icons_icons.dart';
+import '../../../routes/app_pages.dart';
 import '../../../widgets/base_cap.dart';
-import '../../../widgets/base_global_loading.dart';
 import '../../../widgets/base_loading.dart';
 import '../controllers/new_devices_controller.dart';
 
@@ -25,6 +25,7 @@ Future<void> showNewDevices() async {
       init: NewDevicesController(
         bluetoothController: Get.find(),
         homeController: Get.find(),
+        permissionController: Get.find(),
       ),
       builder: (dynamic _) => const NewDevicesView(),
     ),
@@ -133,12 +134,15 @@ class NewDevicesView extends GetView<NewDevicesController> {
                         : BaseCapScreen(
                             title: 'Список доступных устройст пуст.',
                             caption: 'Как подключить устройство?',
-                            // textLink: 'Жмак!',
+                            textLink: 'Жмак!',
                             icon: BaseIcons.hide,
                             onRefresh: () {
                               controller.scanDevices();
                             },
-                            onTap: () {},
+                            onTap: () async {
+                              await Get.toNamed(Routes.HOW_TO_USE)
+                                  ?.then((value) => controller.scanDevices());
+                            },
                           ),
                   ),
                 ],

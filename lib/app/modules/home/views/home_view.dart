@@ -43,15 +43,19 @@ class HomeView extends GetView<HomeController> {
                   height: topHeight,
                   leftChild: GestureDetector(
                     onTap: () => controller.goToAbout(),
-                    child: SvgPicture.asset(
-                      'assets/icons/appIcon.svg',
-                      height: 36,
+                    child: Hero(
+                      tag: 'appIcon.svg',
+                      child: SvgPicture.asset(
+                        'assets/images/appIcon.svg',
+                        height: 36,
+                      ),
                     ),
                   ),
                   rightChild: SizedBox.square(
                     dimension: 36,
                     child: BaseStatusBluetooth(
                       bluetoothController: controller.bluetoothController,
+                      homeController: controller,
                     ),
                   ),
                   title: 'Сварог',

@@ -46,6 +46,7 @@ dependencies:
 
   # Основные
   flutter_blue_plus: ^1.4.0
+  permission_handler: ^10.2.0
 
 
 

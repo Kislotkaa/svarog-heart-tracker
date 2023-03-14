@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
+import 'package:svarog_heart_tracker/app/modules/home/controllers/home_controller.dart';
 import 'package:svarog_heart_tracker/app/resourse/app_colors.dart';
+
+import '../controllers/device_controller.dart';
 
 class BaseStatusBluetooth extends StatelessWidget {
   const BaseStatusBluetooth({
     super.key,
     required this.bluetoothController,
+    required this.homeController,
   });
 
   final BluetoothController bluetoothController;
+  final HomeController homeController;
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +23,23 @@ class BaseStatusBluetooth extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         StreamBuilder<BluetoothState>(
-          stream: FlutterBluePlus.instance.state,
+          stream: bluetoothController.flutterBlue.state,
           initialData: BluetoothState.unknown,
           builder: (stateContext, snapshotState) {
             return StreamBuilder<bool>(
-              stream: FlutterBluePlus.instance.isScanning,
+              stream: bluetoothController.flutterBlue.isScanning,
               initialData: false,
               builder: (isScanningContext, snapshotScanning) {
                 return FutureBuilder<List<BluetoothDevice>>(
-                  future: FlutterBluePlus.instance.connectedDevices,
+                  future: bluetoothController.flutterBlue.connectedDevices,
                   initialData: [],
                   builder: (connectedDevicesContext, snapshotConnected) {
                     final state = snapshotState.data;
                     final isScanning = snapshotScanning.data;
                     final connectedList = snapshotConnected.data ?? [];
 
-                    late Widget iconStatus = Icon(Icons.bluetooth_rounded);
+                    late Widget iconStatus =
+                        const Icon(Icons.bluetooth_rounded);
                     switch (state) {
                       case BluetoothState.on:
                         if (isScanning == true) {
@@ -76,11 +83,12 @@ class BaseStatusBluetooth extends StatelessWidget {
   }
 
   Widget getDisabledBluetooth() {
+    disconnectAll();
     return GestureDetector(
       onTap: () {
         bluetoothController.getDisabledSnackBar();
       },
-      child: Icon(
+      child: const Icon(
         Icons.bluetooth_disabled_rounded,
         color: AppColors.redConst,
       ),
@@ -136,5 +144,18 @@ class BaseStatusBluetooth extends StatelessWidget {
       },
       child: Icon(Icons.bluetooth_searching_rounded),
     );
+  }
+
+  Future<void> disconnectAll() async {
+    try {
+      List<BluetoothDevice> results =
+          await bluetoothController.getConnectedDevices();
+      results.forEach((element) async {
+        await Get.delete<DeviceController>(tag: element.id.id);
+        await bluetoothController.disconnectDevice(element);
+        homeController.list
+            .removeWhere((elementList) => elementList.id == element.id.id);
+      });
+    } catch (e, s) {}
   }
 }

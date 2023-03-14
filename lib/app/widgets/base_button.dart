@@ -11,6 +11,7 @@ class BaseButton extends StatelessWidget {
     this.rightChild,
     this.height = 40,
     this.width = double.infinity,
+    this.reverseColor = false,
     this.isOutLine = false,
     this.visualFeedBack = false,
   }) : super(key: key);
@@ -19,6 +20,7 @@ class BaseButton extends StatelessWidget {
   final Function? onPressed;
   final double? height;
   final bool isOutLine;
+  final bool reverseColor;
   final bool visualFeedBack;
 
   final double? width;
@@ -52,7 +54,9 @@ class BaseButton extends StatelessWidget {
                 focusElevation: 0,
                 hoverElevation: 0,
                 highlightElevation: visualFeedBack ? 3 : 0,
-                color: Theme.of(context).primaryColor,
+                color: reverseColor
+                    ? Theme.of(context).backgroundColor
+                    : Theme.of(context).primaryColor,
                 child: rightChild == null
                     ? child
                     : Row(

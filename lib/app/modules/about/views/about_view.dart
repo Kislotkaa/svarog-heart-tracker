@@ -21,9 +21,12 @@ class AboutView extends GetView<AboutController> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    'assets/icons/appIcon.svg',
-                    height: 150,
+                  Hero(
+                    tag: 'appIcon.svg',
+                    child: SvgPicture.asset(
+                      'assets/images/appIcon.svg',
+                      height: 150,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -56,7 +59,7 @@ class AboutView extends GetView<AboutController> {
               ),
             ),
             const Positioned(
-              bottom: 0,
+              bottom: 16,
               right: 0,
               left: 0,
               child: SafeArea(

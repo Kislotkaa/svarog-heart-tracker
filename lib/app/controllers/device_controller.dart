@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:ffi';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/helper/characteristic.dart';
@@ -23,32 +21,39 @@ class DeviceController extends GetxController {
   late StreamSubscription<List<int>> streamSubscription;
 
   Future<void> getServiceDevice() async {
-    services = await device.discoverServices();
-    BluetoothService? service;
-    BluetoothCharacteristic? characteristics;
-    BluetoothDescriptor? descriptor;
+    try {
+      services = await device.discoverServices();
+      BluetoothService? service;
+      BluetoothCharacteristic? characteristic;
+      BluetoothDescriptor? descriptor;
 
-    _getConsoleService(kDebugMode); // показать все доступные сервисы
+      _getConsoleService(false); // показать все доступные сервисы
 
-    service = getService(ble_service_tracker);
-    characteristics = getCharacteristic(ble_character_heart_rate, service);
+      service = _getService(ble_service_tracker);
+      characteristic = _getCharacteristic(ble_character_heart_rate, service);
 
-    if (characteristics != null) {
-      await characteristics.setNotifyValue(true);
-      streamSubscription = characteristics.value.listen((value) {
-        heartAvg.value = value[1] ?? 0;
-      });
+      if (characteristic != null) {
+        await characteristic.setNotifyValue(true);
+        streamSubscription = characteristic.value.listen((value) {
+          setHeartAvg(value[1]);
+        });
+      }
+    } catch (e, s) {}
+  }
+
+  void setHeartAvg(int? value) {
+    if (value != null) {
+      heartAvg.value = value;
     }
   }
 
-  BluetoothService? getService(String serviceId) {
+  BluetoothService? _getService(String serviceId) {
     return services
         .firstWhereOrNull((element) => element.uuid.toString() == serviceId);
   }
 
   Future<void> _getConsoleService(bool isActive) async {
     if (isActive) {
-      await Future.delayed(const Duration(seconds: 1));
       services.forEach((service) {
         Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
         service.characteristics.forEach((characteristic) async {
@@ -62,7 +67,7 @@ class DeviceController extends GetxController {
     }
   }
 
-  BluetoothCharacteristic? getCharacteristic(
+  BluetoothCharacteristic? _getCharacteristic(
     String characteristicId,
     BluetoothService? serviceTracker,
   ) {
@@ -73,7 +78,7 @@ class DeviceController extends GetxController {
     return null;
   }
 
-  BluetoothDescriptor? getDescriptor(
+  BluetoothDescriptor? _getDescriptor(
     String descriptorId,
     BluetoothCharacteristic? characteristic,
   ) {

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'package:get/get.dart';
+import 'package:svarog_heart_tracker/app/widgets/base_global_loading.dart';
 
 import '../../../helper/screan_helper.dart';
 import '../../../resourse/app_colors.dart';
 import '../../../resourse/app_const.dart';
 import '../../../widgets/base_button.dart';
 import '../../../widgets/base_button_text.dart';
-import '../../../widgets/base_global_loading.dart';
 import '../../../widgets/base_text_form_widget.dart';
-import '../controllers/auth_controller.dart';
+import '../controllers/admin_set_password_controller.dart';
 
-class AuthView extends GetView<AuthController> {
-  const AuthView({Key? key}) : super(key: key);
+class AdminSetPasswordView extends GetView<AdminSetPasswordController> {
+  const AdminSetPasswordView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.primaryConst,
       body: Stack(
         children: [
           Center(
@@ -25,29 +25,20 @@ class AuthView extends GetView<AuthController> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Hero(
-                    tag: 'appIcon.svg',
-                    child: SvgPicture.asset(
-                      'assets/images/appIcon.svg',
-                      height: 200,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Сварог',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  SizedBox(height: Get.height * 0.08),
                   BaseTextFieldWidget(
                     height: 60,
                     controller: controller.password,
                     titleCenter: true,
-                    title: 'Пароль',
+                    title: 'Пароль для входа',
                   ),
                   SizedBox(height: Get.height * 0.3),
                   BaseButton(
-                    onPressed: () => controller.login(),
-                    child: BaseButtonText('Войти'),
+                    reverseColor: true,
+                    onPressed: () => controller.setPassword(),
+                    child: BaseButtonText(
+                      'Установить',
+                      style: Theme.of(context).textTheme.bodyText2,
+                    ),
                   )
                 ],
               ),

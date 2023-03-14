@@ -7,11 +7,11 @@ class BaseButtonText extends StatelessWidget {
     this.text, {
     Key? key,
     this.style,
-    this.maxLines,
+    this.maxLines = 1,
     this.isOutLine = false,
   }) : super(key: key);
   final String text;
-  final int? maxLines;
+  final int maxLines;
   final bool isOutLine;
 
   final TextStyle? style;
