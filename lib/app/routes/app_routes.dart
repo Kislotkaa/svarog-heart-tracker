@@ -11,7 +11,6 @@ abstract class Routes {
   static const HOW_TO_USE = _Paths.HOW_TO_USE;
   static const INIT = _Paths.INIT;
   static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
-  static const ADMIN_SET_PASSWORD = _Paths.ADMIN_SET_PASSWORD;
 }
 
 abstract class _Paths {
@@ -24,5 +23,4 @@ abstract class _Paths {
   static const HOW_TO_USE = '/how-to-use';
   static const INIT = '/init';
   static const ADMIN_PANEL = '/admin-panel';
-  static const ADMIN_SET_PASSWORD = '/admin-set-password';
 }

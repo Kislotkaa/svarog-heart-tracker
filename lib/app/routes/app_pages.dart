@@ -4,8 +4,6 @@ import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
 import '../modules/admin_panel/bindings/admin_panel_binding.dart';
 import '../modules/admin_panel/views/admin_panel_view.dart';
-import '../modules/admin_set_password/bindings/admin_set_password_binding.dart';
-import '../modules/admin_set_password/views/admin_set_password_view.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/auth_view.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -81,11 +79,6 @@ class AppPages {
       binding: AdminPanelBinding(),
       transition: Transition.fadeIn,
       transitionDuration: AppDuration.slow,
-    ),
-    GetPage(
-      name: _Paths.ADMIN_SET_PASSWORD,
-      page: () => const AdminSetPasswordView(),
-      binding: AdminSetPasswordBinding(),
     ),
   ];
 }

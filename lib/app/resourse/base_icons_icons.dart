@@ -22,6 +22,8 @@ class BaseIcons {
   static const String? _kFontPkg = null;
 
   static const IconData hide = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData exit = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData warning_shield = IconData(0xe810, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData moon = IconData(0xe811, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData trash_full = IconData(0xe81f, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../resourse/app_colors.dart';
 import '../resourse/app_const.dart';
 import '../resourse/app_shadow.dart';
-import '../resourse/base_icons_icons.dart';
 
 class BaseAppBar extends StatelessWidget {
   const BaseAppBar({
@@ -52,7 +50,12 @@ class BaseAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          leftChild ?? SizedBox(),
+          GestureDetector(
+            onTap: () {
+              onTapBack != null ? onTapBack!() : {};
+            },
+            child: leftChild ?? SizedBox(),
+          ),
           const SizedBox(width: 4),
           Expanded(
             child: Text(

@@ -16,27 +16,35 @@ class AuthController extends GetxController {
   final TextEditingController password = TextEditingController();
 
   final RxBool isLoading = false.obs;
+  final RxBool hasFocus = false.obs;
+
+  void inFocus() => hasFocus.value = true;
+  void unFocus(context) {
+    hasFocus.value = false;
+    FocusScope.of(context).unfocus();
+  }
 
   Future<void> login() async {
     if (isLoading.value != true) {
-      try {
-        isLoading.value = true;
-        StartAppModel? result = startAppCache.getData();
-        if (result?.localPassword == null) {
-          startAppCache.clearData();
-          Get.offAndToNamed(Routes.ADMIN_PANEL);
-        } else if (result?.localPassword == password.text) {
-          var param = result!.copyWith(isHaveAuth: true);
-          await startAppCache.setData(param.toJson());
-          Get.offAndToNamed(Routes.HOME);
-        } else {
-          showSnackbar(
-            'Не верный пароль, проверьте правильность ввода и повторите попытку',
-            'Пароль не верный',
-            status: SnackStatusEnum.warning,
-          );
-        }
-      } catch (e, s) {
+      isLoading.value = true;
+
+      StartAppModel? result = startAppCache.getData();
+
+      if (result == null || result.localPassword == null) {
+        startAppCache.clearData();
+        Get.offAndToNamed(Routes.ADMIN_PANEL);
+      } else if (result.localPassword == password.text) {
+        var param = result.copyWith(isHaveAuth: true);
+        await startAppCache.setData(param.toJson());
+        Get.offAndToNamed(Routes.HOME);
+      } else {
+        showSnackbar(
+          'Не верный пароль, проверьте правильность ввода и повторите попытку',
+          'Пароль не верный',
+          status: SnackStatusEnum.warning,
+        );
+      }
+      try {} catch (e, s) {
       } finally {
         isLoading.value = false;
       }

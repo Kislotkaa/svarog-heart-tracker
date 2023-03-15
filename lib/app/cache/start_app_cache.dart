@@ -7,12 +7,14 @@ class StartAppCache extends AbstractDataSource {
 
   @override
   Future<void> setData(param) async {
+    print(param);
     return await box.write(key, param);
   }
 
   @override
   StartAppModel? getData() {
     var data = box.read(key);
+    print(data);
     if (data != null) {
       return StartAppModel.fromJson(data);
     }

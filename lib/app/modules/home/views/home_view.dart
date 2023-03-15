@@ -42,7 +42,7 @@ class HomeView extends GetView<HomeController> {
                 BaseAppBar(
                   height: topHeight,
                   leftChild: GestureDetector(
-                    onTap: () => controller.goToAbout(),
+                    onTap: () => controller.goToSettings(),
                     child: Hero(
                       tag: 'appIcon.svg',
                       child: SvgPicture.asset(

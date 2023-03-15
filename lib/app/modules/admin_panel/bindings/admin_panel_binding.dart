@@ -6,7 +6,9 @@ class AdminPanelBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<AdminPanelController>(
-      () => AdminPanelController(),
+      () => AdminPanelController(
+        startAppCache: Get.find(),
+      ),
     );
   }
 }

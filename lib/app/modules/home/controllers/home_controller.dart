@@ -26,8 +26,8 @@ class HomeController extends GetxController {
     }
   }
 
-  void goToAbout() {
-    Get.toNamed(Routes.ABOUT);
+  void goToSettings() {
+    Get.toNamed(Routes.SETTINGS);
   }
 
   void addDevice(DeviceController device) {
