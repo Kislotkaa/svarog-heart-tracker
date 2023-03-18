@@ -1,9 +1,13 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:svarog_heart_tracker/app/resourse/app_strings.dart';
+import 'package:svarog_heart_tracker/app/widgets/base_text_link.dart';
 
 import '../../../helper/screan_helper.dart';
+import '../../../resourse/app_colors.dart';
 import '../../../resourse/app_const.dart';
 import '../../../resourse/app_duration.dart';
 import '../../../widgets/base_button.dart';
@@ -68,10 +72,36 @@ class AuthView extends GetView<AuthController> {
                       onSaved: (s) => controller.unFocus(context),
                     ),
                     SizedBox(height: Get.height * 0.3),
-                    BaseButton(
-                      onPressed: () => controller.login(),
-                      child: const BaseButtonText('Войти'),
-                    )
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        BaseButton(
+                          onPressed: () => controller.login(),
+                          child: const BaseButtonText('Войти'),
+                        ),
+                        GestureDetector(
+                          onTap: () => controller.goToUrl(AppStrings.polit),
+                          child: AutoSizeText.rich(
+                            TextSpan(
+                              style: Theme.of(context).textTheme.bodyText2,
+                              children: <TextSpan>[
+                                _buildTextDefault(
+                                  'Авторизируясь в приложении вы соглашаетесь с ',
+                                  context,
+                                ),
+                                _buildTextLink(
+                                  'настоящей политикой конфиденциальности.',
+                                  context,
+                                ),
+                              ],
+                            ),
+                            presetFontSizes: [14],
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -83,6 +113,22 @@ class AuthView extends GetView<AuthController> {
           ],
         ),
       ),
+    );
+  }
+
+  TextSpan _buildTextDefault(String text, BuildContext context) {
+    return TextSpan(
+      text: text,
+      style: Theme.of(context).textTheme.bodyText2,
+    );
+  }
+
+  TextSpan _buildTextLink(String text, BuildContext context) {
+    return TextSpan(
+      text: text,
+      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+            color: AppColors.linkColorConst,
+          ),
     );
   }
 }

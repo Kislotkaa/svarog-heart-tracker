@@ -1,4 +1,5 @@
 import 'package:dartx/dartx.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,7 @@ class AdminPanelController extends GetxController {
     await dotenv.load(fileName: '.env');
     final env = dotenv.env;
     adminInstaller = env['APP_INSTAL'];
+    kDebugMode ? password.text = adminInstaller ?? '' : {};
   }
 
   void loginAdmin() {

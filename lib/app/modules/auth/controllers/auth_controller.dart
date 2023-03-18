@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/cache/start_app_cache.dart';
 import 'package:svarog_heart_tracker/app/routes/app_pages.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../controllers/base_snackbar_controller.dart';
 import '../../../models/start_app_model.dart';
@@ -49,5 +50,9 @@ class AuthController extends GetxController {
         isLoading.value = false;
       }
     }
+  }
+
+  void goToUrl(String url) {
+    launchUrl(Uri.parse(url));
   }
 }

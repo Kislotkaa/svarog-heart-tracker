@@ -27,6 +27,7 @@
 **/ios/Flutter/.last_build_id
 .dart_tool/
 .flutter-plugins
+.jks
 .flutter-plugins-dependencies
 .packages
 .pub-cache/

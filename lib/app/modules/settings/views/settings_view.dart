@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:svarog_heart_tracker/app/resourse/app_strings.dart';
 import 'package:svarog_heart_tracker/app/widgets/base_global_loading.dart';
 
 import '../../../resourse/app_colors.dart';
@@ -57,6 +58,13 @@ class SettingsView extends GetView<SettingsController> {
                           leftWidget: const Icon(BaseIcons.warning_shield),
                           text: 'О нас',
                         ),
+
+                        BaseItemSettings(
+                          onTap: () => controller.goToUrl(AppStrings.polit),
+                          leftWidget: const Icon(Icons.library_books_outlined),
+                          text: 'Политика конфиденциальности',
+                        ),
+
                         const SizedBox(height: 16),
                         BaseTitle(
                           title: 'Аккаунт',

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/cache/start_app_cache.dart';
 import 'package:svarog_heart_tracker/app/models/start_app_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../helper/error_handler.dart';
 import '../../../routes/app_pages.dart';
@@ -71,5 +72,9 @@ class SettingsController extends GetxController {
 
   void goToBack() {
     Get.back(closeOverlays: true);
+  }
+
+  void goToUrl(String url) {
+    launchUrl(Uri.parse(url));
   }
 }

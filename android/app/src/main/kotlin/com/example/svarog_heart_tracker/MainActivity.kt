@@ -1,4 +1,4 @@
-package com.example.svarog_heart_tracker
+package com.notanapps.svarog_heart_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 

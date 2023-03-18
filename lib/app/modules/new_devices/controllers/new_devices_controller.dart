@@ -189,7 +189,9 @@ class NewDevicesController extends GetxController {
   }
 
   void _unSubscribeConnectedDevices() {
-    subscription.cancel();
+    try {
+      subscription.cancel();
+    } catch (e) {}
   }
 
   @override

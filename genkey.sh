@@ -1,1 +1,1 @@
-keytool -genkey -v -keystore ~/notanapps-pets.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+keytool -genkey -v -keystore ~/notanapps-svarog-heart-tracker.jks -keyalg RSA -keysize 2048 -validity 10000 -alias upload

@@ -440,6 +440,42 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "package_info_plus",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus-1.4.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus_linux",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus_linux-1.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus_macos",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus_macos-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus_platform_interface",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus_platform_interface-1.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus_web",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus_web-1.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "package_info_plus_windows",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/package_info_plus_windows-1.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/path-1.8.2",
       "packageUri": "lib/",
@@ -598,6 +634,18 @@
     {
       "name": "rxdart",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/rxdart-0.27.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sentry",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sentry-6.22.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "sentry_flutter",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sentry_flutter-6.22.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -830,7 +878,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-03-15T06:29:43.463872Z",
+  "generated": "2023-03-18T08:54:58.551398Z",
   "generator": "pub",
   "generatorVersion": "2.19.4"
 }
