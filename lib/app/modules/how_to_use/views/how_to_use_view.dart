@@ -20,12 +20,14 @@ class HowToUseView extends GetView<HowToUseController> {
         bottom: false,
         child: Column(
           children: [
+            isTable ? SizedBox(height: Get.width * 0.1) : SizedBox(),
             Expanded(
               flex: 9,
               child: SvgPicture.asset(
                 'assets/images/body.svg',
               ),
             ),
+            isTable ? SizedBox(height: Get.width * 0.1) : SizedBox(),
             Expanded(
               flex: 13,
               child: Column(
@@ -121,9 +123,10 @@ class HowToUseView extends GetView<HowToUseController> {
                     textAlign: TextAlign.center,
                     presetFontSizes: presetFontSizes,
                   ),
+                  isTable ? SizedBox(height: Get.width * 0.1) : SizedBox(),
                   const SizedBox(height: 8),
                   SizedBox(
-                    width: Get.width * 0.25,
+                    width: Get.width * 0.3,
                     child: BaseButton(
                       child: const BaseButtonText('Понятно'),
                       onPressed: () => Get.back(),

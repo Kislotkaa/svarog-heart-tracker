@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
@@ -36,15 +35,15 @@ class DeviceController extends GetxController {
       if (characteristic != null) {
         await characteristic.setNotifyValue(true);
         streamSubscription = characteristic.value.listen((value) {
-          setHeartAvg(value[1]);
+          setHeartAvg(value);
         });
       }
     } catch (e, s) {}
   }
 
-  void setHeartAvg(int? value) {
+  void setHeartAvg(List<int?>? value) {
     if (value != null) {
-      heartAvg.value = value;
+      heartAvg.value = value[1] ?? 0;
     }
   }
 

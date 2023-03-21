@@ -17,6 +17,10 @@ class SettingsController extends GetxController {
     Get.toNamed(Routes.ABOUT);
   }
 
+  void goToHowToUse() {
+    Get.toNamed(Routes.HOW_TO_USE);
+  }
+
   void goToHistory() {
     Get.toNamed(Routes.HISTORY);
   }

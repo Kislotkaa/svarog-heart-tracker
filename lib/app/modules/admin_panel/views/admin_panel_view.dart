@@ -68,6 +68,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
                         maxLines: 1,
                         obscureText: true,
                         autocorrect: false,
+                        textAlign: TextAlign.center,
                         onTap: () => controller.inFocus(),
                         onEditingComplete: () {
                           controller.unFocus(context);
@@ -101,6 +102,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
                         title: 'Пароль',
                         autocorrect: false,
                         maxLines: 1,
+                        textAlign: TextAlign.center,
                         onEditingComplete: () {
                           controller.unFocus(context);
                           TextInput.finishAutofillContext();
@@ -114,6 +116,7 @@ class AdminPanelView extends GetView<AdminPanelController> {
                         titleCenter: true,
                         title: 'Повторите пароль',
                         autocorrect: false,
+                        textAlign: TextAlign.center,
                         maxLines: 1,
                         onEditingComplete: () {
                           controller.unFocus(context);

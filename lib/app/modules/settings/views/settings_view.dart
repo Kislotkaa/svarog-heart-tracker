@@ -50,10 +50,16 @@ class SettingsView extends GetView<SettingsController> {
                           title: 'Дополнительные',
                           style: Theme.of(context).textTheme.headline3,
                         ),
+
                         BaseItemSettings(
                           onTap: () => controller.goToAbout(),
                           leftWidget: const Icon(BaseIcons.warning_shield),
                           text: 'О нас',
+                        ),
+                        BaseItemSettings(
+                          onTap: () => controller.goToHowToUse(),
+                          leftWidget: const Icon(Icons.question_mark),
+                          text: 'Как пользоваться',
                         ),
                         BaseItemSettings(
                           onTap: () => controller.goToUrl(AppStrings.politUrl),

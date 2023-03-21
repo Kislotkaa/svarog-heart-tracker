@@ -63,6 +63,7 @@ class AuthView extends GetView<AuthController> {
                       title: 'Пароль',
                       autocorrect: false,
                       obscureText: true,
+                      textAlign: TextAlign.center,
                       onTap: () => controller.inFocus(),
                       onEditingComplete: () {
                         controller.unFocus(context);
@@ -70,7 +71,7 @@ class AuthView extends GetView<AuthController> {
                       },
                       onSaved: (s) => controller.unFocus(context),
                     ),
-                    SizedBox(height: Get.height * 0.3),
+                    SizedBox(height: Get.height * 0.2),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -79,6 +80,7 @@ class AuthView extends GetView<AuthController> {
                           onPressed: () => controller.login(),
                           child: const BaseButtonText('Войти'),
                         ),
+                        const SizedBox(height: 8),
                         GestureDetector(
                           onTap: () => controller.goToUrl(AppStrings.politUrl),
                           child: AutoSizeText.rich(
