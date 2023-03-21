@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../modules/HISTORY/bindings/history_binding.dart';
+import '../modules/HISTORY/views/history_view.dart';
 import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
 import '../modules/admin_panel/bindings/admin_panel_binding.dart';
@@ -79,6 +81,11 @@ class AppPages {
       binding: AdminPanelBinding(),
       transition: Transition.fadeIn,
       transitionDuration: AppDuration.slow,
+    ),
+    GetPage(
+      name: _Paths.HISTORY,
+      page: () => const HistoryView(),
+      binding: HistoryBinding(),
     ),
   ];
 }

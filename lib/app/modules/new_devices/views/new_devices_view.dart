@@ -89,7 +89,7 @@ class NewDevicesView extends GetView<NewDevicesController> {
                               padding: const EdgeInsets.only(
                                 left: AppConst.paddingAll,
                                 right: AppConst.paddingAll,
-                                top: AppConst.paddingAll,
+                                top: 24,
                                 bottom: 100,
                               ),
                               itemBuilder: (context, i) {

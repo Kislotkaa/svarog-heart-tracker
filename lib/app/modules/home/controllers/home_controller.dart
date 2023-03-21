@@ -31,7 +31,14 @@ class HomeController extends GetxController {
   }
 
   void addDevice(DeviceController device) {
-    list.add(device);
+    var result = list.firstWhereOrNull((element) => element.id == device.id);
+    if (result == null) {
+      list.add(device);
+    } else {
+      list.removeWhere((element) => element.id == device.id);
+      list.add(device);
+    }
+    list.refresh();
   }
 
   void removeDevice(dynamic device) {

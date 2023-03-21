@@ -39,14 +39,11 @@ class SettingsView extends GetView<SettingsController> {
                         //   style: Theme.of(context).textTheme.headline3,
                         // ),
                         // BaseItemSettings(
-                        //   onTap: () => controller.swithTheme(),
-                        //   leftWidget: const Icon(BaseIcons.moon),
-                        //   text: 'Тема',
-                        //   rightWidget: Switch(
-                        //     activeColor: Theme.of(context).primaryColor,
-                        //     onChanged: (bool value) => controller.swithTheme(),
-                        //     value: controller.themeController.isDark.value,
-                        //   ),
+                        //   onTap: () => controller.goToHistory(),
+                        //   leftWidget: const Icon(BaseIcons.history),
+                        //   text: 'История пользователей',
+                        //   rightWidget:
+                        //       const Icon(Icons.keyboard_arrow_right_rounded),
                         // ),
                         // const SizedBox(height: 16),
                         BaseTitle(
@@ -58,13 +55,13 @@ class SettingsView extends GetView<SettingsController> {
                           leftWidget: const Icon(BaseIcons.warning_shield),
                           text: 'О нас',
                         ),
-
                         BaseItemSettings(
-                          onTap: () => controller.goToUrl(AppStrings.polit),
-                          leftWidget: const Icon(Icons.library_books_outlined),
+                          onTap: () => controller.goToUrl(AppStrings.politUrl),
+                          leftWidget: const Icon(
+                            Icons.document_scanner_outlined,
+                          ),
                           text: 'Политика конфиденциальности',
                         ),
-
                         const SizedBox(height: 16),
                         BaseTitle(
                           title: 'Аккаунт',

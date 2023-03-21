@@ -17,6 +17,10 @@ class SettingsController extends GetxController {
     Get.toNamed(Routes.ABOUT);
   }
 
+  void goToHistory() {
+    Get.toNamed(Routes.HISTORY);
+  }
+
   Future<void> onTapLogout() async {
     showBaseDialog(
       'Выйти?',

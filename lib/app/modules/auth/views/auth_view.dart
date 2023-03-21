@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/resourse/app_strings.dart';
-import 'package:svarog_heart_tracker/app/widgets/base_text_link.dart';
 
 import '../../../helper/screan_helper.dart';
 import '../../../resourse/app_colors.dart';
@@ -81,7 +80,7 @@ class AuthView extends GetView<AuthController> {
                           child: const BaseButtonText('Войти'),
                         ),
                         GestureDetector(
-                          onTap: () => controller.goToUrl(AppStrings.polit),
+                          onTap: () => controller.goToUrl(AppStrings.politUrl),
                           child: AutoSizeText.rich(
                             TextSpan(
                               style: Theme.of(context).textTheme.bodyText2,

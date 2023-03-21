@@ -28,7 +28,10 @@ class BaseGridPeople extends StatelessWidget {
         mainAxisSpacing: 12,
         mainAxisExtent: Get.width * 0.3,
       ),
-      padding: const EdgeInsets.all(AppConst.paddingAll),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppConst.paddingAll,
+        vertical: 24,
+      ),
       itemCount: list.isEmpty ? 1 : list.length + 1,
       itemBuilder: (BuildContext context, int index) {
         if (list.isNotEmpty) {
