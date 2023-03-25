@@ -101,7 +101,7 @@ class BaseListHistory extends StatelessWidget {
     List<Widget> userUnActive = [];
 
     users.forEach((element) async {
-      if (await isConnected(element?.id)) {
+      if (isConnected(element?.id)) {
         if (element != null) {
           userActive.add(
             BaseHistoryUser(
@@ -131,7 +131,7 @@ class BaseListHistory extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async => await onRefresh(),
       child: ListView(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
           horizontal: AppConst.paddingAll,
           vertical: 16,
         ),

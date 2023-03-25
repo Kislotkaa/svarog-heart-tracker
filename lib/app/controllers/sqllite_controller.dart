@@ -22,7 +22,7 @@ class SqlLiteController extends DisposableInterface {
       path,
       version: _version,
       onCreate: (db, v1) async => await _dbInit(db),
-      onUpgrade: (db, v1, v2) async => await _dbReInit(db),
+      onUpgrade: (db, v1, v2) async => await _dbAlert(db),
     );
   }
 
@@ -59,18 +59,8 @@ class SqlLiteController extends DisposableInterface {
     );''');
   }
 
-  Future<void> _dbReInit(Database db) async {
-    final uuid = Uuid();
-    await _dbDrop(db);
-    await _dbInit(db);
-  }
-
-  Future<void> _dbDrop(Database db) async {
-    try {
-      final uuid = Uuid();
-      await db.execute('''DROP TABLE IF EXISTS user;''');
-      await db.execute('''DROP TABLE IF EXISTS user_history;''');
-    } catch (e, s) {
+  Future<void> _dbAlert(Database db) async {
+    try {} catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
   }
