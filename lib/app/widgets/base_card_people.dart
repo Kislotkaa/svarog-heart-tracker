@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,10 +12,12 @@ class BaseCardPeople extends StatefulWidget {
     super.key,
     required this.name,
     required this.heartRate,
+    required this.heartRateDifference,
   });
 
   final String name;
   final int heartRate;
+  final int heartRateDifference;
 
   @override
   State<BaseCardPeople> createState() => _BaseCardPeopleState();
@@ -27,6 +31,7 @@ class _BaseCardPeopleState extends State<BaseCardPeople>
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
         duration: const Duration(milliseconds: 500), vsync: this);
     _controller.repeat(reverse: true);
@@ -41,6 +46,8 @@ class _BaseCardPeopleState extends State<BaseCardPeople>
   @override
   Widget build(BuildContext context) {
     Widget iconHeart = SizedBox();
+    Widget iconHeartDifference = SizedBox();
+
     if (widget.heartRate == 0) {
       iconHeart = Icon(
         Icons.favorite,
@@ -66,6 +73,23 @@ class _BaseCardPeopleState extends State<BaseCardPeople>
         size: 62,
       );
     }
+    if (widget.heartRateDifference < -2) {
+      iconHeartDifference = const Icon(
+        Icons.keyboard_arrow_down_rounded,
+        color: AppColors.greenConst,
+      );
+    } else if (widget.heartRateDifference > 2) {
+      iconHeartDifference = const Icon(
+        Icons.keyboard_arrow_up_rounded,
+        color: AppColors.redConst,
+      );
+    } else {
+      iconHeartDifference = Icon(
+        Icons.horizontal_rule_rounded,
+        color: Theme.of(context).dividerColor,
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -105,19 +129,26 @@ class _BaseCardPeopleState extends State<BaseCardPeople>
           ),
           Expanded(
             flex: 1,
-            child: AutoSizeText.rich(
-              TextSpan(
-                text: widget.heartRate.toString(),
-                style: Theme.of(context).textTheme.headline3,
-                children: <TextSpan>[
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                iconHeartDifference,
+                AutoSizeText.rich(
                   TextSpan(
-                    text: ' уд/м',
-                    style: Theme.of(context).textTheme.caption,
+                    text: widget.heartRate.toString(),
+                    style: Theme.of(context).textTheme.headline3,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: ' уд/м',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              minFontSize: 10,
-              maxLines: 1,
+                  minFontSize: 10,
+                  maxLines: 1,
+                ),
+              ],
             ),
           ),
         ],

@@ -18,11 +18,14 @@ class BluetoothController extends GetxController {
   Stream<List<BluetoothDevice>> get streamConnected =>
       flutterBlue.connectedDevices.asStream();
 
-  Future<void> startScanDevice() async {
-    if (await validBlue()) {
+  late bool isScanning = false;
+
+  Future<void> startScanDevice({int scanSeconds = 2}) async {
+    if (!isScanning) {
       await flutterBlue.startScan(
         scanMode: ScanMode.lowPower,
-        timeout: const Duration(seconds: 4),
+        timeout: Duration(seconds: scanSeconds),
+        allowDuplicates: true,
       );
     }
   }

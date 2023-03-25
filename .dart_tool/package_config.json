@@ -200,6 +200,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "fl_chart",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/fl_chart-0.61.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -686,6 +692,18 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "sqflite",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite-2.2.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "sqflite_common",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite_common-2.4.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/stack_trace-1.11.0",
       "packageUri": "lib/",
@@ -878,7 +896,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-03-21T09:37:11.942219Z",
+  "generated": "2023-03-25T14:01:36.854096Z",
   "generator": "pub",
   "generatorVersion": "2.19.4"
 }

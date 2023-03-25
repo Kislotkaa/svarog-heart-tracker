@@ -10,6 +10,7 @@ class NewDevicesBinding extends Bindings {
         bluetoothController: Get.find(),
         homeController: Get.find(),
         permissionController: Get.find(),
+        userRepository: Get.find(),
       ),
     );
   }

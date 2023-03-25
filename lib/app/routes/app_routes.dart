@@ -12,6 +12,7 @@ abstract class Routes {
   static const INIT = _Paths.INIT;
   static const ADMIN_PANEL = _Paths.ADMIN_PANEL;
   static const HISTORY = _Paths.HISTORY;
+  static const HISTORY_DETAIL = _Paths.HISTORY_DETAIL;
 }
 
 abstract class _Paths {
@@ -25,4 +26,5 @@ abstract class _Paths {
   static const INIT = '/init';
   static const ADMIN_PANEL = '/admin-panel';
   static const HISTORY = '/history';
+  static const HISTORY_DETAIL = '/history-detail';
 }

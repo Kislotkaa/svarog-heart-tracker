@@ -6,10 +6,13 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:svarog_heart_tracker/app/cache/start_app_cache.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
 import 'package:svarog_heart_tracker/app/controllers/permission_controller.dart';
+import 'package:svarog_heart_tracker/app/repository/user_history_repository.dart';
+import 'package:svarog_heart_tracker/app/repository/user_repository.dart';
 
 import '../cache/language_cache_datasource.dart';
 import '../controllers/base_snackbar_controller.dart';
 import '../controllers/language_app_controller.dart';
+import '../controllers/sqllite_controller.dart';
 import '../controllers/theme_controller.dart';
 
 Future<void> initAppModule() async {
@@ -28,7 +31,9 @@ Future<void> initAppModule() async {
   _initControllers();
 }
 
-Future<void> _initApi() async {}
+Future<void> _initApi() async {
+  await Get.put(SqlLiteController()).init();
+}
 
 void _initInteractor() {}
 
@@ -38,7 +43,11 @@ void _initDataSource() {
     ..put(StartAppCache());
 }
 
-void _initRepositories() {}
+void _initRepositories() {
+  Get
+    ..put(UserHistoryRepository())
+    ..put(UserRepository());
+}
 
 void _initControllers() {
   Get

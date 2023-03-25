@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import '../resourse/app_const.dart';
 import '../resourse/app_shadow.dart';
 
-class BaseItemSettings extends StatelessWidget {
-  const BaseItemSettings({
+class BaseSettings extends StatelessWidget {
+  const BaseSettings({
     Key? key,
     required this.text,
     this.textColor,

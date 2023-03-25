@@ -9,7 +9,7 @@ import '../../../resourse/app_const.dart';
 import '../../../resourse/base_icons_icons.dart';
 import '../../../widgets/base_animation_appbar.dart';
 import '../../../widgets/base_backgroudappbar.dart';
-import '../../../widgets/base_item_settings.dart';
+import '../../../widgets/base_settings.dart';
 import '../../../widgets/base_title.dart';
 import '../../../widgets/base_version.dart';
 import '../controllers/settings_controller.dart';
@@ -34,34 +34,44 @@ class SettingsView extends GetView<SettingsController> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // BaseTitle(
-                        //   title: 'Основные',
-                        //   style: Theme.of(context).textTheme.headline3,
-                        // ),
-                        // BaseItemSettings(
-                        //   onTap: () => controller.goToHistory(),
-                        //   leftWidget: const Icon(BaseIcons.history),
-                        //   text: 'История пользователей',
-                        //   rightWidget:
-                        //       const Icon(Icons.keyboard_arrow_right_rounded),
-                        // ),
-                        // const SizedBox(height: 16),
+                        BaseTitle(
+                          title: 'История',
+                        ),
+                        BaseSettings(
+                          onTap: () => controller.goToHistory(),
+                          leftWidget: const Icon(BaseIcons.history),
+                          text: 'История',
+                          rightWidget:
+                              const Icon(Icons.keyboard_arrow_right_rounded),
+                        ),
+                        Obx(
+                          () => controller.sqlLiteController.isEmpty.value
+                              ? const SizedBox()
+                              : BaseSettings(
+                                  onTap: () => controller.onTapDeleteHistory(),
+                                  leftWidget: const Icon(
+                                    BaseIcons.history,
+                                    color: AppColors.redConst,
+                                  ),
+                                  text: 'Отчистить историю',
+                                  textColor: AppColors.redConst,
+                                ),
+                        ),
+                        const SizedBox(height: 16),
                         BaseTitle(
                           title: 'Дополнительные',
-                          style: Theme.of(context).textTheme.headline3,
                         ),
-
-                        BaseItemSettings(
+                        BaseSettings(
                           onTap: () => controller.goToAbout(),
                           leftWidget: const Icon(BaseIcons.warning_shield),
                           text: 'О нас',
                         ),
-                        BaseItemSettings(
+                        BaseSettings(
                           onTap: () => controller.goToHowToUse(),
                           leftWidget: const Icon(Icons.question_mark),
                           text: 'Как пользоваться',
                         ),
-                        BaseItemSettings(
+                        BaseSettings(
                           onTap: () => controller.goToUrl(AppStrings.politUrl),
                           leftWidget: const Icon(
                             Icons.document_scanner_outlined,
@@ -71,14 +81,13 @@ class SettingsView extends GetView<SettingsController> {
                         const SizedBox(height: 16),
                         BaseTitle(
                           title: 'Аккаунт',
-                          style: Theme.of(context).textTheme.headline3,
                         ),
-                        BaseItemSettings(
+                        BaseSettings(
                           onTap: () => controller.onTapLogout(),
                           leftWidget: const Icon(Icons.exit_to_app_rounded),
                           text: 'Выйти с аккаунта',
                         ),
-                        BaseItemSettings(
+                        BaseSettings(
                           onTap: () => controller.onTapDeleteAccount(),
                           leftWidget: const Icon(
                             Icons.close,

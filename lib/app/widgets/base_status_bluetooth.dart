@@ -38,6 +38,8 @@ class BaseStatusBluetooth extends StatelessWidget {
                     final isScanning = snapshotScanning.data;
                     final connectedList = snapshotConnected.data ?? [];
 
+                    bluetoothController.isScanning = isScanning ?? false;
+
                     late Widget iconStatus =
                         const Icon(Icons.bluetooth_rounded);
                     switch (state) {

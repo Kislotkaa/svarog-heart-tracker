@@ -5,15 +5,15 @@ import 'base_button.dart';
 import 'base_button_text.dart';
 import 'base_text_form_widget.dart';
 
-void showBaseDialog(
+Future<dynamic> showBaseDialog(
   String? title,
   String? text,
   Function()? onTapConfirm,
   Function()? onTapCancel,
   String? textConfirm,
   String? textCancel,
-) {
-  Get.defaultDialog(
+) async {
+  return await Get.defaultDialog(
     title: title ?? 'title',
     middleText: text ?? 'text',
     backgroundColor: Theme.of(Get.context!).backgroundColor,

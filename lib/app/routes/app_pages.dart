@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
 
-import '../modules/HISTORY/bindings/history_binding.dart';
-import '../modules/HISTORY/views/history_view.dart';
 import '../modules/about/bindings/about_binding.dart';
 import '../modules/about/views/about_view.dart';
 import '../modules/admin_panel/bindings/admin_panel_binding.dart';
 import '../modules/admin_panel/views/admin_panel_view.dart';
 import '../modules/auth/bindings/auth_binding.dart';
 import '../modules/auth/views/auth_view.dart';
+import '../modules/history/bindings/history_binding.dart';
+import '../modules/history/views/history_view.dart';
+import '../modules/history_detail/bindings/history_detail_binding.dart';
+import '../modules/history_detail/views/history_detail_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/how_to_use/bindings/how_to_use_binding.dart';
@@ -86,6 +88,11 @@ class AppPages {
       name: _Paths.HISTORY,
       page: () => const HistoryView(),
       binding: HistoryBinding(),
+    ),
+    GetPage(
+      name: _Paths.HISTORY_DETAIL,
+      page: () => HistoryDetailView(),
+      binding: HistoryDetailBinding(),
     ),
   ];
 }

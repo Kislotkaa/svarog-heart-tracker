@@ -21,6 +21,7 @@ class BaseIcons {
   static const _kFontFam = 'BaseIcons';
   static const String? _kFontPkg = null;
 
+  static const IconData person = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData history = IconData(0xe807, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData hide = IconData(0xe80a, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData exit = IconData(0xe80f, fontFamily: _kFontFam, fontPackage: _kFontPkg);

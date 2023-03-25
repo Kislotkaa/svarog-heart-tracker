@@ -19,7 +19,7 @@ class BaseTitle extends StatelessWidget {
       children: [
         Text(
           title ?? '',
-          style: style ?? Theme.of(context).textTheme.headline1,
+          style: style ?? Theme.of(context).textTheme.headline3,
           maxLines: maxLinesTitle,
           overflow: TextOverflow.ellipsis,
         ),

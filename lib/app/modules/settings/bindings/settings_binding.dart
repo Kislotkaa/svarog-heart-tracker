@@ -6,7 +6,11 @@ class SettingsBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<SettingsController>(
-      () => SettingsController(startAppCache: Get.find()),
+      () => SettingsController(
+        startAppCache: Get.find(),
+        sqlLiteController: Get.find(),
+        bluetoothController: Get.find(),
+      ),
     );
   }
 }

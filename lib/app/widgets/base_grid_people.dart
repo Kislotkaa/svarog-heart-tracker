@@ -12,37 +12,45 @@ class BaseGridPeople extends StatelessWidget {
     required this.capCard,
     required this.list,
     required this.onRemove,
+    required this.onRefresh,
+    required this.goToDetailHistory,
   });
   final Widget capCard;
   final Function(DeviceController device) onRemove;
+  final Future<void> Function(String id) goToDetailHistory;
+  final Future<void> Function() onRefresh;
+
   final List<DeviceController> list;
 
   @override
   Widget build(BuildContext context) {
     int countItem = getItemCountGrid();
 
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: countItem,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        mainAxisExtent: Get.width * 0.3,
-      ),
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppConst.paddingAll,
-        vertical: 24,
-      ),
-      itemCount: list.isEmpty ? 1 : list.length + 1,
-      itemBuilder: (BuildContext context, int index) {
-        if (list.isNotEmpty) {
-          if (index == list.length) {
+    return RefreshIndicator(
+      onRefresh: () async => await onRefresh(),
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: countItem,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          mainAxisExtent: Get.width * 0.3,
+        ),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppConst.paddingAll,
+          vertical: 24,
+        ),
+        itemCount: list.isEmpty ? 1 : list.length + 1,
+        itemBuilder: (BuildContext context, int index) {
+          if (list.isNotEmpty) {
+            if (index == list.length) {
+              return capCard;
+            }
+            return _buildItem(index);
+          } else {
             return capCard;
           }
-          return _buildItem(index);
-        } else {
-          return capCard;
-        }
-      },
+        },
+      ),
     );
   }
 
@@ -50,9 +58,11 @@ class BaseGridPeople extends StatelessWidget {
     return Obx(
       () => GestureDetector(
         onLongPress: () => onRemove(list[index]),
+        onTap: () => goToDetailHistory(list[index].id),
         child: BaseCardPeople(
           name: list[index].name,
-          heartRate: list[index].heartAvg.value,
+          heartRate: list[index].realHeart.value,
+          heartRateDifference: list[index].heartDifference.value,
         ),
       ),
     );

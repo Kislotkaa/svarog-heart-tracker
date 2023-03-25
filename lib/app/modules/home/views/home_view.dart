@@ -29,6 +29,8 @@ class HomeView extends GetView<HomeController> {
                 Obx(
                   () => BaseGridPeople(
                     list: controller.list.value,
+                    goToDetailHistory: (String id) =>
+                        controller.goToDetailHistory(id),
                     onRemove: (device) {
                       controller.removeDevice(device);
                     },
@@ -37,6 +39,8 @@ class HomeView extends GetView<HomeController> {
                         controller.goToNewDevice();
                       },
                     ),
+                    onRefresh: () async =>
+                        await controller.getConnectedDevice(),
                   ),
                 ).paddingOnly(top: topHeight),
                 BaseAppBar(

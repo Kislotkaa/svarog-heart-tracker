@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class AppColors {
   // Константы
@@ -22,4 +23,9 @@ class AppColors {
   static const Color textColorDark = Color(0xffF8F8F8);
   static const Color backGroundColorDark = Color.fromARGB(255, 62, 62, 62);
   static final Color shadowColorDark = const Color(0xFFD3D3D3).withOpacity(0.1);
+
+  static final List<Color> gradientGraphicsColors = [
+    AppColors.redConst,
+    Theme.of(Get.context!).cardColor,
+  ];
 }

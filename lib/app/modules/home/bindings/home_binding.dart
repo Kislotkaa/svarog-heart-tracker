@@ -8,6 +8,7 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(
       () => HomeController(
         bluetoothController: Get.find(),
+        userRepository: Get.find(),
       ),
     );
   }

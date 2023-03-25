@@ -9,7 +9,9 @@ import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
 import 'package:svarog_heart_tracker/app/controllers/permission_controller.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
 import 'package:svarog_heart_tracker/app/models/new_device_model.dart';
+import 'package:svarog_heart_tracker/app/models/user_model.dart';
 import 'package:svarog_heart_tracker/app/modules/home/controllers/home_controller.dart';
+import 'package:svarog_heart_tracker/app/repository/user_repository.dart';
 
 import '../../../controllers/device_controller.dart';
 import '../../../widgets/base_dialog.dart';
@@ -17,11 +19,13 @@ import '../../../widgets/base_dialog.dart';
 class NewDevicesController extends GetxController {
   NewDevicesController({
     required this.bluetoothController,
+    required this.userRepository,
     required this.homeController,
     required this.permissionController,
   });
 
   final BluetoothController bluetoothController;
+  final UserRepository userRepository;
   final HomeController homeController;
   final PermissionController permissionController;
 
@@ -31,6 +35,8 @@ class NewDevicesController extends GetxController {
   final RxString textStatus = RxString('');
 
   final RxList<NewDeviceModel> scanResult = RxList<NewDeviceModel>();
+  final RxList<UserModel> previouslyConnected = RxList<UserModel>();
+
   final List<NewDeviceModel> connectedDevices = [];
 
   late StreamSubscription subscription;
@@ -39,6 +45,10 @@ class NewDevicesController extends GetxController {
     try {
       isLoadingLinier.value = true;
       textStatus.value = 'Поиск свободных устройств...';
+      previouslyConnected.clear();
+      var results = await userRepository.getUsers();
+      previouslyConnected.addAll(results);
+
       await bluetoothController.startScanDevice();
       scanResult.clear();
       bluetoothController.scanResultListen((results) {
@@ -50,9 +60,9 @@ class NewDevicesController extends GetxController {
         scanResult.clear();
         textStatus.value = '$textStatusDefault: ${result.length}';
 
-        result.forEach((element) async {
-          String? deviceName = await element.advertisementData.localName;
-          String? deviceNumber = await element.device.id.id;
+        result.forEach((element) {
+          String? deviceName = element.advertisementData.localName;
+          String? deviceNumber = element.device.id.id;
           var model = NewDeviceModel(
             blueDevice: element.device,
             deviceId: deviceNumber,
@@ -80,7 +90,12 @@ class NewDevicesController extends GetxController {
         if (result != null) {
           showDialogDisconnect(result.blueDevice);
         } else {
-          showDialogConnect(blueDevice);
+          if (isPreviouslyConnected(blueDevice.id.id)) {
+            var result = getNamePreviouslyDevice(blueDevice.id.id);
+            await connect(blueDevice, result);
+          } else {
+            showDialogConnect(blueDevice);
+          }
         }
       } catch (e, s) {
         ErrorHandler.getMessage(e, s);
@@ -106,19 +121,18 @@ class NewDevicesController extends GetxController {
   Future<void> connect(BluetoothDevice blueDevice, String name) async {
     try {
       isLoadingLinier.value = true;
-      Get.printInfo(info: 'DEBUG: connectToDevice');
       await bluetoothController.connectToDevice(blueDevice);
-      Get.printInfo(info: 'DEBUG: connectedDevice');
       DeviceController deviceController = Get.put(
         DeviceController(
           device: blueDevice,
           name: name,
           id: blueDevice.id.id,
+          userHistoryRepository: Get.find(),
+          userRepository: Get.find(),
         ),
         tag: blueDevice.id.id,
       );
       homeController.addDevice(deviceController);
-      Get.printInfo(info: 'DEBUG: add controller device');
     } catch (e, s) {
     } finally {
       isLoadingLinier.value = false;
@@ -156,7 +170,6 @@ class NewDevicesController extends GetxController {
       () async {
         if (controller.text.isNotEmpty) {
           Get.back();
-          Get.printInfo(info: 'DEBUG: connect');
           connect(blueDevice, controller.text);
         }
       },
@@ -166,7 +179,27 @@ class NewDevicesController extends GetxController {
     );
   }
 
-  void _subscribeConnectedDevices() {
+  bool isPreviouslyConnected(String? id) {
+    if (id != null) {
+      return previouslyConnected
+                  .firstWhereOrNull((element) => element.id == id) ==
+              null
+          ? false
+          : true;
+    }
+    return false;
+  }
+
+  String getNamePreviouslyDevice(String? id) {
+    if (id != null) {
+      var result =
+          previouslyConnected.firstWhereOrNull((element) => element.id == id);
+      return result?.personName ?? 'Empty';
+    }
+    return 'Empty';
+  }
+
+  void _subscribeConnectedDevices() async {
     final stream = Stream.periodic(const Duration(seconds: 1));
     subscription = stream.listen((event) async {
       if (!isLoadingLinier.value) {
@@ -188,23 +221,20 @@ class NewDevicesController extends GetxController {
     });
   }
 
-  void _unSubscribeConnectedDevices() {
-    try {
-      subscription.cancel();
-    } catch (e) {}
+  Future<void> _unSubscribeConnectedDevices() async {
+    await subscription.cancel();
   }
 
   @override
   Future<void> onInit() async {
-    await scanDevices();
     _subscribeConnectedDevices();
-
+    await scanDevices();
     super.onInit();
   }
 
   @override
-  void onClose() {
-    _unSubscribeConnectedDevices();
+  Future<void> onClose() async {
+    await _unSubscribeConnectedDevices();
     super.onClose();
   }
 
