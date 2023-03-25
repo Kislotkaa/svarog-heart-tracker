@@ -79,10 +79,8 @@ class DeviceController extends GetxController {
     }
   }
 
-  void saveHeartAvg(List<int?>? value) {
-    if (value != null) {
-      listHeartRate.add(getHeartRateAdaptive(value));
-    }
+  void saveHeartAvg() {
+    listHeartRate.add(avgHeart.value);
   }
 
   void saveTimeTraining(bool isSecond) {
@@ -214,17 +212,16 @@ class DeviceController extends GetxController {
     BluetoothCharacteristic? characteristic,
   ) async {
     final stream = Stream.periodic(const Duration(milliseconds: 500));
-
     if (characteristic != null) {
+      streamSubscription = characteristic.value.listen((value) {
+        setHeartAvg(value); // Установить текущее значение пульса
+      });
+
       await characteristic.setNotifyValue(true);
       var isSecond = false;
 
       streamSubscription = stream.listen((event) async {
-        var value = await characteristic.read();
-
-        setHeartAvg(value); // Установить текущее значение пульса
-
-        saveHeartAvg(value); // Запомнить текущий пульс
+        saveHeartAvg(); // Запомнить текущий пульс
 
         setHeartDifference(); // Пульс уменьшается или увеличивается
 
