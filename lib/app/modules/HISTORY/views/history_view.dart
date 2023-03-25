@@ -100,8 +100,8 @@ class BaseListHistory extends StatelessWidget {
     List<Widget> userActive = [];
     List<Widget> userUnActive = [];
 
-    users.forEach((element) {
-      if (isConnected(element?.id)) {
+    users.forEach((element) async {
+      if (await isConnected(element?.id)) {
         if (element != null) {
           userActive.add(
             BaseHistoryUser(

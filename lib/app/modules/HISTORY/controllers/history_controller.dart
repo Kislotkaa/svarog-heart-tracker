@@ -24,7 +24,7 @@ class HistoryController extends GetxController {
   final UserHistoryRepository userHistoryRepository;
 
   final RxList<UserModel?> users = RxList<UserModel>();
-  final RxList<BluetoothDevice?> connectedDevice = RxList<BluetoothDevice>();
+  final List<BluetoothDevice?> connectedDevice = [];
 
   final RxBool isLoading = false.obs;
 
@@ -44,6 +44,7 @@ class HistoryController extends GetxController {
   Future<void> getHistory() async {
     try {
       isLoading.value = true;
+
       var resultUser = await userRepository.getUsers();
       users.clear();
       users.addAll(resultUser);
@@ -51,6 +52,8 @@ class HistoryController extends GetxController {
       var resultConnected = await bluetoothController.getConnectedDevices();
       connectedDevice.clear();
       connectedDevice.addAll(resultConnected);
+
+      users.refresh();
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     } finally {
