@@ -20,7 +20,7 @@ String _dateFormatYear(DateTime date) {
 String dateFormatDefault(DateTime? date) {
   if (date == null) return 'Дата не указана';
   var _now = DateTime.now();
-  var _date = date.toLocal();
+  var _date = date;
 
   int dateYear = _now.year - _date.year;
   int dateMonth = _now.month - _date.month;

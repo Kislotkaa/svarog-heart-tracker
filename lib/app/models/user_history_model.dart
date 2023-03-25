@@ -85,8 +85,9 @@ class UserHistoryModel {
       redTimeHeart: map['redTimeHeart']?.toInt() ?? 0,
       orangeTimeHeart: map['orangeTimeHeart']?.toInt() ?? 0,
       greenTimeHeart: map['greenTimeHeart']?.toInt() ?? 0,
-      createAt:
-          map['createAt'] != null ? DateTime.parse(map['createAt']) : null,
+      createAt: map['createAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['createAt'])
+          : null,
     );
   }
 

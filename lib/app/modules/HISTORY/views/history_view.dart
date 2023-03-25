@@ -38,7 +38,7 @@ class HistoryView extends GetView<HistoryController> {
                               await controller.onDeleteUser(id),
                           users: controller.users.value,
                           onRefresh: () async => await controller.getHistory(),
-                        ).paddingSymmetric(horizontal: AppConst.paddingAll)
+                        )
                       : Column(
                           children: [
                             BaseCapScreen(
@@ -51,9 +51,6 @@ class HistoryView extends GetView<HistoryController> {
                               },
                             ),
                           ],
-                        ).paddingSymmetric(
-                          horizontal: AppConst.paddingAll,
-                          vertical: Get.height * 0.1,
                         ),
                 ),
                 BaseAppBar(
@@ -133,10 +130,13 @@ class BaseListHistory extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () async => await onRefresh(),
-      child: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, i) {
-          return Column(
+      child: ListView(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppConst.paddingAll,
+          vertical: 16,
+        ),
+        children: [
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               userActive.isNotEmpty
@@ -160,9 +160,9 @@ class BaseListHistory extends StatelessWidget {
                     )
                   : const SizedBox(),
             ],
-          );
-        },
+          ),
+        ],
       ),
-    ).paddingOnly(top: height + 16);
+    ).paddingOnly(top: height);
   }
 }

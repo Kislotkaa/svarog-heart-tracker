@@ -60,11 +60,9 @@ class HistoryController extends GetxController {
 
   bool isConnected(String? id) {
     if (id != null) {
-      return connectedDevice
-                  .firstWhereOrNull((element) => element?.id.id == id) ==
-              null
-          ? false
-          : true;
+      var result =
+          connectedDevice.firstWhereOrNull((element) => element?.id.id == id);
+      return result == null ? false : true;
     }
     return false;
   }

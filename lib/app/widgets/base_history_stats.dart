@@ -33,7 +33,8 @@ class BaseHistoryStats extends StatelessWidget {
         Text(
           dateFormatDefault(history?.createAt ?? DateTime.now()),
           style: Theme.of(context).textTheme.caption,
-        ),
+        ).paddingOnly(left: 6),
+        const SizedBox(height: 4),
         ClipRRect(
           borderRadius: BorderRadius.circular(
             AppConst.borderRadius,

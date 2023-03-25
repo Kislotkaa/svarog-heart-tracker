@@ -71,20 +71,24 @@ class HomeController extends GetxController {
     list.refresh();
   }
 
+  void disconectDevice(dynamic device) {
+    if (device is DeviceController) {
+      bluetoothController.disconnectDevice(device.device);
+      Get.delete<DeviceController>(tag: device.id);
+      list.removeWhere((element) => device.id == element.device.id.id);
+    } else if (device is BluetoothDevice) {
+      bluetoothController.disconnectDevice(device);
+      Get.delete<DeviceController>(tag: device.id.id);
+      list.removeWhere((element) => device.id.id == element.device.id.id);
+    }
+  }
+
   void removeDevice(dynamic device) {
     showBaseDialog(
       'Разорвать соединение?',
       'Вы действительно хотите разорвать соединение?',
       () async {
-        if (device is DeviceController) {
-          bluetoothController.disconnectDevice(device.device);
-          Get.delete<DeviceController>(tag: device.id);
-          list.removeWhere((element) => device.id == element.device.id.id);
-        } else if (device is BluetoothDevice) {
-          bluetoothController.disconnectDevice(device);
-          Get.delete<DeviceController>(tag: device.id.id);
-          list.removeWhere((element) => device.id.id == element.device.id.id);
-        }
+        disconectDevice(device);
         Get.back();
       },
       () => Get.back(),
@@ -152,6 +156,7 @@ class HomeController extends GetxController {
           id: blueDevice.id.id,
           userHistoryRepository: Get.find(),
           userRepository: Get.find(),
+          homeController: Get.find(),
         ),
         tag: blueDevice.id.id,
       );

@@ -31,7 +31,10 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
                     ? RefreshIndicator(
                         onRefresh: () => controller.getDetailHistory(),
                         child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppConst.paddingAll,
+                            horizontal: AppConst.paddingAll,
+                          ),
                           itemCount: controller.listHistory.length,
                           itemBuilder: (context, i) {
                             if (i == 0) {
@@ -69,8 +72,7 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
                             }
                           },
                         ),
-                      ).paddingSymmetric(
-                        horizontal: AppConst.paddingAll, vertical: height)
+                      ).paddingSymmetric(vertical: height)
                     : Column(
                         children: [
                           BaseCapScreen(

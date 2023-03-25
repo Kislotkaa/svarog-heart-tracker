@@ -7,6 +7,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/helper/characteristic.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
+import 'package:svarog_heart_tracker/app/modules/home/controllers/home_controller.dart';
 import 'package:svarog_heart_tracker/app/repository/user_history_repository.dart';
 import 'package:svarog_heart_tracker/app/repository/user_repository.dart';
 import 'package:uuid/uuid.dart';
@@ -20,11 +21,13 @@ class DeviceController extends GetxController {
     required this.id,
     required this.userHistoryRepository,
     required this.userRepository,
+    required this.homeController,
   });
 
   final BluetoothDevice device;
   final UserHistoryRepository userHistoryRepository;
   final UserRepository userRepository;
+  final HomeController homeController;
 
   final String name;
   final String id;
@@ -38,9 +41,12 @@ class DeviceController extends GetxController {
   final RxInt maxHeart = 0.obs;
   final RxInt minHeart = 0.obs;
 
+  final RxInt secondsOff = 0.obs;
   final RxInt secondsRed = 0.obs;
   final RxInt secondsOrange = 0.obs;
   final RxInt secondsGreen = 0.obs;
+
+  final DateTime createAt = DateTime.now();
 
   late List<int> listHeartRate = [];
 
@@ -69,23 +75,38 @@ class DeviceController extends GetxController {
   /// Методы обработки и сохранения данных
   ///
   void setHeartDifference() {
-    heartDifference.value =
-        listHeartRate.last - listHeartRate[listHeartRate.length - 6];
+    try {
+      var preLast = listHeartRate[listHeartRate.length - 6];
+      var last = listHeartRate.last;
+      if (preLast != null && last != null) {
+        heartDifference.value = last - preLast;
+      }
+    } catch (e, s) {}
   }
 
-  void setHeartAvg(List<int?>? value) {
+  void setHeartReal(List<int?>? value) {
     if (value != null) {
       realHeart.value = getHeartRateAdaptive(value);
     }
   }
 
-  void saveHeartAvg() {
-    listHeartRate.add(avgHeart.value);
+  void saveHeartList() {
+    if (realHeart.value != 0) {
+      listHeartRate.add(realHeart.value);
+    }
+  }
+
+  void checkTimeOffAndDisconnect() {
+    if (secondsOff.value >= 12) {
+      homeController.disconectDevice(device);
+    }
   }
 
   void saveTimeTraining(bool isSecond) {
     if (isSecond) {
       if (realHeart.value == 0) {
+        secondsOff.value++;
+        checkTimeOffAndDisconnect();
       } else if (realHeart.value < 145) {
         secondsGreen.value++;
       } else if (realHeart.value < 160) {
@@ -94,7 +115,7 @@ class DeviceController extends GetxController {
         secondsRed.value++;
       }
       seconds.value++;
-      if (kDebugMode) Get.printInfo(info: seconds.value.toString());
+      Get.printInfo(info: seconds.value.toString());
     }
   }
 
@@ -120,6 +141,7 @@ class DeviceController extends GetxController {
             redTimeHeart: secondsRed.value,
             orangeTimeHeart: secondsOrange.value,
             greenTimeHeart: secondsGreen.value,
+            createAt: createAt,
           );
         } else {
           model = UserHistoryModel(
@@ -132,6 +154,7 @@ class DeviceController extends GetxController {
             redTimeHeart: secondsRed.value,
             orangeTimeHeart: secondsOrange.value,
             greenTimeHeart: secondsGreen.value,
+            createAt: createAt,
           );
         }
         await userHistoryRepository.insertHistory(model);
@@ -150,9 +173,11 @@ class DeviceController extends GetxController {
   /// Вспомогательыне методы
 
   int getHeartRateAdaptive(List<int?>? value) {
-    if (value != null) {
-      return value[1] ?? 0;
-    }
+    try {
+      if (value != null) {
+        return value[1] ?? 0;
+      }
+    } catch (e, s) {}
     return 0;
   }
 
@@ -213,15 +238,15 @@ class DeviceController extends GetxController {
   ) async {
     final stream = Stream.periodic(const Duration(milliseconds: 500));
     if (characteristic != null) {
-      streamSubscription = characteristic.value.listen((value) {
-        setHeartAvg(value); // Установить текущее значение пульса
-      });
-
       await characteristic.setNotifyValue(true);
       var isSecond = false;
 
+      streamSubscription = characteristic.value.listen((value) {
+        setHeartReal(value); // Установить текущее значение пульса
+      });
+
       streamSubscription = stream.listen((event) async {
-        saveHeartAvg(); // Запомнить текущий пульс
+        saveHeartList(); // Запомнить текущий пульс
 
         setHeartDifference(); // Пульс уменьшается или увеличивается
 

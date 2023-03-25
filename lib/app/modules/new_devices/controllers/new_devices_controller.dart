@@ -129,6 +129,7 @@ class NewDevicesController extends GetxController {
           id: blueDevice.id.id,
           userHistoryRepository: Get.find(),
           userRepository: Get.find(),
+          homeController: Get.find(),
         ),
         tag: blueDevice.id.id,
       );

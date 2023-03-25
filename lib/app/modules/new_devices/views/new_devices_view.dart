@@ -179,17 +179,16 @@ class BaseListNewDevice extends StatelessWidget {
         }
       }
     });
-    return ListView.builder(
+    return ListView(
       physics: const ClampingScrollPhysics(),
-      itemCount: scanResult.length,
       padding: const EdgeInsets.only(
         left: AppConst.paddingAll,
         right: AppConst.paddingAll,
         top: 24,
         bottom: 100,
       ),
-      itemBuilder: (context, i) {
-        return Column(
+      children: [
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             newDevice.isNotEmpty
@@ -213,8 +212,8 @@ class BaseListNewDevice extends StatelessWidget {
                   )
                 : const SizedBox(),
           ],
-        );
-      },
+        ),
+      ],
     );
   }
 }

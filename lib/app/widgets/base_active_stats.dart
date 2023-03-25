@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controllers/device_controller.dart';
+import '../helper/screan_helper.dart';
 import '../helper/time_format.dart';
 import '../resourse/app_colors.dart';
 import '../resourse/app_const.dart';
@@ -70,7 +71,9 @@ class _BaseActiveStatsState extends State<BaseActiveStats>
                   flex: 4,
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: isMob()
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.start,
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
@@ -188,7 +191,7 @@ class _BaseActiveStatsState extends State<BaseActiveStats>
                         height: 85,
                         width: 1,
                         color: Theme.of(context).dividerColor,
-                      ),
+                      ).paddingSymmetric(horizontal: 12),
                       Obx(
                         () => Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -256,7 +259,7 @@ class _BaseActiveStatsState extends State<BaseActiveStats>
                             ),
                           ],
                         ),
-                      ),
+                      ).paddingOnly(right: 16),
                       Obx(
                         () => Column(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -355,6 +358,7 @@ class _BaseActiveStatsState extends State<BaseActiveStats>
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
                 Expanded(
                   flex: 3,
                   child: BaseGraphics(
@@ -369,6 +373,14 @@ class _BaseActiveStatsState extends State<BaseActiveStats>
       );
     } else {
       return SizedBox();
+    }
+  }
+
+  bool isMob() {
+    if (isMobile) {
+      return true;
+    } else {
+      return false;
     }
   }
 }

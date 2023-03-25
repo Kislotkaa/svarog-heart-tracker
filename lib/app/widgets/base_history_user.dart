@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../resourse/app_colors.dart';
 import '../resourse/app_const.dart';
@@ -95,6 +96,6 @@ class BaseHistoryUser extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ).paddingOnly(bottom: 12);
   }
 }
