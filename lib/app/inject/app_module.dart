@@ -51,9 +51,9 @@ void _initRepositories() {
 
 void _initControllers() {
   Get
-    ..put(BaseSnackbarController())
     ..put(BluetoothController())
     ..put(ThemeController())
     ..put(LanguagesAppController(cache: Get.find()))
-    ..put(PermissionController());
+    ..put(PermissionController())
+    ..put(BaseSnackbarController());
 }

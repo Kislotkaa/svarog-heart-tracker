@@ -1,4 +1,6 @@
+import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
+import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
@@ -8,7 +10,7 @@ class SqlLiteController extends DisposableInterface {
   static SqlLiteController get to => Get.find<SqlLiteController>();
 
   late Database db;
-  final int _version = 1;
+  late int _version = 2;
 
   final RxBool isEmpty = true.obs;
 
@@ -66,7 +68,6 @@ class SqlLiteController extends DisposableInterface {
   Future<void> _dbDrop(Database db) async {
     try {
       final uuid = Uuid();
-
       await db.execute('''DROP TABLE IF EXISTS user;''');
       await db.execute('''DROP TABLE IF EXISTS user_history;''');
     } catch (e, s) {
