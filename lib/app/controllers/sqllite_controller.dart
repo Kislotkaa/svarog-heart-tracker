@@ -15,7 +15,7 @@ class SqlLiteController extends DisposableInterface {
   Future open() async {
     var dataBasePath = await getDatabasesPath();
     String path = join(dataBasePath, 'heart_tracker_sqllite.db');
-    await deleteDatabase(path); // Использовать если хотите сбросить базу
+    // await deleteDatabase(path); // Использовать если хотите сбросить базу
     db = await openDatabase(
       path,
       version: _version,
