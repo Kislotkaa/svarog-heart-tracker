@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 
-version: 2.1.16+20
+version: 2.1.17+21
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
@@ -20,6 +20,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   package_info: ^2.0.2
   mask_text_input_formatter: ^2.4.0
+  shared_preferences: ^2.0.20
   flutter_secure_storage: ^8.0.0
   url_launcher: ^6.1.6
   auto_size_text: ^3.0.0
