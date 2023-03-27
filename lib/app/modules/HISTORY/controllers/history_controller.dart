@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
 import 'package:svarog_heart_tracker/app/models/user_model.dart';
-import 'package:svarog_heart_tracker/app/modules/home/controllers/home_controller.dart';
 
 import '../../../controllers/device_controller.dart';
 import '../../../repository/user_history_repository.dart';
@@ -73,11 +72,11 @@ class HistoryController extends GetxController {
   Future<bool> onDeleteUser(String? id) async {
     if (id != null) {
       var result = await showBaseDialog(
-        'Разорвать соединение?',
-        'Вы действительно хотите разорвать соединение?',
+        'Удалить пользователя?',
+        'Вы действительно хотите удалить пользователя?',
         () async {
           users.removeWhere((element) => element?.id == id);
-          Get.delete<DeviceController>(tag: id);
+          await Get.delete<DeviceController>(tag: id);
           var resultHistory =
               await userHistoryRepository.getHistoryUserByPk(id);
           resultHistory.forEach((element) async {
