@@ -120,12 +120,10 @@ class DeviceController extends GetxController {
 
   Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
     try {
-      if (ignoreTimer) {
+      if (ignoreTimer && seconds.value > 300) {
         await _saveHeartRateDB();
-      } else {
-        if (seconds.value % 300 == 0 && seconds.value != 0) {
-          await _saveHeartRateDB();
-        }
+      } else if (seconds.value % 300 == 0 && seconds.value != 0) {
+        await _saveHeartRateDB();
       }
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
