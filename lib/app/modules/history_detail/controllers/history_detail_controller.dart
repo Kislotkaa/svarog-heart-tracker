@@ -73,11 +73,14 @@ class HistoryDetailController extends GetxController {
     } catch (e, s) {}
   }
 
-  void onTapDeleteHistory() {
+  void onTapDeleteAllHistory() {
     showBaseDialog(
       'Отчистить историю тренировок?',
       'Вы действительно хотите удалить историю тренировок у пользователя?',
-      () => deleteAllHistory(),
+      () async {
+        Get.back();
+        await deleteAllHistory();
+      },
       () => Get.back(),
       'Подтвердить',
       'Отмена',
@@ -95,6 +98,20 @@ class HistoryDetailController extends GetxController {
       ErrorHandler.getMessage(e, s);
       return false;
     }
+  }
+
+  Future<bool?> onTapDeleteHistory(String? id) async {
+    await showBaseDialog(
+      'Удалить выбранную активность?',
+      'Вы действительно хотите удалить тренировку?',
+      () async {
+        Get.back();
+        await deleteHistory(id);
+      },
+      () => Get.back(),
+      'Подтвердить',
+      'Отмена',
+    );
   }
 
   Future<void> deleteAllHistory() async {

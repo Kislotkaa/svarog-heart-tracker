@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dartx/dartx.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
@@ -99,17 +100,12 @@ class HomeController extends GetxController {
 
   Future<void> getConnectedDevice() async {
     var resultDevice = await bluetoothController.getConnectedDevices();
-    list.forEach((elementList) {
-      bool isHave = false;
-      resultDevice.forEach((elementResult) {
-        if (elementList.id == elementResult.id.id) {
-          isHave = true;
-        }
-      });
-      if (isHave == false) {
-        list.removeWhere((element) => element.id == elementList.id);
-      }
-    });
+    list.removeWhere(
+      (elementList) =>
+          resultDevice
+              .firstWhereOrNull((element) => element.id.id == elementList.id) ==
+          null,
+    );
   }
 
   Future<void> getUsersConnected() async {

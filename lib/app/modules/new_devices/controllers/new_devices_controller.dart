@@ -164,7 +164,6 @@ class NewDevicesController extends GetxController {
   void showDialogConnect(BluetoothDevice blueDevice) {
     DeviceController? model;
     TextEditingController controller = TextEditingController();
-    if (kDebugMode) controller.text = 'Пробник';
     showBaseAddNameDialog(
       'Кто это?',
       controller,

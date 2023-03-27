@@ -20,7 +20,7 @@ class SettingsController extends GetxController {
   final SqlLiteController sqlLiteController;
   final BluetoothController bluetoothController;
 
-  final RxBool isLoading = false.obs;
+  final RxBool isGlobalLoading = false.obs;
 
   void goToAbout() {
     Get.toNamed(Routes.ABOUT);
@@ -56,7 +56,7 @@ class SettingsController extends GetxController {
     );
   }
 
-  void onTapDeleteHistory() {
+  Future<void> onTapDeleteHistory() async {
     showBaseDialog(
       'Отчистить историю?',
       'Вы действительно хотите удалить историю и всё что с ней связано?',
@@ -69,7 +69,7 @@ class SettingsController extends GetxController {
 
   Future<void> goToLogout() async {
     try {
-      isLoading.value = true;
+      isGlobalLoading.value = true;
       var result = startAppCache.getData();
       if (result != null) {
         var param = result.copyWith(isHaveAuth: false);
@@ -82,30 +82,31 @@ class SettingsController extends GetxController {
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     } finally {
-      isLoading.value = false;
+      isGlobalLoading.value = false;
     }
   }
 
   Future<void> goToLogoutAndDelete() async {
     try {
-      isLoading.value = true;
+      isGlobalLoading.value = true;
       startAppCache.clearData();
       Get.offAllNamed(Routes.ADMIN_PANEL);
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     } finally {
-      isLoading.value = false;
+      isGlobalLoading.value = false;
     }
   }
 
   Future<void> goToDeleteHistory() async {
     try {
-      isLoading.value = true;
+      isGlobalLoading.value = true;
 
       await sqlLiteController.clearDataBase();
       var result = await bluetoothController.getConnectedDevices();
-      result.forEach((element) async {
-        await Get.delete<DeviceController>(tag: element.id.id);
+
+      result.forEach((element) {
+        Get.delete<DeviceController>(tag: element.id.id);
       });
 
       await bluetoothController.disconnectDeviceAll();
@@ -114,7 +115,7 @@ class SettingsController extends GetxController {
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     } finally {
-      isLoading.value = false;
+      isGlobalLoading.value = false;
     }
   }
 

@@ -113,7 +113,7 @@ class SettingsView extends GetView<SettingsController> {
             ),
           ),
           Obx(
-            () => controller.isLoading.value
+            () => controller.isGlobalLoading.value
                 ? const BaseGlobalLoading()
                 : const SizedBox(),
           ),

@@ -53,7 +53,7 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
                                   BaseHistoryStats(
                                     history: controller.listHistory[i],
                                     onDelete: (id) =>
-                                        controller.deleteHistory(id),
+                                        controller.onTapDeleteHistory(id),
                                   ),
                                 ],
                               );
@@ -65,7 +65,7 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
                                   BaseHistoryStats(
                                     history: controller.listHistory[i],
                                     onDelete: (id) =>
-                                        controller.deleteHistory(id),
+                                        controller.onTapDeleteHistory(id),
                                   ),
                                 ],
                               );
@@ -112,7 +112,7 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
                         ),
                         controller.listHistory.isNotEmpty
                             ? GestureDetector(
-                                onTap: () => controller.onTapDeleteHistory(),
+                                onTap: () => controller.onTapDeleteAllHistory(),
                                 child: Icon(BaseIcons.trash_full),
                               )
                             : const SizedBox(),
