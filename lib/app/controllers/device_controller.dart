@@ -117,50 +117,58 @@ class DeviceController extends GetxController {
     }
   }
 
-  Future<void> saveHeartRateDB() async {
+  Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
     try {
-      if (seconds.value % 300 == 0 && seconds.value != 0) {
-        var result = await userHistoryRepository.getHistoryByPk(idTraining);
-        UserHistoryModel? model = null;
-        if (result != null) {
-          result.yHeart.addAll(listHeartRate);
-
-          maxHeart.value = result.yHeart.max;
-          minHeart.value = result.yHeart.min;
-          avgHeart.value = result.yHeart.average.toInt();
-
-          model = UserHistoryModel(
-            id: result.id,
-            userId: result.userId,
-            yHeart: result.yHeart,
-            avgHeart: avgHeart.value,
-            maxHeart: maxHeart.value,
-            minHeart: minHeart.value,
-            redTimeHeart: secondsRed.value,
-            orangeTimeHeart: secondsOrange.value,
-            greenTimeHeart: secondsGreen.value,
-            createAt: createAt,
-          );
-        } else {
-          model = UserHistoryModel(
-            id: idTraining,
-            userId: id,
-            yHeart: listHeartRate,
-            avgHeart: listHeartRate.average.toInt(),
-            maxHeart: listHeartRate.max,
-            minHeart: listHeartRate.min,
-            redTimeHeart: secondsRed.value,
-            orangeTimeHeart: secondsOrange.value,
-            greenTimeHeart: secondsGreen.value,
-            createAt: createAt,
-          );
+      if (ignoreTimer) {
+        await _saveHeartRateDB();
+      } else {
+        if (seconds.value % 300 == 0 && seconds.value != 0) {
+          await _saveHeartRateDB();
         }
-        await userHistoryRepository.insertHistory(model);
-        listHeartRate.clear();
       }
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
+  }
+
+  Future<void> _saveHeartRateDB() async {
+    var result = await userHistoryRepository.getHistoryByPk(idTraining);
+    UserHistoryModel? model = null;
+    if (result != null) {
+      result.yHeart.addAll(listHeartRate);
+
+      maxHeart.value = result.yHeart.max;
+      minHeart.value = result.yHeart.min;
+      avgHeart.value = result.yHeart.average.toInt();
+
+      model = UserHistoryModel(
+        id: result.id,
+        userId: result.userId,
+        yHeart: result.yHeart,
+        avgHeart: avgHeart.value,
+        maxHeart: maxHeart.value,
+        minHeart: minHeart.value,
+        redTimeHeart: secondsRed.value,
+        orangeTimeHeart: secondsOrange.value,
+        greenTimeHeart: secondsGreen.value,
+        createAt: createAt,
+      );
+    } else {
+      model = UserHistoryModel(
+        id: idTraining,
+        userId: id,
+        yHeart: listHeartRate,
+        avgHeart: listHeartRate.average.toInt(),
+        maxHeart: listHeartRate.max,
+        minHeart: listHeartRate.min,
+        redTimeHeart: secondsRed.value,
+        orangeTimeHeart: secondsOrange.value,
+        greenTimeHeart: secondsGreen.value,
+        createAt: createAt,
+      );
+    }
+    await userHistoryRepository.insertHistory(model);
+    listHeartRate.clear();
   }
 
   Future<List<int>?> getHistory() async {
@@ -273,7 +281,7 @@ class DeviceController extends GetxController {
   @override
   Future<void> onClose() async {
     await _unSubscribeCharacteristics();
-    await saveHeartRateDB();
+    await saveHeartRateDB(ignoreTimer: true);
     super.onClose();
   }
 }
