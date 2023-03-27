@@ -94,8 +94,9 @@ class DeviceController extends GetxController {
     }
   }
 
-  void checkTimeOffAndDisconnect() {
-    if (secondsOff.value >= 12) {
+  Future<void> checkTimeOffAndDisconnect() async {
+    if (secondsOff.value >= 20) {
+      await saveHeartRateDB(ignoreTimer: true);
       homeController.disconectDevice(device);
     }
   }
