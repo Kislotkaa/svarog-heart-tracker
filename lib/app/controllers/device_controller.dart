@@ -122,7 +122,7 @@ class DeviceController extends GetxController {
     try {
       if (ignoreTimer && seconds.value > 300) {
         await _saveHeartRateDB();
-      } else if (seconds.value % 300 == 0 && seconds.value != 0) {
+      } else if (seconds.value % 10 == 0 && seconds.value != 0) {
         await _saveHeartRateDB();
       }
     } catch (e, s) {
@@ -132,6 +132,7 @@ class DeviceController extends GetxController {
 
   Future<void> _saveHeartRateDB() async {
     var result = await userHistoryRepository.getHistoryByPk(idTraining);
+    DateTime finishedAt = DateTime.now();
     UserHistoryModel? model = null;
     if (result != null) {
       result.yHeart.addAll(listHeartRate);
@@ -151,6 +152,7 @@ class DeviceController extends GetxController {
         orangeTimeHeart: secondsOrange.value,
         greenTimeHeart: secondsGreen.value,
         createAt: createAt,
+        finishedAt: finishedAt,
       );
     } else {
       model = UserHistoryModel(
@@ -164,6 +166,7 @@ class DeviceController extends GetxController {
         orangeTimeHeart: secondsOrange.value,
         greenTimeHeart: secondsGreen.value,
         createAt: createAt,
+        finishedAt: finishedAt,
       );
     }
     await userHistoryRepository.insertHistory(model);

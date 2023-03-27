@@ -1,6 +1,4 @@
-import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
-import 'package:package_info/package_info.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
@@ -10,7 +8,7 @@ class SqlLiteController extends DisposableInterface {
   static SqlLiteController get to => Get.find<SqlLiteController>();
 
   late Database db;
-  late int _version = 2;
+  late int _version = 3;
 
   final RxBool isEmpty = true.obs;
 
@@ -60,7 +58,9 @@ class SqlLiteController extends DisposableInterface {
   }
 
   Future<void> _dbAlert(Database db) async {
-    try {} catch (e, s) {
+    try {
+      db.execute("ALTER TABLE user_history ADD COLUMN finishedAt TIMESTAMP;");
+    } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
   }

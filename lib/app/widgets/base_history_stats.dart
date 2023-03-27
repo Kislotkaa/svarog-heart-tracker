@@ -30,11 +30,32 @@ class BaseHistoryStats extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          dateFormatDefault(history?.createAt ?? DateTime.now()),
-          style: Theme.of(context).textTheme.caption,
-        ).paddingOnly(left: 6),
-        const SizedBox(height: 4),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                dateFormatDefault(history?.createAt ?? DateTime.now()),
+                style: Theme.of(context).textTheme.caption,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ).paddingOnly(left: 6, bottom: 4),
+            ),
+            Expanded(
+              child: Text(
+                dateFormatDuration(
+                      history?.createAt,
+                      history?.finishedAt,
+                    ) ??
+                    '',
+                textAlign: TextAlign.end,
+                style: Theme.of(context).textTheme.caption,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ).paddingOnly(right: 6, bottom: 4),
+            ),
+          ],
+        ),
         ClipRRect(
           borderRadius: BorderRadius.circular(
             AppConst.borderRadius,

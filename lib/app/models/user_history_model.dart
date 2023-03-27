@@ -16,6 +16,7 @@ class UserHistoryModel {
     required this.orangeTimeHeart,
     required this.greenTimeHeart,
     this.createAt,
+    this.finishedAt,
   });
 
   final String id;
@@ -28,6 +29,7 @@ class UserHistoryModel {
   final int orangeTimeHeart;
   final int greenTimeHeart;
   final DateTime? createAt;
+  final DateTime? finishedAt;
 
   UserHistoryModel copyWith({
     String? id,
@@ -40,6 +42,7 @@ class UserHistoryModel {
     int? orangeTimeHeart,
     int? greenTimeHeart,
     DateTime? createAt,
+    DateTime? finishedAt,
   }) {
     return UserHistoryModel(
       id: id ?? this.id,
@@ -52,6 +55,7 @@ class UserHistoryModel {
       orangeTimeHeart: orangeTimeHeart ?? this.orangeTimeHeart,
       greenTimeHeart: greenTimeHeart ?? this.greenTimeHeart,
       createAt: createAt ?? this.createAt,
+      finishedAt: finishedAt ?? this.finishedAt,
     );
   }
 
@@ -69,6 +73,9 @@ class UserHistoryModel {
     result.addAll({'greenTimeHeart': greenTimeHeart});
     if (createAt != null) {
       result.addAll({'createAt': createAt!.millisecondsSinceEpoch});
+    }
+    if (finishedAt != null) {
+      result.addAll({'finishedAt': finishedAt!.millisecondsSinceEpoch});
     }
 
     return result;
@@ -88,6 +95,9 @@ class UserHistoryModel {
       createAt: map['createAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['createAt'])
           : null,
+      finishedAt: map['finishedAt'] != null
+          ? DateTime.fromMillisecondsSinceEpoch(map['finishedAt'])
+          : null,
     );
   }
 
@@ -98,7 +108,7 @@ class UserHistoryModel {
 
   @override
   String toString() {
-    return 'UserHistoryModel(id: $id, userId: $userId, yHeart: $yHeart, maxHeart: $maxHeart, minHeart: $minHeart, avgHeart: $avgHeart, redTimeHeart: $redTimeHeart, orangeTimeHeart: $orangeTimeHeart, greenTimeHeart: $greenTimeHeart, createAt: $createAt)';
+    return 'UserHistoryModel(id: $id, userId: $userId, yHeart: $yHeart, maxHeart: $maxHeart, minHeart: $minHeart, avgHeart: $avgHeart, redTimeHeart: $redTimeHeart, orangeTimeHeart: $orangeTimeHeart, greenTimeHeart: $greenTimeHeart, createAt: $createAt, finishedAt: $finishedAt)';
   }
 
   @override
@@ -115,7 +125,8 @@ class UserHistoryModel {
         other.redTimeHeart == redTimeHeart &&
         other.orangeTimeHeart == orangeTimeHeart &&
         other.greenTimeHeart == greenTimeHeart &&
-        other.createAt == createAt;
+        other.createAt == createAt &&
+        other.finishedAt == finishedAt;
   }
 
   @override
@@ -129,6 +140,7 @@ class UserHistoryModel {
         redTimeHeart.hashCode ^
         orangeTimeHeart.hashCode ^
         greenTimeHeart.hashCode ^
-        createAt.hashCode;
+        createAt.hashCode ^
+        finishedAt.hashCode;
   }
 }

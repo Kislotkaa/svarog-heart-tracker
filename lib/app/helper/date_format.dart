@@ -1,3 +1,4 @@
+import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -15,6 +16,43 @@ String _dateFormatYear(DateTime date) {
     'dd MMM yyy',
     Get.find<LanguagesAppController>().getCache(),
   ).format(date);
+}
+
+String? dateFormatDurationSeconds(int? seconds) {
+  if (seconds != null) {
+    var inHours = (seconds / 3600).toStringAsFixed(0);
+    var inMinutes = (seconds / 60).toStringAsFixed(0);
+    var inSeconds = seconds % 60;
+
+    if (inHours == '0' && inMinutes == '0') {
+      return '${inSeconds} сек.';
+    } else if (inHours == '0') {
+      return '${inMinutes} мин. ${inSeconds} сек.';
+    } else {
+      return '${inHours} ч. ${inMinutes} мин. ${inSeconds} сек.';
+    }
+  } else {
+    return null;
+  }
+}
+
+String? dateFormatDuration(DateTime? start, DateTime? end) {
+  if (start != null && end != null) {
+    var date = end.difference(start);
+    var inHours = (date.inSeconds / 3600).toStringAsFixed(0);
+    var inMinutes = (date.inSeconds / 60).toStringAsFixed(0);
+    var inSeconds = date.inSeconds % 60;
+
+    if (inHours == '0' && inMinutes == '0') {
+      return '${inSeconds} сек.';
+    } else if (inHours == '0') {
+      return '${inMinutes} мин. ${inSeconds} сек.';
+    } else {
+      return '${inHours} ч. ${inMinutes} мин. ${inSeconds} сек.';
+    }
+  } else {
+    return null;
+  }
 }
 
 String dateFormatDefault(DateTime? date) {
