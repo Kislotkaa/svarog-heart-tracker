@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' 
 
-version: 2.1.22+26
+version: 2.1.23+27
 
 environment:
   sdk: '>=2.19.2 <3.0.0'
@@ -27,7 +27,6 @@ dependencies:
 
   # Виджеты
   flutter_svg: ^2.0.0+1
-  flutter_launcher_icons: ^0.11.0
   aligned_dialog: ^0.0.6
   fl_chart: ^0.61.0
 
@@ -39,6 +38,8 @@ dependencies:
   artemis: ^7.1.1-beta.1
   json_annotation: ^4.0.1
   json_serializable: ^6.5.4
+  # flutter_native_splash: ^2.2.19
+  flutter_launcher_icons: ^0.11.0
 
   # GetX
   get: ^4.6.5
