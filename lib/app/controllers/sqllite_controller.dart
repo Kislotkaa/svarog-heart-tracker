@@ -8,7 +8,7 @@ class SqlLiteController extends DisposableInterface {
   static SqlLiteController get to => Get.find<SqlLiteController>();
 
   late Database db;
-  late int _version = 3;
+  late int _version = 4;
 
   final RxBool isEmpty = true.obs;
 
@@ -53,6 +53,7 @@ class SqlLiteController extends DisposableInterface {
     orangeTimeHeart INTEGER,
     greenTimeHeart INTEGER,
   	createAt TIMESTAMP,
+  	finishedAt TIMESTAMP,
     CONSTRAINT user_fk FOREIGN KEY (userId) REFERENCES user (id)
     );''');
   }
