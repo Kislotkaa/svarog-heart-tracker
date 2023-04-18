@@ -94,18 +94,14 @@ class DeviceController extends GetxController {
     }
   }
 
-  Future<void> checkTimeOffAndDisconnect() async {
-    if (secondsOff.value >= 20) {
-      await saveHeartRateDB(ignoreTimer: true);
-      homeController.disconectDevice(device);
-    }
-  }
-
-  void saveTimeTraining(bool isSecond) {
+  Future<void> saveTimeTraining(bool isSecond) async {
     if (isSecond) {
       if (realHeart.value == 0) {
         secondsOff.value++;
-        checkTimeOffAndDisconnect();
+        if (secondsOff.value >= 20) {
+          await saveHeartRateDB(ignoreTimer: true);
+          homeController.disconectDevice(device);
+        }
       } else if (realHeart.value < 145) {
         secondsGreen.value++;
       } else if (realHeart.value < 160) {
@@ -120,9 +116,9 @@ class DeviceController extends GetxController {
 
   Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
     try {
-      if (ignoreTimer && seconds.value > 300) {
+      if (ignoreTimer && seconds.value > 180) {
         await _saveHeartRateDB();
-      } else if (seconds.value % 10 == 0 && seconds.value != 0) {
+      } else if (seconds.value % 180 == 0 && seconds.value != 0) {
         await _saveHeartRateDB();
       }
     } catch (e, s) {

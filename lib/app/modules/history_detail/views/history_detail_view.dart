@@ -27,68 +27,70 @@ class HistoryDetailView extends GetView<HistoryDetailController> {
             bottom: false,
             child: Stack(
               children: [
-                Obx(() => controller.listHistory.isNotEmpty
-                    ? RefreshIndicator(
-                        onRefresh: () => controller.getDetailHistory(),
-                        child: ListView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppConst.paddingAll,
-                            horizontal: AppConst.paddingAll,
-                          ),
-                          itemCount: controller.listHistory.length,
-                          itemBuilder: (context, i) {
-                            if (i == 0) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  BaseActiveStats(
-                                    device: controller.deviceController,
-                                    isLoading: controller.isLoading.value,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  const BaseTitle(
-                                    title: 'История активности',
-                                  ),
-                                  const SizedBox(height: 12),
-                                  BaseHistoryStats(
-                                    history: controller.listHistory[i],
-                                    onDelete: (id) =>
-                                        controller.onTapDeleteHistory(id),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 12),
-                                  BaseHistoryStats(
-                                    history: controller.listHistory[i],
-                                    onDelete: (id) =>
-                                        controller.onTapDeleteHistory(id),
-                                  ),
-                                ],
-                              );
-                            }
-                          },
-                        ),
-                      ).paddingSymmetric(vertical: height)
-                    : Column(
-                        children: [
-                          BaseCapScreen(
-                            title: 'История отсутсвует',
-                            caption:
-                                'Начните пользоваться приложением и история тренировок будет пополняться',
-                            icon: BaseIcons.hide,
-                            onRefresh: () {
-                              controller.getDetailHistory();
+                Obx(
+                  () => controller.listHistory.isNotEmpty
+                      ? RefreshIndicator(
+                          onRefresh: () => controller.getDetailHistory(),
+                          child: ListView.builder(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppConst.paddingAll,
+                              horizontal: AppConst.paddingAll,
+                            ),
+                            itemCount: controller.listHistory.length,
+                            itemBuilder: (context, i) {
+                              if (i == 0) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    BaseActiveStats(
+                                      device: controller.deviceController,
+                                      isLoading: controller.isLoading.value,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const BaseTitle(
+                                      title: 'История активности',
+                                    ),
+                                    const SizedBox(height: 12),
+                                    BaseHistoryStats(
+                                      history: controller.listHistory[i],
+                                      onDelete: (id) =>
+                                          controller.onTapDeleteHistory(id),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 12),
+                                    BaseHistoryStats(
+                                      history: controller.listHistory[i],
+                                      onDelete: (id) =>
+                                          controller.onTapDeleteHistory(id),
+                                    ),
+                                  ],
+                                );
+                              }
                             },
                           ),
-                        ],
-                      ).paddingSymmetric(
-                        horizontal: AppConst.paddingAll,
-                        vertical: Get.height * 0.1,
-                      )),
+                        ).paddingSymmetric(vertical: height)
+                      : Column(
+                          children: [
+                            BaseCapScreen(
+                              title: 'История отсутсвует',
+                              caption:
+                                  'Начните пользоваться приложением и история тренировок будет пополняться',
+                              icon: BaseIcons.hide,
+                              onRefresh: () {
+                                controller.getDetailHistory();
+                              },
+                            ),
+                          ],
+                        ).paddingSymmetric(
+                          horizontal: AppConst.paddingAll,
+                          vertical: Get.height * 0.1,
+                        ),
+                ),
                 Obx(
                   () => BaseAppBar(
                     onTapBack: () => controller.goToBack(),

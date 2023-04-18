@@ -26,44 +26,47 @@ class BaseCapScreen extends StatelessWidget {
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async => onRefresh(),
-        child: ListView(children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: onTap,
-                child: Container(
-                  color: Colors.transparent,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        icon,
-                        size: 60,
-                      ),
-                      const SizedBox(height: 12),
-                      Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headline1,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        caption,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                      const SizedBox(height: 6),
-                      BaseTextLink(textLink ?? '')
-                    ],
+        child: ListView(
+          padding: EdgeInsets.only(top: Get.height * 0.23),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: onTap,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          icon,
+                          size: 60,
+                        ),
+                        const SizedBox(height: 12),
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headline1,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          caption,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        const SizedBox(height: 6),
+                        BaseTextLink(textLink ?? '')
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ).paddingOnly(top: Get.height * 0.23),
-        ]),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -105,6 +105,7 @@ class AppTheme {
       actionsIconTheme: IconThemeData(color: AppColors.textColorLight),
       iconTheme: IconThemeData(color: AppColors.textColorLight),
     ),
+
     primaryColorLight: AppColors.textColorLight,
     iconTheme: const IconThemeData(color: AppColors.textColorLight),
     primaryIconTheme: const IconThemeData(color: AppColors.textColorLight),
