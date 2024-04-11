@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:dartx/dartx.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/bluetooth_contoller.dart';
@@ -53,8 +53,7 @@ class HomeController extends GetxController {
   Future<void> goToDetailHistory(String id) async {
     isScanning = false;
 
-    await Get.toNamed(Routes.HISTORY_DETAIL, arguments: id)
-        ?.then((value) async {
+    await Get.toNamed(Routes.HISTORY_DETAIL, arguments: id)?.then((value) async {
       await getConnectedDevice();
       await getUsersConnected();
       isScanning = true;
@@ -101,10 +100,7 @@ class HomeController extends GetxController {
   Future<void> getConnectedDevice() async {
     var resultDevice = await bluetoothController.getConnectedDevices();
     list.removeWhere(
-      (elementList) =>
-          resultDevice
-              .firstWhereOrNull((element) => element.id.id == elementList.id) ==
-          null,
+      (elementList) => resultDevice.firstWhereOrNull((element) => element.id.id == elementList.id) == null,
     );
   }
 
@@ -125,13 +121,13 @@ class HomeController extends GetxController {
 
         bluetoothController.scanResultListen((results) async {
           var result = results.where((element) =>
-              element.advertisementData.serviceUuids.firstWhereOrNull(
-                  (element) => (element.toLowerCase()).contains('180d')) !=
+              element.advertisementData.serviceUuids
+                  .firstWhereOrNull((element) => (element.toLowerCase()).contains('180d')) !=
               null);
 
           result.forEach((elementDevice) async {
-            var result = listConnected.firstWhereOrNull((elementConnected) =>
-                elementConnected.id == elementDevice.device.id.id);
+            var result =
+                listConnected.firstWhereOrNull((elementConnected) => elementConnected.id == elementDevice.device.id.id);
             if (result != null && result.isAutoConnect == true) {
               await connect(elementDevice.device, result.personName);
             }
@@ -157,7 +153,8 @@ class HomeController extends GetxController {
         tag: blueDevice.id.id,
       );
       addDevice(deviceController);
-    } catch (e, s) {
+    } catch (e) {
+      log(e.toString());
     } finally {
       isLoadingLinier.value = false;
     }
@@ -166,7 +163,9 @@ class HomeController extends GetxController {
   Future<void> _unSubscribeAutoConnecting() async {
     try {
       await streamSubscription.cancel();
-    } catch (e, s) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override

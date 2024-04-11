@@ -1,8 +1,5 @@
-import 'package:collection/collection.dart';
-import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/app/controllers/sqllite_controller.dart';
-import 'package:uuid/uuid.dart';
 
 import '../models/user_history_model.dart';
 
@@ -18,9 +15,9 @@ class UserHistoryRepository {
       orderBy: 'createAt DESC',
     );
     final List<UserHistoryModel> returnData = [];
-    result.forEach((element) {
+    for (var element in result) {
       returnData.add(UserHistoryModel.fromMap(element));
-    });
+    }
     return returnData;
   }
 
@@ -30,7 +27,7 @@ class UserHistoryRepository {
       where: '"id" = ?',
       whereArgs: [id],
     );
-    late UserHistoryModel? returnData = null;
+    late UserHistoryModel? returnData;
 
     if (result.isNotEmpty) {
       returnData = UserHistoryModel.fromMap(result.first);

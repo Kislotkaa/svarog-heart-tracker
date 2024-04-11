@@ -30,12 +30,10 @@ class HistoryView extends GetView<HistoryController> {
                   () => controller.users.isNotEmpty
                       ? BaseListHistory(
                           height: height,
-                          goToDetailHistory: (String? id) =>
-                              controller.goToDetailHistory(id),
-                          isConnected: (String? id) =>
-                              controller.isConnected(id),
-                          onDeleteUser: (String? id) async =>
-                              await controller.onDeleteUser(id),
+                          goToDetailHistory: (String? id) => controller.goToDetailHistory(id),
+                          isConnected: (String? id) => controller.isConnected(id),
+                          onDeleteUser: (String? id) async => await controller.onDeleteUser(id),
+                          // ignore: invalid_use_of_protected_member
                           users: controller.users.value,
                           onRefresh: () async => await controller.getHistory(),
                         )
@@ -43,8 +41,7 @@ class HistoryView extends GetView<HistoryController> {
                           children: [
                             BaseCapScreen(
                               title: 'История отсутсвует',
-                              caption:
-                                  'Начните пользоваться приложением и история подключений будет пополняться',
+                              caption: 'Начните пользоваться приложением и история подключений будет пополняться',
                               icon: BaseIcons.hide,
                               onRefresh: () async {
                                 await controller.getHistory();

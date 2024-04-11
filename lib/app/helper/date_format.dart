@@ -1,5 +1,5 @@
-import 'package:dartx/dartx.dart';
 import 'package:get/get.dart';
+// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
 import '../controllers/language_app_controller.dart';
@@ -25,11 +25,11 @@ String? dateFormatDurationSeconds(int? seconds) {
     var inSeconds = seconds % 60;
 
     if (inHours == '0' && inMinutes == '0') {
-      return '${inSeconds} сек.';
+      return '$inSeconds сек.';
     } else if (inHours == '0') {
-      return '${inMinutes} мин. ${inSeconds} сек.';
+      return '$inMinutes мин. $inSeconds сек.';
     } else {
-      return '${inHours} ч. ${inMinutes} мин. ${inSeconds} сек.';
+      return '$inHours ч. $inMinutes мин. $inSeconds сек.';
     }
   } else {
     return null;

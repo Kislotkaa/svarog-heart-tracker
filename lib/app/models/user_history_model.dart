@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
-import 'package:get/get.dart';
 
 class UserHistoryModel {
   UserHistoryModel({
@@ -92,19 +91,14 @@ class UserHistoryModel {
       redTimeHeart: map['redTimeHeart']?.toInt() ?? 0,
       orangeTimeHeart: map['orangeTimeHeart']?.toInt() ?? 0,
       greenTimeHeart: map['greenTimeHeart']?.toInt() ?? 0,
-      createAt: map['createAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['createAt'])
-          : null,
-      finishedAt: map['finishedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(map['finishedAt'])
-          : null,
+      createAt: map['createAt'] != null ? DateTime.fromMillisecondsSinceEpoch(map['createAt']) : null,
+      finishedAt: map['finishedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(map['finishedAt']) : null,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserHistoryModel.fromJson(String source) =>
-      UserHistoryModel.fromMap(json.decode(source));
+  factory UserHistoryModel.fromJson(String source) => UserHistoryModel.fromMap(json.decode(source));
 
   @override
   String toString() {

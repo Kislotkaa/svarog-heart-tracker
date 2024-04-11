@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
@@ -32,7 +34,7 @@ class BaseStatusBluetooth extends StatelessWidget {
               builder: (isScanningContext, snapshotScanning) {
                 return FutureBuilder<List<BluetoothDevice>>(
                   future: bluetoothController.flutterBlue.connectedDevices,
-                  initialData: [],
+                  initialData: const [],
                   builder: (connectedDevicesContext, snapshotConnected) {
                     final state = snapshotState.data;
                     final isScanning = snapshotScanning.data;
@@ -40,8 +42,7 @@ class BaseStatusBluetooth extends StatelessWidget {
 
                     bluetoothController.isScanning = isScanning ?? false;
 
-                    late Widget iconStatus =
-                        const Icon(Icons.bluetooth_rounded);
+                    late Widget iconStatus = const Icon(Icons.bluetooth_rounded);
                     switch (state) {
                       case BluetoothState.on:
                         if (isScanning == true) {
@@ -150,14 +151,14 @@ class BaseStatusBluetooth extends StatelessWidget {
 
   Future<void> disconnectAll() async {
     try {
-      List<BluetoothDevice> results =
-          await bluetoothController.getConnectedDevices();
-      results.forEach((element) async {
+      List<BluetoothDevice> results = await bluetoothController.getConnectedDevices();
+      for (var element in results) {
         await Get.delete<DeviceController>(tag: element.id.id);
         await bluetoothController.disconnectDevice(element);
-        homeController.list
-            .removeWhere((elementList) => elementList.id == element.id.id);
-      });
-    } catch (e, s) {}
+        homeController.list.removeWhere((elementList) => elementList.id == element.id.id);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
   }
 }

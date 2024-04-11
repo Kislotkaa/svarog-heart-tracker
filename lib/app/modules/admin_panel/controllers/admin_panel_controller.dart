@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -82,7 +84,8 @@ class AdminPanelController extends GetxController {
         );
         await startAppCache.setData(param.toJson());
         Get.offAndToNamed(Routes.AUTH);
-      } catch (e, s) {
+      } catch (e) {
+        log(e.toString());
       } finally {
         isLoading.value = false;
       }

@@ -1,7 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:dartx/dartx.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
@@ -53,8 +52,8 @@ class NewDevicesController extends GetxController {
       scanResult.clear();
       bluetoothController.scanResultListen((results) {
         var result = results.where((element) =>
-            element.advertisementData.serviceUuids.firstWhereOrNull(
-                (element) => (element.toLowerCase()).contains('180d')) !=
+            element.advertisementData.serviceUuids
+                .firstWhereOrNull((element) => (element.toLowerCase()).contains('180d')) !=
             null);
 
         scanResult.clear();
@@ -85,8 +84,7 @@ class NewDevicesController extends GetxController {
     if (!isLoadingLinier.value) {
       try {
         isLoadingLinier.value = true;
-        var result = connectedDevices.firstWhereOrNull(
-            (element) => element.blueDevice.id.id == blueDevice.id.id);
+        var result = connectedDevices.firstWhereOrNull((element) => element.blueDevice.id.id == blueDevice.id.id);
         if (result != null) {
           showDialogDisconnect(result.blueDevice);
         } else {
@@ -110,9 +108,9 @@ class NewDevicesController extends GetxController {
       isLoadingLinier.value = true;
       await bluetoothController.disconnectDevice(blueDevice);
       Get.delete<DeviceController>(tag: blueDevice.id.id);
-      homeController.list
-          .removeWhere((element) => blueDevice.id.id == element.device.id.id);
-    } catch (e, s) {
+      homeController.list.removeWhere((element) => blueDevice.id.id == element.device.id.id);
+    } catch (e) {
+      log(e.toString());
     } finally {
       isLoadingLinier.value = false;
     }
@@ -134,15 +132,15 @@ class NewDevicesController extends GetxController {
         tag: blueDevice.id.id,
       );
       homeController.addDevice(deviceController);
-    } catch (e, s) {
+    } catch (e) {
+      log(e.toString());
     } finally {
       isLoadingLinier.value = false;
     }
   }
 
   bool haveConnect(BluetoothDevice blueDevice) {
-    var result = connectedDevices.firstWhereOrNull(
-        (element) => blueDevice.id.id == element.blueDevice.id.id);
+    var result = connectedDevices.firstWhereOrNull((element) => blueDevice.id.id == element.blueDevice.id.id);
     if (result == null) return false;
     return true;
   }
@@ -162,7 +160,6 @@ class NewDevicesController extends GetxController {
   }
 
   void showDialogConnect(BluetoothDevice blueDevice) {
-    DeviceController? model;
     TextEditingController controller = TextEditingController();
     showBaseAddNameDialog(
       'Кто это?',
@@ -181,19 +178,14 @@ class NewDevicesController extends GetxController {
 
   bool isPreviouslyConnected(String? id) {
     if (id != null) {
-      return previouslyConnected
-                  .firstWhereOrNull((element) => element.id == id) ==
-              null
-          ? false
-          : true;
+      return previouslyConnected.firstWhereOrNull((element) => element.id == id) == null ? false : true;
     }
     return false;
   }
 
   String getNamePreviouslyDevice(String? id) {
     if (id != null) {
-      var result =
-          previouslyConnected.firstWhereOrNull((element) => element.id == id);
+      var result = previouslyConnected.firstWhereOrNull((element) => element.id == id);
       return result?.personName ?? 'Empty';
     }
     return 'Empty';

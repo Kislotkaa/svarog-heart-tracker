@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:collection/collection.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -58,7 +59,6 @@ class DeviceController extends GetxController {
       services = await device.discoverServices();
       BluetoothService? service;
       BluetoothCharacteristic? characteristic;
-      BluetoothDescriptor? descriptor;
 
       _getConsoleService(false); // показать все доступные сервисы
 
@@ -76,10 +76,10 @@ class DeviceController extends GetxController {
     try {
       var preLast = listHeartRate[listHeartRate.length - 6];
       var last = listHeartRate.last;
-      if (preLast != null && last != null) {
-        heartDifference.value = last - preLast;
-      }
-    } catch (e, s) {}
+      heartDifference.value = last - preLast;
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void setHeartReal(List<int?>? value) {
@@ -181,17 +181,19 @@ class DeviceController extends GetxController {
       if (value != null) {
         return value[1] ?? 0;
       }
-    } catch (e, s) {}
+    } catch (e) {
+      log(e.toString());
+    }
     return 0;
   }
 
   BluetoothService? _getService(String serviceId) {
     try {
-      return services
-          .firstWhereOrNull((element) => element.uuid.toString() == serviceId);
+      return services.firstWhereOrNull((element) => element.uuid.toString() == serviceId);
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
+    return null;
   }
 
   BluetoothCharacteristic? _getCharacteristic(
@@ -200,13 +202,14 @@ class DeviceController extends GetxController {
   ) {
     try {
       if (serviceTracker != null) {
-        return serviceTracker.characteristics.firstWhereOrNull(
-            (element) => element.uuid.toString() == characteristicId);
+        return serviceTracker.characteristics
+            .firstWhereOrNull((element) => element.uuid.toString() == characteristicId);
       }
       return null;
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
+    return null;
   }
 
   Future<void> _getConsoleService(bool isActive) async {
@@ -216,11 +219,8 @@ class DeviceController extends GetxController {
           Get.printInfo(info: 'SERVICE_ID: ${service.uuid}');
           service.characteristics.forEach((characteristic) async {
             Get.printInfo(info: 'CHARACTERISTIC_ID: ${characteristic.uuid}');
-            Get.printInfo(
-                info: 'CHARACTERISTIC: ${await characteristic.read()}');
-            Get.printInfo(
-                info:
-                    'CHARACTERISTIC_READ: ${String.fromCharCodes(await characteristic.read())}');
+            Get.printInfo(info: 'CHARACTERISTIC: ${await characteristic.read()}');
+            Get.printInfo(info: 'CHARACTERISTIC_READ: ${String.fromCharCodes(await characteristic.read())}');
           });
         });
       }
@@ -266,7 +266,9 @@ class DeviceController extends GetxController {
   Future<void> _unSubscribeCharacteristics() async {
     try {
       await streamSubscription.cancel();
-    } catch (e, s) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   @override

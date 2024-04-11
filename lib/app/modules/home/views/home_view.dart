@@ -28,9 +28,9 @@ class HomeView extends GetView<HomeController> {
               children: [
                 Obx(
                   () => BaseGridPeople(
+                    // ignore: invalid_use_of_protected_member
                     list: controller.list.value,
-                    goToDetailHistory: (String id) =>
-                        controller.goToDetailHistory(id),
+                    goToDetailHistory: (String id) => controller.goToDetailHistory(id),
                     onRemove: (device) {
                       controller.removeDevice(device);
                     },
@@ -39,8 +39,7 @@ class HomeView extends GetView<HomeController> {
                         controller.goToNewDevice();
                       },
                     ),
-                    onRefresh: () async =>
-                        await controller.getConnectedDevice(),
+                    onRefresh: () async => await controller.getConnectedDevice(),
                   ),
                 ).paddingOnly(top: topHeight),
                 BaseAppBar(
@@ -70,9 +69,7 @@ class HomeView extends GetView<HomeController> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: controller.isLoadingLinier.value
-                ? const BaseLinearLoading()
-                : const SizedBox(),
+            child: controller.isLoadingLinier.value ? const BaseLinearLoading() : const SizedBox(),
           ),
         ],
       ),

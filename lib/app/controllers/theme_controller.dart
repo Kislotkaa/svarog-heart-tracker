@@ -18,8 +18,6 @@ class ThemeController extends GetxController {
 
   ThemeData currentTheme() => _isDarkStorage.val ? _dark : _light;
 
-  Brightness? _brightness;
-
   void _setDark() {
     theme.value = _dark;
 

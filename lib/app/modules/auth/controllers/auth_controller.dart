@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/cache/start_app_cache.dart';
@@ -45,7 +47,8 @@ class AuthController extends GetxController {
           status: SnackStatusEnum.warning,
         );
       }
-      try {} catch (e, s) {
+      try {} catch (e) {
+        log(e.toString());
       } finally {
         isLoading.value = false;
       }

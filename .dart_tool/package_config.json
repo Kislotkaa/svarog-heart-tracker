@@ -45,7 +45,7 @@
     },
     {
       "name": "async",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/async-2.10.0",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/async-2.11.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -87,7 +87,7 @@
     },
     {
       "name": "characters",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/characters-1.2.1",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/characters-1.3.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -129,9 +129,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/collection-1.17.0",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/collection-1.17.2",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "2.18"
     },
     {
       "name": "convert",
@@ -203,7 +203,7 @@
       "name": "flutter",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/packages/flutter",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_blue_plus",
@@ -275,13 +275,13 @@
       "name": "flutter_test",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/packages/flutter_test",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "flutter_web_plugins",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/packages/flutter_web_plugins",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "3.0"
     },
     {
       "name": "get",
@@ -411,19 +411,19 @@
     },
     {
       "name": "matcher",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/matcher-0.12.13",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/matcher-0.12.16",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
     {
       "name": "material_color_utilities",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/material_color_utilities-0.2.0",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/material_color_utilities-0.5.0",
       "packageUri": "lib/",
-      "languageVersion": "2.13"
+      "languageVersion": "2.17"
     },
     {
       "name": "meta",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/meta-1.8.0",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/meta-1.9.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -477,7 +477,7 @@
     },
     {
       "name": "path",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/path-1.8.2",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/path-1.8.3",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -701,7 +701,7 @@
       "name": "sky_engine",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
-      "languageVersion": "2.12"
+      "languageVersion": "3.0"
     },
     {
       "name": "source_gen",
@@ -717,9 +717,9 @@
     },
     {
       "name": "source_span",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/source_span-1.9.1",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/source_span-1.10.0",
       "packageUri": "lib/",
-      "languageVersion": "2.14"
+      "languageVersion": "2.18"
     },
     {
       "name": "spring",
@@ -783,7 +783,7 @@
     },
     {
       "name": "test_api",
-      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/test_api-0.4.16",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/test_api-0.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -902,6 +902,12 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "web",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/web-0.1.4-beta",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
       "name": "win32",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/win32-2.6.1",
       "packageUri": "lib/",
@@ -932,7 +938,7 @@
       "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-04-17T12:28:31.890291Z",
+  "generated": "2024-04-11T09:21:59.861040Z",
   "generator": "pub",
-  "generatorVersion": "2.19.4"
+  "generatorVersion": "3.1.3"
 }

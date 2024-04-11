@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:get/get.dart';
-import 'package:svarog_heart_tracker/app/models/user_model.dart';
-import 'package:svarog_heart_tracker/app/widgets/base_checker.dart';
 import 'package:svarog_heart_tracker/app/widgets/base_divider.dart';
 import 'package:svarog_heart_tracker/app/widgets/base_handler.dart';
 
@@ -11,8 +9,8 @@ import '../../../resourse/app_const.dart';
 import '../../../resourse/base_icons_icons.dart';
 import '../../../routes/app_pages.dart';
 import '../../../widgets/base_cap.dart';
-import '../../../widgets/base_new_device.dart';
 import '../../../widgets/base_loading.dart';
+import '../../../widgets/base_new_device.dart';
 import '../../../widgets/base_title.dart';
 import '../controllers/new_devices_controller.dart';
 
@@ -76,7 +74,7 @@ class NewDevicesView extends GetView<NewDevicesController> {
                         ),
                         GestureDetector(
                           onTap: () => controller.scanDevices(),
-                          child: Icon(
+                          child: const Icon(
                             Icons.refresh_rounded,
                           ),
                         )
@@ -90,15 +88,12 @@ class NewDevicesView extends GetView<NewDevicesController> {
                     () => controller.scanResult.isNotEmpty
                         ? Expanded(
                             child: BaseListNewDevice(
-                              connectOrDisconnect: (BluetoothDevice device) =>
-                                  controller.connectOrDisconnect(device),
-                              haveConnect: (BluetoothDevice device) =>
-                                  controller.haveConnect(device),
+                              connectOrDisconnect: (BluetoothDevice device) => controller.connectOrDisconnect(device),
+                              haveConnect: (BluetoothDevice device) => controller.haveConnect(device),
+                              // ignore: invalid_use_of_protected_member
                               scanResult: controller.scanResult.value,
-                              isPreviouslyConnected: (String id) =>
-                                  controller.isPreviouslyConnected(id),
-                              getName: (String id) =>
-                                  controller.getNamePreviouslyDevice(id),
+                              isPreviouslyConnected: (String id) => controller.isPreviouslyConnected(id),
+                              getName: (String id) => controller.getNamePreviouslyDevice(id),
                             ),
                           )
                         : BaseCapScreen(
@@ -110,8 +105,7 @@ class NewDevicesView extends GetView<NewDevicesController> {
                               controller.scanDevices();
                             },
                             onTap: () async {
-                              await Get.toNamed(Routes.HOW_TO_USE)
-                                  ?.then((value) => controller.scanDevices());
+                              await Get.toNamed(Routes.HOW_TO_USE)?.then((value) => controller.scanDevices());
                             },
                           ),
                   ),
@@ -154,29 +148,25 @@ class BaseListNewDevice extends StatelessWidget {
 
     scanResult.forEach((element) {
       if (isPreviouslyConnected(element.deviceId)) {
-        if (element != null) {
-          oldDevice.add(
-            BaseNewDevice(
-              connectOrDisconnect: connectOrDisconnect,
-              device: element,
-              haveConnect: haveConnect,
-              name: getName(element.deviceId),
-              number: element.deviceNumber,
-            ),
-          );
-        }
+        oldDevice.add(
+          BaseNewDevice(
+            connectOrDisconnect: connectOrDisconnect,
+            device: element,
+            haveConnect: haveConnect,
+            name: getName(element.deviceId),
+            number: element.deviceNumber,
+          ),
+        );
       } else {
-        if (element != null) {
-          newDevice.add(
-            BaseNewDevice(
-              connectOrDisconnect: connectOrDisconnect,
-              device: element,
-              haveConnect: haveConnect,
-              name: element.deviceName,
-              number: element.deviceNumber,
-            ),
-          );
-        }
+        newDevice.add(
+          BaseNewDevice(
+            connectOrDisconnect: connectOrDisconnect,
+            device: element,
+            haveConnect: haveConnect,
+            name: element.deviceName,
+            number: element.deviceNumber,
+          ),
+        );
       }
     });
     return ListView(

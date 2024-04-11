@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
-import 'package:uuid/uuid.dart';
 
 class SqlLiteController extends DisposableInterface {
   static SqlLiteController get to => Get.find<SqlLiteController>();
@@ -34,7 +33,6 @@ class SqlLiteController extends DisposableInterface {
   }
 
   Future<void> _dbInit(Database db) async {
-    final uuid = Uuid();
     await db.execute('''CREATE TABLE IF NOT EXISTS user (
     id TEXT PRIMARY KEY,
     personName TEXT,
@@ -80,8 +78,7 @@ class SqlLiteController extends DisposableInterface {
     try {
       var isEmptyTables = [];
       isEmptyTables.add((await db.rawQuery('SELECT * FROM user')).isEmpty);
-      isEmptyTables
-          .add((await db.rawQuery('SELECT * FROM user_history')).isEmpty);
+      isEmptyTables.add((await db.rawQuery('SELECT * FROM user_history')).isEmpty);
       bool value = !isEmptyTables.contains(false);
       isEmpty.value = value;
       return value;

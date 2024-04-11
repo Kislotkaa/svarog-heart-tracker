@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 import 'package:svarog_heart_tracker/app/controllers/device_controller.dart';
 import 'package:svarog_heart_tracker/app/helper/error_handler.dart';
@@ -20,7 +22,7 @@ class HistoryDetailController extends GetxController {
   final UserRepository userRepository;
 
   final Rxn<UserModel?> user = Rxn<UserModel?>();
-  late DeviceController? deviceController = null;
+  late DeviceController? deviceController;
   final RxList<UserHistoryModel?> listHistory = RxList<UserHistoryModel>();
 
   final RxBool isLoading = false.obs;
@@ -45,8 +47,7 @@ class HistoryDetailController extends GetxController {
   Future<void> getDetailHistory() async {
     try {
       if (user.value?.id != null) {
-        var result =
-            await userHistoryRepository.getHistoryUserByPk(user.value!.id);
+        var result = await userHistoryRepository.getHistoryUserByPk(user.value!.id);
         listHistory.clear();
         listHistory.addAll(result);
       }
@@ -70,7 +71,9 @@ class HistoryDetailController extends GetxController {
       if (user.value?.id != null) {
         deviceController = Get.find<DeviceController>(tag: user.value!.id);
       }
-    } catch (e, s) {}
+    } catch (e) {
+      log(e.toString());
+    }
   }
 
   void onTapDeleteAllHistory() {
@@ -98,6 +101,7 @@ class HistoryDetailController extends GetxController {
       ErrorHandler.getMessage(e, s);
       return false;
     }
+    return null;
   }
 
   Future<bool?> onTapDeleteHistory(String? id) async {
@@ -112,6 +116,7 @@ class HistoryDetailController extends GetxController {
       'Подтвердить',
       'Отмена',
     );
+    return null;
   }
 
   Future<void> deleteAllHistory() async {
