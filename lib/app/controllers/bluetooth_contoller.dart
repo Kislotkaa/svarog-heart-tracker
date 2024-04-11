@@ -8,15 +8,12 @@ import 'base_snackbar_controller.dart';
 class BluetoothController extends GetxController {
   final FlutterBluePlus flutterBlue = FlutterBluePlus.instance;
 
-  StreamSubscription<List<ScanResult>> Function(
-          void Function(List<ScanResult> event)? onData,
-          {bool? cancelOnError,
-          void Function()? onDone,
-          Function? onError})
-      get scanResultListen => flutterBlue.scanResults.listen;
+  StreamSubscription<List<ScanResult>> Function(void Function(List<ScanResult> event)? onData,
+      {bool? cancelOnError,
+      void Function()? onDone,
+      Function? onError}) get scanResultListen => flutterBlue.scanResults.listen;
 
-  Stream<List<BluetoothDevice>> get streamConnected =>
-      flutterBlue.connectedDevices.asStream();
+  Stream<List<BluetoothDevice>> get streamConnected => flutterBlue.connectedDevices.asStream();
 
   late bool isScanning = false;
 
