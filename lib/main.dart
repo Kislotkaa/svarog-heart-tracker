@@ -1,28 +1,30 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'dart:async';
+import 'dart:developer';
 
-import 'app/app.dart';
-import 'app/inject/app_module.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:svarog_heart_tracker/app.dart';
+import 'package:svarog_heart_tracker/locator.dart' as di;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initAppModule();
-  await runMyApp();
-}
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    await di.init();
 
-Future<void> runMyApp() async {
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://7cf307e0fa8a4b03829211c2c30cb122@o1165796.ingest.sentry.io/4504841419161600';
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(
-      App(
-        languagesAppController: Get.find(),
-        themeController: Get.find(),
+    await SentryFlutter.init(
+      (options) {
+        options.dsn = 'https://7cf307e0fa8a4b03829211c2c30cb122@o1165796.ingest.sentry.io/4504841419161600';
+        options.tracesSampleRate = 1.0;
+      },
+      appRunner: () => runApp(
+        const App(),
       ),
-    ),
-  );
+    );
+
+    runApp(const App());
+  }, (error, stackTrace) async {
+    log(error.toString());
+  });
 }
