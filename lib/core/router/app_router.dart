@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/new_devices_page.dart';
-import 'package:svarog_heart_tracker/feature/about/pages/about_page.dart';
+import 'package:svarog_heart_tracker/feature/about/presentation/pages/about_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_admin_page.dart';
 import 'package:svarog_heart_tracker/feature/history/pages/history_page.dart';

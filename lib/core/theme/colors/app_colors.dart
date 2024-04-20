@@ -28,7 +28,7 @@ class AppDarkColors {
 class AppLightColors {
   // ЦВЕТА
   static const Color shadow = Color.fromRGBO(50, 52, 72, 1);
-  static const Color text = Color.fromRGBO(44, 47, 57, 1);
+  static const Color text = Color.fromRGBO(18, 19, 23, 1);
   static const Color gray = Color.fromRGBO(241, 244, 249, 1);
   static const Color card = Color.fromRGBO(255, 255, 255, 1);
 
