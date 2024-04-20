@@ -14,6 +14,15 @@ dependencies:
   flutter_localizations:
     sdk: flutter  
 
+  # Для геренации id
+  uuid: ^3.0.7
+
+  # Хранение данных
+  sqflite: ^2.3.3
+
+  # Виджет динамического текста (подумать как избавиться)
+  auto_size_text: ^3.0.0
+
   # Переход в браузер по ссылкам
   url_launcher: ^6.2.6
 

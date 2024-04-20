@@ -1,8 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:svarog_heart_tracker/app.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
+import 'package:svarog_heart_tracker/core/l10n/generated/l10n.dart';
 import 'package:svarog_heart_tracker/core/models/start_app_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/feature/auth/domain/usecases/set_cache_start_app_usecase.dart';
@@ -21,16 +23,11 @@ class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
         emit(
           state.copyWith(
             status: StateStatus.loading,
+            errorMessage: null,
+            errorTitle: null,
           ),
         );
-        if (event.password == EnvironmentConfig.APP_PASSWORD) {
-          emit(
-            state.copyWith(
-              status: StateStatus.success,
-              crossFadeState: CrossFadeState.showSecond,
-            ),
-          );
-        } else {
+        if (event.password != EnvironmentConfig.APP_PASSWORD) {
           emit(
             state.copyWith(
               status: StateStatus.notValid,
@@ -38,14 +35,26 @@ class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
               errorTitle: 'Пароли не совпадают',
             ),
           );
+          return;
         }
+        emit(
+          state.copyWith(
+            status: StateStatus.success,
+            crossFadeState: CrossFadeState.showSecond,
+          ),
+        );
       },
     );
     on<AuthSetPasswordAdminEvent>(
       (event, emit) async {
-        state.copyWith(
-          status: StateStatus.loading,
+        emit(
+          state.copyWith(
+            status: StateStatus.loading,
+            errorMessage: null,
+            errorTitle: null,
+          ),
         );
+
         if (event.password != event.repeatPassword) {
           emit(
             state.copyWith(
@@ -76,8 +85,8 @@ class AuthAdminBloc extends Bloc<AuthAdminEvent, AuthAdminState> {
           (l) {
             state.copyWith(
               status: StateStatus.failure,
-              errorTitle: 'Ошибка',
-              errorMessage: 'Произошла какая то ошибка, повторите попытку позже',
+              errorTitle: S.of(externalContext).error,
+              errorMessage: S.of(externalContext).somethingWrong,
             );
           },
           (startApp) {

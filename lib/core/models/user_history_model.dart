@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 
 class UserHistoryModel {
@@ -63,7 +62,7 @@ class UserHistoryModel {
 
     result.addAll({'id': id});
     result.addAll({'userId': userId});
-    result.addAll({'yHeart': yHeart.joinToString(separator: ',')});
+    result.addAll({'yHeart': yHeart.join(',')});
     result.addAll({'maxHeart': maxHeart});
     result.addAll({'minHeart': minHeart});
     result.addAll({'avgHeart': avgHeart});

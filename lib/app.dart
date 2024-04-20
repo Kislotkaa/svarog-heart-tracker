@@ -8,8 +8,14 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/utils/routing_observer.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart' as di;
 import 'package:svarog_heart_tracker/locator.dart';
+
+final GlobalKey _key = GlobalKey();
+BuildContext get externalContext => _key.currentContext!;
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -21,6 +27,9 @@ class App extends StatelessWidget {
         // Bloc
         BlocProvider<AuthAdminBloc>(create: (context) => di.sl<AuthAdminBloc>()),
         BlocProvider<AuthBloc>(create: (context) => di.sl<AuthBloc>()),
+        BlocProvider<SplashBloc>(create: (context) => di.sl<SplashBloc>()),
+        BlocProvider<HomeBloc>(create: (context) => di.sl<HomeBloc>()),
+        BlocProvider<SettingsBloc>(create: (context) => di.sl<SettingsBloc>()),
 
         // Cubit
         BlocProvider<ThemeCubit>(create: (context) => di.sl<ThemeCubit>()),
@@ -31,6 +40,7 @@ class App extends StatelessWidget {
         listenWhen: (prev, current) => prev.isDarkMode != current.isDarkMode,
         builder: (context, themeState) => BlocBuilder<IntlCubit, IntlState>(
           builder: (_, intlState) => MaterialApp.router(
+            key: _key,
             locale: Locale(intlState.languageCode),
             localizationsDelegates: const [
               S.delegate,

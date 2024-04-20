@@ -8,7 +8,7 @@ class AppDarkColors {
   static const Color shadow = Color.fromRGBO(145, 145, 145, 1);
   static const Color text = Color.fromRGBO(241, 244, 249, 1);
   static const Color gray = Color.fromRGBO(44, 47, 57, 1);
-  static const Color card = Color.fromRGBO(28, 30, 38, 1);
+  static const Color card = Color.fromRGBO(26, 28, 36, 1);
 
   // ТЕНИ
   static BoxShadow footerShadow = BoxShadow(

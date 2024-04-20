@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_button.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_text_form_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/lounch_url.dart';
@@ -29,7 +30,17 @@ class _AuthPageState extends State<AuthPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (BuildContext context, AuthState state) {},
+        listenWhen: (prev, next) => prev.status != next.status,
+        listener: (BuildContext context, AuthState state) {
+          if (state.errorTitle != null) {
+            AppSnackbar.showTextFloatingSnackBar(
+              title: state.errorTitle ?? '',
+              description: state.errorMessage ?? '',
+              overlayState: Overlay.of(context),
+              status: SnackStatusEnum.warning,
+            );
+          }
+        },
         buildWhen: (prev, next) => prev.status != next.status,
         builder: (context, state) {
           return Padding(

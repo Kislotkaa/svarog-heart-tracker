@@ -50,11 +50,21 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Something went wrong`
+  /// `Произошла какая то ошибка, повторите попытку позже`
   String get somethingWrong {
     return Intl.message(
-      'Something went wrong',
+      'Произошла какая то ошибка, повторите попытку позже',
       name: 'somethingWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ошибка`
+  String get error {
+    return Intl.message(
+      'Ошибка',
+      name: 'error',
       desc: '',
       args: [],
     );

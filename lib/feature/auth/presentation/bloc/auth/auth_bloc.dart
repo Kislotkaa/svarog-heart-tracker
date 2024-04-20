@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
+import 'package:svarog_heart_tracker/app.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
+import 'package:svarog_heart_tracker/core/l10n/generated/l10n.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/feature/auth/domain/usecases/get_cache_start_app_usecase.dart';
@@ -25,6 +27,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(
           state.copyWith(
             status: StateStatus.loading,
+            errorMessage: null,
+            errorTitle: null,
           ),
         );
 
@@ -34,8 +38,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(
               state.copyWith(
                 status: StateStatus.failure,
-                errorTitle: 'Ошибка',
-                errorMessage: 'Произошла какая то ошибка, повторите попытку позже',
+                errorTitle: S.of(externalContext).error,
+                errorMessage: S.of(externalContext).somethingWrong,
               ),
             );
           },
@@ -46,11 +50,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               return;
             }
             if (startApp.localPassword != event.password) {
-              state.copyWith(
-                status: StateStatus.notValid,
-                errorTitle: 'Пароль не верный',
-                errorMessage: 'Не верный пароль, проверьте правильность ввода и повторите попытку',
+              emit(
+                state.copyWith(
+                  status: StateStatus.notValid,
+                  errorTitle: 'Пароль не верный',
+                  errorMessage: 'Не верный пароль, проверьте правильность ввода и повторите попытку',
+                ),
               );
+              return;
             }
             var param = startApp.copyWith(isHaveAuth: true);
             final failureOrStartApp = await setCacheStartAppUserCase(param);
@@ -59,8 +66,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 emit(
                   state.copyWith(
                     status: StateStatus.failure,
-                    errorTitle: 'Ошибка',
-                    errorMessage: 'Произошла какая то ошибка, повторите попытку позже',
+                    errorTitle: S.of(externalContext).error,
+                    errorMessage: S.of(externalContext).somethingWrong,
                   ),
                 );
               },

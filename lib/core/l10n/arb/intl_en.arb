@@ -1,5 +1,5 @@
 {
     "@@locale": "en",
-    "somethingWrong": "Что то пошло не так"
-    
+    "somethingWrong": "Some error occurred, please try again later",
+    "error": "Error"
 }

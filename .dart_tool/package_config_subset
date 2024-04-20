@@ -34,6 +34,10 @@ auto_route_generator
 2.17
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_route_generator-7.3.2/
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_route_generator-7.3.2/lib/
+auto_size_text
+2.12
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_size_text-3.0.0/
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_size_text-3.0.0/lib/
 bloc
 2.12
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/bloc-8.1.4/
@@ -426,6 +430,14 @@ source_span
 2.18
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/source_span-1.10.0/
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/source_span-1.10.0/lib/
+sqflite
+3.3
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite-2.3.3/
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite-2.3.3/lib/
+sqflite_common
+3.3
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite_common-2.5.4/
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite_common-2.5.4/lib/
 stack_trace
 2.18
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/stack_trace-1.11.1/
@@ -442,6 +454,10 @@ string_scanner
 2.18
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/string_scanner-1.2.0/
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/string_scanner-1.2.0/lib/
+synchronized
+3.0
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/synchronized-3.1.0+1/
+file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/synchronized-3.1.0+1/lib/
 term_glyph
 2.12
 file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/term_glyph-1.2.1/

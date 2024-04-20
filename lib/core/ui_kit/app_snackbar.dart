@@ -21,17 +21,7 @@ class AppSnackbar {
     required String? description,
     required OverlayState? overlayState,
     SnackStatusEnum? status,
-    Duration forwardAnimationDuration = const Duration(milliseconds: 300),
-    Duration reverseAnimationDuration = const Duration(milliseconds: 300),
-    Duration displayDuration = const Duration(seconds: 2),
-    EdgeInsets margin = const EdgeInsets.only(left: 16, right: 16, top: 16),
-    EdgeInsets padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
     Color? backgroundColor,
-    Curve forwardCurve = Curves.easeIn,
-    Curve reverseCurve = Curves.easeOut,
-    DismissDirection dismissDirection = DismissDirection.up,
-    SnackBarPosition snackBarPosition = SnackBarPosition.TOP,
-    bool isDismissible = true,
   }) {
     late OverlayEntry overlayEntry;
 
@@ -42,20 +32,24 @@ class AppSnackbar {
           _previousEntry = null;
         },
         borderRadius: BorderRadius.circular(16),
-        forwardAnimationDuration: forwardAnimationDuration,
-        reverseAnimationDuration: reverseAnimationDuration,
-        displayDuration: displayDuration,
-        forwardCurve: forwardCurve,
-        reverseCurve: reverseCurve,
-        dismissDirection: dismissDirection,
-        snackBarPosition: snackBarPosition,
-        margin: margin,
-        isDismissible: isDismissible,
+        forwardAnimationDuration: const Duration(milliseconds: 300),
+        reverseAnimationDuration: const Duration(milliseconds: 300),
+        displayDuration: const Duration(seconds: 2),
+        forwardCurve: Curves.easeIn,
+        reverseCurve: Curves.easeOut,
+        dismissDirection: DismissDirection.up,
+        snackBarPosition: SnackBarPosition.TOP,
+        margin: const EdgeInsets.only(left: 16, right: 16),
+        isDismissible: true,
         child: Container(
-          padding: padding,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
           decoration: BoxDecoration(
             color: backgroundColor ?? appTheme.revertBasicColor,
+            boxShadow: [
+              appTheme.cardShadow,
+            ],
           ),
+          clipBehavior: Clip.none,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -86,26 +80,29 @@ class AppSnackbar {
                     }
                   }),
                 ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: appTheme.textTheme.captionExtrabold14.copyWith(
-                      color: appTheme.cardColor,
-                    ),
-                  ),
-                  if (description != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(
-                        description,
-                        style: appTheme.textTheme.smallCaptionSemibold12.copyWith(
-                          color: appTheme.textGrayColor,
-                        ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: appTheme.textTheme.captionExtrabold14.copyWith(
+                        color: appTheme.revertTextColor,
                       ),
                     ),
-                ],
+                    if (description != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          description,
+                          style: appTheme.textTheme.smallCaptionSemibold12.copyWith(
+                            color: appTheme.textGrayColor,
+                          ),
+                          maxLines: 2,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ],
           ),

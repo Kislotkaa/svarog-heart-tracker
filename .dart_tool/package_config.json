@@ -56,6 +56,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "auto_size_text",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/auto_size_text-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "bloc",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/bloc-8.1.4",
       "packageUri": "lib/",
@@ -674,6 +680,18 @@
       "languageVersion": "2.18"
     },
     {
+      "name": "sqflite",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite-2.3.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "sqflite_common",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/sqflite_common-2.5.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "stack_trace",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/stack_trace-1.11.1",
       "packageUri": "lib/",
@@ -696,6 +714,12 @@
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/string_scanner-1.2.0",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "synchronized",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/synchronized-3.1.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
     },
     {
       "name": "term_glyph",
@@ -860,7 +884,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-04-14T16:12:08.412823Z",
+  "generated": "2024-04-20T13:29:26.239613Z",
   "generator": "pub",
-  "generatorVersion": "3.3.3"
+  "generatorVersion": "3.3.4"
 }

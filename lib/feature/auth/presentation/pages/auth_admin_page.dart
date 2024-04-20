@@ -40,6 +40,7 @@ class _AuthAdminPageState extends State<AuthAdminPage> {
       resizeToAvoidBottomInset: true,
       backgroundColor: appTheme.alwaysBlackColor,
       body: BlocConsumer<AuthAdminBloc, AuthAdminState>(
+        listenWhen: (prev, next) => prev.status != next.status,
         listener: (context, state) {
           if (state.errorTitle != null) {
             AppSnackbar.showTextFloatingSnackBar(
@@ -50,7 +51,7 @@ class _AuthAdminPageState extends State<AuthAdminPage> {
             );
           }
         },
-        buildWhen: (prev, next) => prev.crossFadeState != next.crossFadeState || prev.hasFocus != next.hasFocus,
+        buildWhen: (prev, next) => prev.crossFadeState != next.crossFadeState,
         builder: (context, state) {
           final authAdminBloc = context.read<AuthAdminBloc>();
           return Padding(
@@ -105,65 +106,64 @@ class _AuthAdminPageState extends State<AuthAdminPage> {
                   ),
                 ),
               ),
-              secondChild: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Center(
-                  child: SizedBox(
-                    width: ScreenSize.isMobile(context) ? double.infinity : MediaQuery.of(context).size.width * 0.4,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const SizedBox.shrink(),
-                        Column(
-                          children: [
-                            BaseTextFieldWidget(
-                              controller: authPassword,
-                              titleCenter: true,
-                              title: 'Пароль',
-                              style:
-                                  appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.alwaysBlackTextColor),
-                              cursorColor: appTheme.alwaysBlackTextColor,
-                              textCapitalization: TextCapitalization.none,
-                              backgroundColor: appTheme.alwaysWhiteColor,
-                              autocorrect: false,
-                              textAlign: TextAlign.center,
-                              onEditingComplete: () {
-                                TextInput.finishAutofillContext();
-                              },
-                              onSaved: (s) => FocusScope.of(context).unfocus(),
-                            ),
-                            const SizedBox(height: 16),
-                            BaseTextFieldWidget(
-                              controller: authRepeatPassword,
-                              titleCenter: true,
-                              title: 'Повторите пароль',
-                              style:
-                                  appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.alwaysBlackTextColor),
-                              cursorColor: appTheme.alwaysBlackTextColor,
-                              textCapitalization: TextCapitalization.none,
-                              backgroundColor: appTheme.alwaysWhiteColor,
-                              autocorrect: false,
-                              textAlign: TextAlign.center,
-                              onEditingComplete: () {
-                                TextInput.finishAutofillContext();
-                              },
-                              onSaved: (s) => FocusScope.of(context).unfocus(),
-                            ),
-                          ],
-                        ),
-                        BaseButton(
-                          color: appTheme.alwaysWhiteColor,
-                          visualFeedBack: false,
-                          phisicalFeedBack: true,
-                          onPressed: () => authAdminBloc.add(
-                            AuthSetPasswordAdminEvent(password: authPassword.text, repeatPassword: authPassword.text),
+              secondChild: Center(
+                child: SizedBox(
+                  width: ScreenSize.isMobile(context) ? double.infinity : MediaQuery.of(context).size.width * 0.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox.shrink(),
+                      Column(
+                        children: [
+                          BaseTextFieldWidget(
+                            controller: authPassword,
+                            titleCenter: true,
+                            title: 'Пароль',
+                            style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.alwaysBlackTextColor),
+                            cursorColor: appTheme.alwaysBlackTextColor,
+                            textCapitalization: TextCapitalization.none,
+                            backgroundColor: appTheme.alwaysWhiteColor,
+                            autocorrect: false,
+                            textAlign: TextAlign.center,
+                            onEditingComplete: () {
+                              TextInput.finishAutofillContext();
+                            },
+                            onSaved: (s) => FocusScope.of(context).unfocus(),
                           ),
-                          child: Text('Установить',
-                              style: appTheme.textTheme.bodySemibold16.copyWith(color: appTheme.alwaysBlackTextColor)),
+                          const SizedBox(height: 16),
+                          BaseTextFieldWidget(
+                            controller: authRepeatPassword,
+                            titleCenter: true,
+                            title: 'Повторите пароль',
+                            style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.alwaysBlackTextColor),
+                            cursorColor: appTheme.alwaysBlackTextColor,
+                            textCapitalization: TextCapitalization.none,
+                            backgroundColor: appTheme.alwaysWhiteColor,
+                            autocorrect: false,
+                            textAlign: TextAlign.center,
+                            onEditingComplete: () {
+                              TextInput.finishAutofillContext();
+                            },
+                            onSaved: (s) => FocusScope.of(context).unfocus(),
+                          ),
+                        ],
+                      ),
+                      BaseButton(
+                        color: appTheme.alwaysWhiteColor,
+                        visualFeedBack: false,
+                        phisicalFeedBack: true,
+                        onPressed: () => authAdminBloc.add(
+                          AuthSetPasswordAdminEvent(
+                            password: authPassword.text,
+                            repeatPassword: authRepeatPassword.text,
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
+                        child: Text(
+                          'Установить',
+                          style: appTheme.textTheme.bodySemibold16.copyWith(color: appTheme.alwaysBlackTextColor),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
