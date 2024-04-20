@@ -1,32 +1,43 @@
 import 'dart:async';
+import 'dart:developer';
+import 'dart:io';
 
-import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
-class SqlLiteService extends Disposable {
+class SqlLiteService {
   late Database db;
   final int _version = 4;
 
   late bool isEmpty = true;
 
   Future open() async {
-    var dataBasePath = await getDatabasesPath();
+    try {
+      late String tempDir = '';
+      if (Platform.isIOS) {
+        tempDir = (await getTemporaryDirectory()).path;
+      } else if (Platform.isAndroid) {
+        tempDir = await getDatabasesPath();
+      }
 
-    String path = '$dataBasePath/heart_tracker_sqllite.db';
-    // await deleteDatabase(path); // Использовать если хотите сбросить базу
-    db = await openDatabase(
-      path,
-      version: _version,
-      onCreate: (db, v1) async => await _dbInit(db),
-      onUpgrade: (db, v1, v2) async => await _dbAlert(db),
-    );
+      String path = '$tempDir/heart_tracker_sqllite.db';
+      log(' DB Initial path: $path');
+
+      db = await openDatabase(
+        path,
+        version: _version,
+        onCreate: (db, v1) async => await _dbInit(db),
+        onUpgrade: (db, v1, v2) async => await _dbAlert(db),
+      );
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
   }
 
   Future<void> init() async {
     try {
       await open();
-      await dataBaseIsEmpty();
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
@@ -68,7 +79,6 @@ class SqlLiteService extends Disposable {
     try {
       await db.rawDelete('DELETE FROM user');
       await db.rawDelete('DELETE FROM user_history');
-      await dataBaseIsEmpty();
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
@@ -85,10 +95,5 @@ class SqlLiteService extends Disposable {
       ErrorHandler.getMessage(e, s);
     }
     return true;
-  }
-
-  @override
-  FutureOr onDispose() {
-    throw UnimplementedError;
   }
 }

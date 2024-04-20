@@ -210,7 +210,6 @@ class DeviceController extends Disposable {
         return value[1] ?? 0;
       }
     } catch (e) {
-      log(e.toString());
     }
     return 0;
   }

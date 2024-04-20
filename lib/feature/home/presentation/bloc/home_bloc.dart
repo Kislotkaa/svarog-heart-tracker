@@ -24,7 +24,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
           ),
         );
 
-        final failureOrDevices = await getConnectedDeviceUseCase(NoParams());
+        var failureOrDevices = await getConnectedDeviceUseCase(NoParams());
         failureOrDevices.fold(
           (l) {
             emit(
@@ -36,17 +36,20 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             );
           },
           (list) {
-            List<DeviceController> stateList = state.list;
+            late List<DeviceController> resultList = [];
 
-            stateList.removeWhere(
-              (elementList) =>
-                  list.firstWhereOrNull((element) => element.remoteId.str == elementList.device.remoteId.str) == null,
-            );
+            for (var elementState in state.list) {
+              final BluetoothDevice? elementList = list.firstWhereOrNull(
+                (elementList) => elementList.remoteId.str == elementState.device.remoteId.str,
+              );
+
+              if (elementList != null) resultList.add(elementState);
+            }
 
             emit(
               state.copyWith(
                 status: StateStatus.success,
-                list: stateList,
+                list: resultList,
               ),
             );
           },

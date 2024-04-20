@@ -5,10 +5,11 @@ import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_global_loading.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_version.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database_service.dart/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_confirm_dialog_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_global_loading_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -20,19 +21,19 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const BaseAppBar(
-        title: 'Настройки',
-        needClose: true,
-      ),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          return Stack(
-            children: [
-              SafeArea(
-                child: Stack(
-                  children: [
-                    ListView(
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        return Stack(
+          children: [
+            Scaffold(
+              appBar: const BaseAppBarWidget(
+                title: 'Настройки',
+                needClose: true,
+              ),
+              body: Stack(
+                children: [
+                  SafeArea(
+                    child: ListView(
                       padding: const EdgeInsets.only(top: 16, left: 16, right: 16),
                       physics: const ClampingScrollPhysics(),
                       children: [
@@ -52,16 +53,36 @@ class SettingsPage extends StatelessWidget {
                               text: 'История',
                               rightWidget: const Icon(Icons.keyboard_arrow_right_rounded),
                             ),
-                            if (!sl<SqlLiteService>().isEmpty)
-                              BaseSettings(
-                                onTap: () => sl<SettingsBloc>().add(const SettingsDeleteHistoryEvent()),
-                                leftWidget: Icon(
-                                  Icons.signal_cellular_no_sim_outlined,
-                                  color: appTheme.errorColor,
-                                ),
-                                text: 'Отчистить историю',
-                                textColor: appTheme.errorColor,
-                              ),
+                            FutureBuilder(
+                              future: sl<SqlLiteService>().dataBaseIsEmpty(),
+                              builder: (context, snapshot) {
+                                if (snapshot.data == false) {
+                                  return BaseSettings(
+                                    onTap: () {
+                                      showConfirmDialog(
+                                        context: context,
+                                        title: 'Отчистить историю?',
+                                        text: 'Вы действительно хотите удалить историю и всё что с ней связано?',
+                                        onTapConfirm: () {
+                                          Navigator.pop(context);
+                                          sl<SettingsBloc>().add(const SettingsDeleteHistoryEvent());
+                                        },
+                                        onTapCancel: () => Navigator.pop(context),
+                                        textConfirm: 'Подтвердить',
+                                        textCancel: 'Отмена',
+                                      );
+                                    },
+                                    leftWidget: Icon(
+                                      Icons.signal_cellular_no_sim_outlined,
+                                      color: appTheme.errorColor,
+                                    ),
+                                    text: 'Отчистить историю',
+                                    textColor: appTheme.errorColor,
+                                  );
+                                }
+                                return const SizedBox.shrink();
+                              },
+                            ),
                             const SizedBox(height: 16),
                             Text(
                               'Дополнительные',
@@ -97,7 +118,20 @@ class SettingsPage extends StatelessWidget {
                               style: appTheme.textTheme.buttonExtrabold16,
                             ),
                             BaseSettings(
-                              onTap: () => sl<SettingsBloc>().add(const SettingsLogoutEvent()),
+                              onTap: () {
+                                showConfirmDialog(
+                                  context: context,
+                                  title: 'Выйти?',
+                                  text: 'Вы действительно хотите выйти с аккаунта?',
+                                  textConfirm: 'Подтвердить',
+                                  textCancel: 'Отмена',
+                                  onTapConfirm: () {
+                                    Navigator.pop(context);
+                                    sl<SettingsBloc>().add(const SettingsLogoutEvent());
+                                  },
+                                  onTapCancel: () => Navigator.pop(context),
+                                );
+                              },
                               leftWidget: Icon(
                                 Icons.exit_to_app_rounded,
                                 color: appTheme.textGrayColor,
@@ -105,7 +139,20 @@ class SettingsPage extends StatelessWidget {
                               text: 'Выйти с аккаунта',
                             ),
                             BaseSettings(
-                              onTap: () => sl<SettingsBloc>().add(const SettingsDeleteAccountEvent()),
+                              onTap: () {
+                                showConfirmDialog(
+                                  context: context,
+                                  title: 'Удалить аккаунт?',
+                                  text: 'Вы действительно хотите удалить аккаунт?',
+                                  textConfirm: 'Подтвердить',
+                                  textCancel: 'Отмена',
+                                  onTapConfirm: () {
+                                    Navigator.pop(context);
+                                    sl<SettingsBloc>().add(const SettingsDeleteAccountEvent());
+                                  },
+                                  onTapCancel: () => Navigator.pop(context),
+                                );
+                              },
                               leftWidget: Icon(
                                 Icons.close,
                                 color: appTheme.errorColor,
@@ -114,19 +161,19 @@ class SettingsPage extends StatelessWidget {
                               textColor: appTheme.errorColor,
                             ),
                             const SizedBox(height: 32),
-                            const BaseVersion(),
+                            const BaseVersionWidget(),
                           ],
                         ),
                       ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              if (state.status == StateStatus.loading) const BaseGlobalLoading(),
-            ],
-          );
-        },
-      ),
+            ),
+            if (state.status == StateStatus.loading) const BaseGlobalLoadingWidget(),
+          ],
+        );
+      },
     );
   }
 }

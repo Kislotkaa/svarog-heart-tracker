@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class BaseDivider extends StatelessWidget {
-  const BaseDivider({
+class BaseDividerWidget extends StatelessWidget {
+  const BaseDividerWidget({
     Key? key,
     this.padding,
   }) : super(key: key);

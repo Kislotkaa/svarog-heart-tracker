@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 
-class BaseTextLink extends StatelessWidget {
-  const BaseTextLink(
+class BaseTextLinkWidget extends StatelessWidget {
+  const BaseTextLinkWidget(
     this.text, {
     Key? key,
   }) : super(key: key);

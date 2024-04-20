@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_dialog_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_loading.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_status_bluetooth.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_confirm_dialog_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_status_bluetooth_widget.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/widgets/base_grid_people.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -31,17 +31,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: BaseAppBar(
+      appBar: BaseAppBarWidget(
         title: 'Сварог',
         leadingWidget: Hero(
           tag: 'appIcon.svg',
-          child: IconButton(
-            iconSize: 36,
-            onPressed: () => router.push(const SettingsRoute()),
-            icon: Assets.icons.appIcon.svg(),
+          child: GestureDetector(
+            onTap: () => router.push(const SettingsRoute()),
+            child: Assets.icons.appIcon.svg(height: 36),
           ),
         ),
-        actions: const [BaseStatusBluetooth()],
+        actions: const [BaseStatusBluetoothWidget()],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
           buildWhen: (prev, next) => prev.list.length != next.list.length,

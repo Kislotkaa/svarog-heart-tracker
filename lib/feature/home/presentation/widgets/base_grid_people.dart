@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/core/utils/screen_size.dart';
+import 'package:svarog_heart_tracker/core/utils/service/app_bluetooth_service.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/widgets/base_card_people.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
+import 'package:svarog_heart_tracker/locator.dart';
 
 class BaseGridPeople extends StatelessWidget {
   const BaseGridPeople({
@@ -36,7 +39,15 @@ class BaseGridPeople extends StatelessWidget {
           if (list.isNotEmpty) {
             if (i == list.length) {
               return BaseCapCardPeople(
-                onTap: () {
+                onTap: () async {
+                  final isSupported = await sl<AppBluetoothService>().isSupported;
+                  if (!isSupported) {
+                    AppSnackbar.showTextFloatingSnackBar(
+                      title: 'Устройство не поддерживается',
+                      description: 'Ваше устройство не поддерживает технологию Bluetooth',
+                      overlayState: Overlay.of(context),
+                    );
+                  }
                   router.push(const NewDevicesRoute());
                 },
               );
@@ -52,7 +63,15 @@ class BaseGridPeople extends StatelessWidget {
             );
           } else {
             return BaseCapCardPeople(
-              onTap: () {
+              onTap: () async {
+                final isSupported = await sl<AppBluetoothService>().isSupported;
+                if (!isSupported) {
+                  AppSnackbar.showTextFloatingSnackBar(
+                    title: 'Устройство не поддерживается',
+                    description: 'Ваше устройство не поддерживает технологию Bluetooth',
+                    overlayState: Overlay.of(context),
+                  );
+                }
                 router.push(const NewDevicesRoute());
               },
             );

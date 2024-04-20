@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_button.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_text_form_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_button_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_text_field_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/lounch_url.dart';
 import 'package:svarog_heart_tracker/core/utils/screen_size.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
@@ -43,10 +43,10 @@ class _AuthPageState extends State<AuthPage> {
         },
         buildWhen: (prev, next) => prev.status != next.status,
         builder: (context, state) {
-          return Padding(
-            padding: const EdgeInsets.all(16),
-            child: SizedBox(
+          return SafeArea(
+            child: Container(
               width: ScreenSize.isMobile(context) ? double.infinity : MediaQuery.of(context).size.width * 0.4,
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -81,7 +81,8 @@ class _AuthPageState extends State<AuthPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      BaseButton(
+                      BaseButtonWidget(
+                        margin: const EdgeInsets.only(bottom: 8),
                         onPressed: () {
                           sl<AuthBloc>().add(AuthSingInEvent(password: password.text));
                         },
@@ -90,7 +91,6 @@ class _AuthPageState extends State<AuthPage> {
                           style: appTheme.textTheme.bodySemibold16.copyWith(color: appTheme.revertTextColor),
                         ),
                       ),
-                      const SizedBox(height: 8),
                       GestureDetector(
                         onTap: () => goToUrl(EnvironmentConfig.APP_POLIT_URL),
                         child: Text.rich(

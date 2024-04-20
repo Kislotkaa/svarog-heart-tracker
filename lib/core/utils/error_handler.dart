@@ -18,10 +18,11 @@ class ErrorHandler {
     } else if (e is PlatformException) {
       if (e.code.contains('bluetooth')) {
         log(e.toString());
+        log(s.toString());
       }
     } else {
       log(e.toString());
-
+      log(s.toString());
       Sentry.captureException(e, stackTrace: s);
     }
   }

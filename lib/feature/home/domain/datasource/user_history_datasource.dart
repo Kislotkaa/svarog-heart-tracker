@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database_service.dart/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
 
 abstract class UserHistoryDataSource {
   Future<List<UserHistoryModel>> getUserHistoryByPk(String id);

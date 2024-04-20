@@ -5,6 +5,7 @@ import 'package:svarog_heart_tracker/core/models/start_app_model.dart';
 abstract class StartAppDataSource {
   StartAppModel? getData();
   Future<void> setData(StartAppModel params);
+  Future<void> clearData();
 }
 
 class StartAppDataSourceImpl extends StartAppDataSource {
@@ -24,7 +25,10 @@ class StartAppDataSourceImpl extends StartAppDataSource {
   @override
   Future<void> setData(StartAppModel params) async {
     await sharedPreferences.setString(SPrefsKeys.APP_START_KEY, params.toJson());
+  }
 
-    throw UnimplementedError();
+  @override
+  Future<void> clearData() async {
+    await sharedPreferences.remove(SPrefsKeys.APP_START_KEY);
   }
 }

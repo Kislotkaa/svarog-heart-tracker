@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_loading.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
 
-class BaseGlobalLoading extends StatelessWidget {
-  const BaseGlobalLoading({
+class BaseGlobalLoadingWidget extends StatelessWidget {
+  const BaseGlobalLoadingWidget({
     Key? key,
   }) : super(key: key);
 
@@ -23,7 +23,7 @@ class BaseGlobalLoading extends StatelessWidget {
             boxShadow: [appTheme.cardShadow],
             border: Border.all(color: appTheme.cardColor),
           ),
-          child: const BaseCircularProgressIndicator(),
+          child: const BaseCircularProgressIndicatorWidget(),
         ),
       ),
     );

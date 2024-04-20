@@ -16,6 +16,13 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
   SplashBloc({required this.getCacheStartAppUserCase}) : super(const SplashState.initial()) {
     on<SplashInitEvent>((event, emit) async {
+      emit(
+        state.copyWith(
+          status: StateStatus.loading,
+          errorTitle: null,
+          errorMessage: null,
+        ),
+      );
       await Future.delayed(const Duration(seconds: 1));
 
       final failureOrStartApp = await getCacheStartAppUserCase(NoParams());
@@ -30,6 +37,12 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           );
         },
         (startApp) async {
+          emit(
+            state.copyWith(
+              status: StateStatus.success,
+            ),
+          );
+
           if (startApp == null || startApp.isFirstStart == true) {
             router.pushAndPopUntil(const AuthAdminRoute(), predicate: (_) => false);
             return;

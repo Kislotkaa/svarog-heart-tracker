@@ -9,6 +9,7 @@ import 'package:svarog_heart_tracker/core/utils/routing_observer.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/new_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart' as di;
@@ -30,6 +31,7 @@ class App extends StatelessWidget {
         BlocProvider<SplashBloc>(create: (context) => di.sl<SplashBloc>()),
         BlocProvider<HomeBloc>(create: (context) => di.sl<HomeBloc>()),
         BlocProvider<SettingsBloc>(create: (context) => di.sl<SettingsBloc>()),
+        BlocProvider<NewDeviceBloc>(create: (context) => di.sl<NewDeviceBloc>()),
 
         // Cubit
         BlocProvider<ThemeCubit>(create: (context) => di.sl<ThemeCubit>()),

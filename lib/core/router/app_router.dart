@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:svarog_heart_tracker/feature/new_devices/new_devices_page.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_devices_page.dart';
 import 'package:svarog_heart_tracker/feature/about/presentation/pages/about_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_admin_page.dart';
@@ -54,13 +54,13 @@ class AppRouter extends _$AppRouter {
           path: '/history_detail',
           page: HistoryDetailRoute.page,
           durationInMilliseconds: 150,
-          transitionsBuilder: TransitionsBuilders.fadeIn,
+          transitionsBuilder: TransitionsBuilders.slideLeft,
         ),
         CustomRoute(
           path: '/how_to_use',
           page: HowToUseRoute.page,
           durationInMilliseconds: 150,
-          transitionsBuilder: TransitionsBuilders.fadeIn,
+          transitionsBuilder: TransitionsBuilders.slideBottom,
         ),
         CustomRoute(
           path: '/auth',

@@ -24,7 +24,8 @@ Future<void> main() async {
     );
 
     runApp(const App());
-  }, (error, stackTrace) async {
-    log(error.toString());
+  }, (e, s) async {
+    log(e.toString());
+    log(s.toString());
   });
 }

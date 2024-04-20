@@ -16,19 +16,27 @@ class _AuthAnimatedLogoState extends State<AuthAnimatedLogo> {
 
   @override
   void initState() {
-    widget.focusNode.addListener(() {
-      setState(() {
-        hasFocus = widget.focusNode.hasFocus;
-      });
-    });
+    widget.focusNode.addListener(addEvent);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.focusNode.removeListener(addEvent);
+    super.dispose();
+  }
+
+  void addEvent() {
+    setState(() {
+      hasFocus = widget.focusNode.hasFocus;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       height: hasFocus ? 0 : 210,
-      duration: AppDuration.medium,
+      duration: AppDuration.fast,
       child: AnimatedOpacity(
         duration: AppDuration.fast,
         opacity: hasFocus ? 0 : 1,

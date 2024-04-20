@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 
-class BaseCircularProgressIndicator extends StatelessWidget {
-  const BaseCircularProgressIndicator({
+class BaseCircularProgressIndicatorWidget extends StatelessWidget {
+  const BaseCircularProgressIndicatorWidget({
     Key? key,
   }) : super(key: key);
 

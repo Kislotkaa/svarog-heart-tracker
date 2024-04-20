@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database_service.dart/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 
 abstract class UserDataSource {

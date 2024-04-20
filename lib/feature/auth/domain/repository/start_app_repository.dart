@@ -6,6 +6,7 @@ import 'package:svarog_heart_tracker/feature/auth/domain/datasource/start_app_da
 abstract class StartAppRepository {
   Future<Either<Failure, StartAppModel?>> getStartAppModel();
   Future<Either<Failure, void>> setStartAppModel(StartAppModel params);
+  Future<Either<Failure, void>> clearStartAppModel();
 }
 
 class StartAppRepositoryImpl extends StartAppRepository {
@@ -30,6 +31,17 @@ class StartAppRepositoryImpl extends StartAppRepository {
   Future<Either<CacheFailure, void>> setStartAppModel(StartAppModel params) async {
     try {
       startAppDataSource.setData(params);
+
+      return const Right(null);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearStartAppModel() async {
+    try {
+      await startAppDataSource.clearData();
 
       return const Right(null);
     } on CacheFailure catch (exception) {

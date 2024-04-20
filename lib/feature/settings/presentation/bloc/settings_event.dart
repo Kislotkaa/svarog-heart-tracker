@@ -7,10 +7,6 @@ abstract class SettingsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SettingsInitialEvent extends SettingsEvent {
-  const SettingsInitialEvent();
-}
-
 class SettingsLogoutEvent extends SettingsEvent {
   const SettingsLogoutEvent();
 }

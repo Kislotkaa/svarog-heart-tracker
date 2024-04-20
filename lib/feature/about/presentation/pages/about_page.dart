@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_text_link.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_version.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_text_link_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 @RoutePage()
@@ -45,7 +45,7 @@ class AboutPage extends StatelessWidget {
                         horizontal: MediaQuery.of(context).size.width * 0.1,
                         vertical: MediaQuery.of(context).size.height * 0.03,
                       ),
-                      child: const BaseTextLink('dimokamera.ru'),
+                      child: const BaseTextLinkWidget('dimokamera.ru'),
                     ),
                   ),
                 ],
@@ -56,7 +56,7 @@ class AboutPage extends StatelessWidget {
               right: 0,
               left: 0,
               child: SafeArea(
-                child: BaseVersion(),
+                child: BaseVersionWidget(),
               ),
             ),
           ],

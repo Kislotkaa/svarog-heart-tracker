@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 
-class BaseButtonText extends StatelessWidget {
-  const BaseButtonText(
+class BaseButtonTextWidget extends StatelessWidget {
+  const BaseButtonTextWidget(
     this.text, {
     Key? key,
     this.style,
