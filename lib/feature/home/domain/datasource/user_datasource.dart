@@ -24,7 +24,7 @@ class UserDataSourceImpl extends UserDataSource {
       _tableName,
     );
 
-    final List<UserModel> returnData = [];
+    List<UserModel> returnData = [];
     result.forEach((element) {
       returnData.add(UserModel.fromMap(element));
     });
@@ -38,7 +38,7 @@ class UserDataSourceImpl extends UserDataSource {
       where: '"id" = ?',
       whereArgs: [id],
     );
-    final List<UserModel> returnData = [];
+    List<UserModel> returnData = [];
     result.forEach((element) {
       returnData.add(UserModel.fromMap(element));
     });
@@ -54,7 +54,7 @@ class UserDataSourceImpl extends UserDataSource {
     );
     await _db.insert(
       _tableName,
-      conflictAlgorithm: ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
       userModel.toMap(),
     );
   }
@@ -74,6 +74,7 @@ class UserDataSourceImpl extends UserDataSource {
       id: params.id,
       personName: params.personName,
       deviceName: params.deviceName,
+      isAutoConnect: params.isAutoConnect,
     );
     await _db.update(
       _tableName,

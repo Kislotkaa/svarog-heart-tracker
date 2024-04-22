@@ -8,17 +8,14 @@ abstract class ConnectDeviceEvent extends Equatable {
 }
 
 class ConnectDeviceDisconnectEvent extends ConnectDeviceEvent {
-  final BluetoothDevice device;
-  const ConnectDeviceDisconnectEvent({required this.device});
+  final DeviceController? deviceController;
+  final BluetoothDevice? blueDevice;
+
+  const ConnectDeviceDisconnectEvent({this.deviceController, this.blueDevice});
 }
 
 class ConnectDeviceConnectEvent extends ConnectDeviceEvent {
   final BluetoothDevice device;
   final String name;
   const ConnectDeviceConnectEvent({required this.device, required this.name});
-}
-
-class ConnectDeviceConnectOrDisconnectEvent extends ConnectDeviceEvent {
-  final BluetoothDevice device;
-  const ConnectDeviceConnectOrDisconnectEvent({required this.device});
 }

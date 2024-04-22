@@ -14,6 +14,11 @@ import 'package:svarog_heart_tracker/feature/auth/domain/usecases/get_cache_star
 import 'package:svarog_heart_tracker/feature/auth/domain/usecases/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/delete_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/get_user_history_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/update_user_use_case.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/datasource/bluetooth_datasource.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/datasource/user_datasource.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/datasource/user_history_datasource.dart';
@@ -24,12 +29,14 @@ import 'package:svarog_heart_tracker/feature/home/domain/usecases/get_connected_
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/get_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_history_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_user_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/domain/usecases/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/domain/usecases/clear_database_usecase.dart';
 import 'package:svarog_heart_tracker/feature/settings/domain/usecases/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
@@ -110,28 +117,42 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetConnectedDeviceUseCase(sl()));
   sl.registerLazySingleton(() => GetHistoryByPkUseCase(sl()));
   sl.registerLazySingleton(() => GetUsersUseCase(sl()));
+  sl.registerLazySingleton(() => GetUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => InsertHistoryUseCase(sl()));
   sl.registerLazySingleton(() => InsertUserUseCase(sl()));
+  sl.registerLazySingleton(() => GetUserHistoryUserByPkUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteUserHistoryByPkUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
+  sl.registerLazySingleton(() => ClearDatabaseUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
   sl.registerLazySingleton(() => AuthBloc(setCacheStartAppUserCase: sl(), getCacheStartAppUserCase: sl()));
   sl.registerLazySingleton(() => SplashBloc(getCacheStartAppUserCase: sl()));
-  sl.registerLazySingleton(() => HomeBloc(getConnectedDeviceUseCase: sl()));
+  sl.registerLazySingleton(() => HomeBloc(getConnectedDeviceUseCase: sl(), appBluetoothService: sl()));
   sl.registerLazySingleton(() => ConnectedDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => ConnectDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => PreviouslyConnectedBloc(appBluetoothService: sl(), getUsersUserCase: sl()));
   sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
+  sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
+
+  sl.registerLazySingleton(() => HistoryDetailBloc(
+        getUserByPkUseCase: sl(),
+        getUserHistoryUserByPkUseCase: sl(),
+        deleteUserHistoryByPkUseCase: sl(),
+        updateUserUseCase: sl(),
+      ));
 
   sl.registerLazySingleton(() => SettingsBloc(
         clearCacheStartAppUseCase: sl(),
         setCacheStartAppUseCase: sl(),
         getCacheStartAppUseCase: sl(),
+        clearAllDatabaseUseCase: sl(),
       ));
 
   // --- Other --- \\
   final sharedPreferences = await SharedPreferences.getInstance();
-  final appBluetoothService = AppBluetoothService()..initial();
+  final appBluetoothService = AppBluetoothService()..init();
   final sqlLiteService = SqlLiteService()..init();
 
   sl.registerLazySingleton(() => sharedPreferences);

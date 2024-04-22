@@ -254,6 +254,12 @@
       "languageVersion": "2.19"
     },
     {
+      "name": "fl_chart",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/fl_chart-0.61.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "flutter",
       "rootUri": "file:///Users/maksimfeduskin/Development/flutter/packages/flutter",
       "packageUri": "lib/",
@@ -902,7 +908,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-04-20T19:45:37.548144Z",
+  "generated": "2024-04-22T10:12:13.299695Z",
   "generator": "pub",
   "generatorVersion": "3.3.4"
 }

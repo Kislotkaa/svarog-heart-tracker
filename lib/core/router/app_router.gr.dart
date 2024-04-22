@@ -33,10 +33,45 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const AuthPage(),
       );
     },
-    HistoryDetailRoute.name: (routeData) {
+    ChooseNameDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<ChooseNameDialogRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HistoryDetailPage(),
+        child: ChooseNameDialogPage(
+          title: args.title,
+          controller: args.controller,
+          onTapConfirm: args.onTapConfirm,
+          onTapCancel: args.onTapCancel,
+          textConfirm: args.textConfirm,
+          textCancel: args.textCancel,
+          key: args.key,
+        ),
+      );
+    },
+    ConfirmDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<ConfirmDialogRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ConfirmDialogPage(
+          title: args.title,
+          description: args.description,
+          onTapConfirm: args.onTapConfirm,
+          onTapCancel: args.onTapCancel,
+          textConfirm: args.textConfirm,
+          textCancel: args.textCancel,
+          key: args.key,
+        ),
+      );
+    },
+    HistoryDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<HistoryDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: HistoryDetailPage(
+          key: args.key,
+          userId: args.userId,
+          deviceController: args.deviceController,
+        ),
       );
     },
     HistoryRoute.name: (routeData) {
@@ -127,17 +162,169 @@ class AuthRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ChooseNameDialogPage]
+class ChooseNameDialogRoute extends PageRouteInfo<ChooseNameDialogRouteArgs> {
+  ChooseNameDialogRoute({
+    required String title,
+    required TextEditingController controller,
+    required dynamic Function()? onTapConfirm,
+    required dynamic Function()? onTapCancel,
+    required String textConfirm,
+    required String textCancel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ChooseNameDialogRoute.name,
+          args: ChooseNameDialogRouteArgs(
+            title: title,
+            controller: controller,
+            onTapConfirm: onTapConfirm,
+            onTapCancel: onTapCancel,
+            textConfirm: textConfirm,
+            textCancel: textCancel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ChooseNameDialogRoute';
+
+  static const PageInfo<ChooseNameDialogRouteArgs> page = PageInfo<ChooseNameDialogRouteArgs>(name);
+}
+
+class ChooseNameDialogRouteArgs {
+  const ChooseNameDialogRouteArgs({
+    required this.title,
+    required this.controller,
+    required this.onTapConfirm,
+    required this.onTapCancel,
+    required this.textConfirm,
+    required this.textCancel,
+    this.key,
+  });
+
+  final String title;
+
+  final TextEditingController controller;
+
+  final dynamic Function()? onTapConfirm;
+
+  final dynamic Function()? onTapCancel;
+
+  final String textConfirm;
+
+  final String textCancel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ChooseNameDialogRouteArgs{title: $title, controller: $controller, onTapConfirm: $onTapConfirm, onTapCancel: $onTapCancel, textConfirm: $textConfirm, textCancel: $textCancel, key: $key}';
+  }
+}
+
+/// generated route for
+/// [ConfirmDialogPage]
+class ConfirmDialogRoute extends PageRouteInfo<ConfirmDialogRouteArgs> {
+  ConfirmDialogRoute({
+    required String title,
+    required String description,
+    required dynamic Function()? onTapConfirm,
+    required dynamic Function()? onTapCancel,
+    required String textConfirm,
+    required String textCancel,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ConfirmDialogRoute.name,
+          args: ConfirmDialogRouteArgs(
+            title: title,
+            description: description,
+            onTapConfirm: onTapConfirm,
+            onTapCancel: onTapCancel,
+            textConfirm: textConfirm,
+            textCancel: textCancel,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ConfirmDialogRoute';
+
+  static const PageInfo<ConfirmDialogRouteArgs> page = PageInfo<ConfirmDialogRouteArgs>(name);
+}
+
+class ConfirmDialogRouteArgs {
+  const ConfirmDialogRouteArgs({
+    required this.title,
+    required this.description,
+    required this.onTapConfirm,
+    required this.onTapCancel,
+    required this.textConfirm,
+    required this.textCancel,
+    this.key,
+  });
+
+  final String title;
+
+  final String description;
+
+  final dynamic Function()? onTapConfirm;
+
+  final dynamic Function()? onTapCancel;
+
+  final String textConfirm;
+
+  final String textCancel;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'ConfirmDialogRouteArgs{title: $title, description: $description, onTapConfirm: $onTapConfirm, onTapCancel: $onTapCancel, textConfirm: $textConfirm, textCancel: $textCancel, key: $key}';
+  }
+}
+
+/// generated route for
 /// [HistoryDetailPage]
-class HistoryDetailRoute extends PageRouteInfo<void> {
-  const HistoryDetailRoute({List<PageRouteInfo>? children})
-      : super(
+class HistoryDetailRoute extends PageRouteInfo<HistoryDetailRouteArgs> {
+  HistoryDetailRoute({
+    Key? key,
+    required String userId,
+    required DeviceController deviceController,
+    List<PageRouteInfo>? children,
+  }) : super(
           HistoryDetailRoute.name,
+          args: HistoryDetailRouteArgs(
+            key: key,
+            userId: userId,
+            deviceController: deviceController,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'HistoryDetailRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<HistoryDetailRouteArgs> page = PageInfo<HistoryDetailRouteArgs>(name);
+}
+
+class HistoryDetailRouteArgs {
+  const HistoryDetailRouteArgs({
+    this.key,
+    required this.userId,
+    required this.deviceController,
+  });
+
+  final Key? key;
+
+  final String userId;
+
+  final DeviceController deviceController;
+
+  @override
+  String toString() {
+    return 'HistoryDetailRouteArgs{key: $key, userId: $userId, deviceController: $deviceController}';
+  }
 }
 
 /// generated route for

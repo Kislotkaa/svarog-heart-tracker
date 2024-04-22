@@ -29,8 +29,6 @@ class BaseTextFieldWidget extends StatelessWidget {
     this.autocorrect = true,
     this.focusNode,
     this.onTap,
-    this.isAccentBorder = false,
-    this.isAccentTitle = false,
     this.onEditingComplete,
     this.enabled = true,
     this.height = 50,
@@ -64,8 +62,6 @@ class BaseTextFieldWidget extends StatelessWidget {
   final bool autocorrect;
   final bool enabled;
   final bool obscureText;
-  final bool isAccentBorder;
-  final bool isAccentTitle;
 
   final TextStyle? style;
   final TextStyle? hintStyle;
@@ -140,28 +136,28 @@ class BaseTextFieldWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
                 width: 1,
-                color: appTheme.textGrayColor.withOpacity(isAccentBorder ? 0.5 : 0.1),
+                color: appTheme.grayColor,
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
                 width: 1,
-                color: appTheme.textGrayColor.withOpacity(isAccentBorder ? 0.5 : 0.1),
+                color: appTheme.grayColor,
               ),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
                 width: 1,
-                color: appTheme.textGrayColor.withOpacity(0.1),
+                color: appTheme.grayColor,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
               borderSide: BorderSide(
                 width: 1,
-                color: appTheme.textGrayColor.withOpacity(isAccentBorder ? 0.5 : 0.1),
+                color: appTheme.textGrayColor.withOpacity(0.5),
               ),
             ),
             floatingLabelBehavior: FloatingLabelBehavior.auto,

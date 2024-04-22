@@ -90,7 +90,7 @@ class BaseButtonWidget extends StatelessWidget {
         ),
         side: MaterialStateProperty.all(
           BorderSide(
-            color: onPressed == null ? appTheme.primaryColor.withOpacity(0.3) : appTheme.primaryColor.withOpacity(0.8),
+            color: onPressed == null ? appTheme.textGrayColor.withOpacity(0.3) : appTheme.textGrayColor,
           ),
         ),
         enableFeedback: false,

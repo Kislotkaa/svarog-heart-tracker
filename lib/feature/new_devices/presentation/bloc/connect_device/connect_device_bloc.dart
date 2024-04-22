@@ -4,7 +4,7 @@ import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/core/utils/service/app_bluetooth_service.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
@@ -16,6 +16,9 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
   ConnectDeviceBloc({required this.appBluetoothService}) : super(const ConnectDeviceState.initial()) {
     on<ConnectDeviceDisconnectEvent>((event, emit) async {
       try {
+        if (event.blueDevice == null && event.deviceController == null) {
+          return;
+        }
         emit(
           state.copyWith(
             status: StateStatus.loading,
@@ -23,8 +26,13 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
             errorMessage: null,
           ),
         );
-        await appBluetoothService.disconnectDevice(event.device);
-        sl<HomeBloc>().add(HomRemoveDeviceControllerEvent(blueDevice: event.device));
+        if (event.blueDevice != null) {
+          await appBluetoothService.disconnectDevice(event.blueDevice!);
+          sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.blueDevice!));
+        } else {
+          await appBluetoothService.disconnectDevice(event.deviceController!.device);
+          sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.deviceController!.device));
+        }
 
         emit(
           state.copyWith(
@@ -50,12 +58,13 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
         DeviceController deviceController = DeviceController(
           id: event.device.remoteId.str,
           device: event.device,
-          name: 'name',
+          name: event.name,
           getHistoryByPkUseCase: sl(),
           insertHistoryUseCase: sl(),
           insertUserUseCase: sl(),
+          getUserByPkUseCase: sl(),
         );
-        sl<HomeBloc>().add(HomAddDeviceControllerEvent(deviceController: deviceController));
+        sl<HomeBloc>().add(HomeAddDeviceControllerEvent(deviceController: deviceController));
         emit(
           state.copyWith(
             status: StateStatus.success,

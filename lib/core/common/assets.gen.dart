@@ -70,9 +70,6 @@ class $AssetsFontsGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/BaseIcons.ttf
-  String get baseIcons => 'assets/icons/BaseIcons.ttf';
-
   /// File path: assets/icons/appIcon.svg
   SvgGenImage get appIcon => const SvgGenImage('assets/icons/appIcon.svg');
 
@@ -80,7 +77,7 @@ class $AssetsIconsGen {
   SvgGenImage get body => const SvgGenImage('assets/icons/body.svg');
 
   /// List of all assets
-  List<dynamic> get values => [baseIcons, appIcon, body];
+  List<SvgGenImage> get values => [appIcon, body];
 }
 
 class $AssetsImagesGen {

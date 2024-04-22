@@ -1,10 +1,15 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
+import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_devices_page.dart';
 import 'package:svarog_heart_tracker/feature/about/presentation/pages/about_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_admin_page.dart';
 import 'package:svarog_heart_tracker/feature/history/pages/history_page.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/pages/history_detail_page.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/history_detail_page.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/pages/home_page.dart';
 import 'package:svarog_heart_tracker/feature/hot_to_use/pages/how_to_use_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/settings_page.dart';
@@ -79,6 +84,22 @@ class AppRouter extends _$AppRouter {
           page: NewDevicesRoute.page,
           durationInMilliseconds: 150,
           transitionsBuilder: TransitionsBuilders.slideBottom,
+        ),
+        CustomRoute(
+          path: '/confirm_dialog',
+          page: ConfirmDialogRoute.page,
+          durationInMilliseconds: 150,
+          opaque: false,
+          barrierColor: appTheme.revertBasicColor.withOpacity(0.5),
+          transitionsBuilder: TransitionsBuilders.fadeIn,
+        ),
+        CustomRoute(
+          path: '/choose_name_dialog',
+          page: ChooseNameDialogRoute.page,
+          durationInMilliseconds: 150,
+          opaque: false,
+          barrierColor: appTheme.revertBasicColor.withOpacity(0.5),
+          transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
         CustomRoute(
           path: '*',

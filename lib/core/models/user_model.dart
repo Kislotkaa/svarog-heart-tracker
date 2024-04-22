@@ -10,8 +10,8 @@ class UserModel {
 
   final String id;
   final String personName;
-  final String? deviceName;
-  final bool isAutoConnect;
+  final String deviceName;
+  final bool? isAutoConnect;
 
   UserModel copyWith({
     String? id,
@@ -32,10 +32,14 @@ class UserModel {
 
     result.addAll({'id': id});
     result.addAll({'personName': personName});
-    if (deviceName != null) {
-      result.addAll({'deviceName': deviceName});
-    }
-    result.addAll({'isAutoConnect': isAutoConnect ? 1 : 0});
+    result.addAll({'deviceName': deviceName});
+    result.addAll({
+      'isAutoConnect': isAutoConnect == null
+          ? 0
+          : isAutoConnect!
+              ? 1
+              : 0
+    });
 
     return result;
   }

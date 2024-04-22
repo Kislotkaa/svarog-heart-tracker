@@ -3,7 +3,10 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
+import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
+import 'package:svarog_heart_tracker/core/utils/service/app_bluetooth_service.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/get_connected_device_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 
@@ -13,7 +16,12 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   /// **[NoParams]** required
   final GetConnectedDeviceUseCase getConnectedDeviceUseCase;
-  HomeBloc({required this.getConnectedDeviceUseCase}) : super(const HomeState.initial()) {
+
+  final AppBluetoothService appBluetoothService;
+  HomeBloc({
+    required this.getConnectedDeviceUseCase,
+    required this.appBluetoothService,
+  }) : super(const HomeState.initial()) {
     on<HomeInitialEvent>(
       (event, emit) async {
         emit(
@@ -34,6 +42,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
                 errorMessage: l.data?.message,
               ),
             );
+            return;
           },
           (list) {
             late List<DeviceController> resultList = [];
@@ -57,23 +66,41 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       },
     );
 
-    on<HomAddDeviceControllerEvent>(
+    on<HomeAddDeviceControllerEvent>(
       (event, emit) {
-        late List<DeviceController> list = state.list;
-        var result = list.firstWhereOrNull((element) => element.id == event.deviceController.id);
-        if (result == null) {
-          list.add(event.deviceController);
-        } else {
-          list.removeWhere((element) => element.id == event.deviceController.id);
-          list.add(event.deviceController);
+        try {
+          final isNotHave = state.list.firstWhereOrNull((element) => element.id == event.deviceController.id) == null;
+
+          if (isNotHave) {
+            event.deviceController.onInit();
+
+            emit(
+              state.copyWith(
+                status: StateStatus.success,
+                list: [...state.list, event.deviceController],
+              ),
+            );
+          }
+        } catch (e, s) {
+          ErrorHandler.getMessage(e, s);
         }
+      },
+    );
+
+    on<HomeRemoveDeviceEvent>((event, emit) async {
+      try {
+        List<DeviceController> list = [...state.list]
+          ..removeWhere((element) => event.blueDevice.remoteId.str == element.device.remoteId.str);
 
         emit(
           state.copyWith(
+            status: StateStatus.success,
             list: list,
           ),
         );
-      },
-    );
+      } catch (e, s) {
+        ErrorHandler.getMessage(e, s);
+      }
+    });
   }
 }

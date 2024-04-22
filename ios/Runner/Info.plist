@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>FLTEnableImpeller</key>
-	<false />
+	<true />
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Приложения запрашивает доступ к Bluetooth для получения данных с датчиков</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>

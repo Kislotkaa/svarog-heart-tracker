@@ -8,6 +8,7 @@ abstract class UserHistoryRepository {
   Future<Either<Failure, UserHistoryModel?>> getHistoryByPk(String id);
   Future<Either<Failure, void>> insertHistory(UserHistoryModel params);
   Future<Either<Failure, void>> removeHistoryByPk(String id);
+  Future<Either<Failure, void>> clearDatabase();
 }
 
 class UserHistoryRepositoryImpl extends UserHistoryRepository {
@@ -54,6 +55,17 @@ class UserHistoryRepositoryImpl extends UserHistoryRepository {
   Future<Either<Failure, void>> removeHistoryByPk(String id) async {
     try {
       await userHistoryDataSource.removeHistoryByPk(id);
+
+      return const Right(null);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearDatabase() async {
+    try {
+      await userHistoryDataSource.clearDatabase();
 
       return const Right(null);
     } on CacheFailure catch (exception) {

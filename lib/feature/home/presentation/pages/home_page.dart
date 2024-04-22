@@ -5,11 +5,13 @@ import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_confirm_dialog_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_status_bluetooth_widget.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/pages/auto_connect_page.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/widgets/base_grid_people.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 @RoutePage()
@@ -42,7 +44,8 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: const [BaseStatusBluetoothWidget()],
       ),
-      body: BlocBuilder<HomeBloc, HomeState>(
+      body: AutoConnectPage(
+        child: BlocBuilder<HomeBloc, HomeState>(
           buildWhen: (prev, next) => prev.list.length != next.list.length,
           builder: (context, state) {
             return Stack(
@@ -53,37 +56,37 @@ class _HomePageState extends State<HomePage> {
                     child: Assets.images.backGroundLogo.image(),
                   ),
                 ),
-                SafeArea(
-                  child: Stack(
-                    children: [
-                      BaseGridPeople(
-                        list: state.list,
-                        onRemove: (device) {
-                          showConfirmDialog(
-                            context: context,
-                            onTapConfirm: () async {
-                              sl<HomeBloc>().add(HomeDisconnectDeviceEvent(device: device.device));
-                              Navigator.pop(context);
-                            },
-                            onTapCancel: () => Navigator.pop(context),
-                            textConfirm: 'Подтвердить',
-                            textCancel: 'Отмена',
-                            title: 'Разорвать соединение?',
-                            text: 'Вы действительно хотите разорвать соединение?',
-                          );
-                        },
-                        onRefresh: () {
-                          sl<HomeBloc>().add(const HomeRefreshEvent());
-                        },
-                      ),
-                    ],
-                  ),
+                Stack(
+                  children: [
+                    BaseGridPeople(
+                      list: state.list,
+                      onRemove: (device) {
+                        showConfirmDialog(
+                          context: context,
+                          onTapConfirm: () async {
+                            router.removeLast();
+                            sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(blueDevice: device.device));
+                          },
+                          onTapCancel: () => router.removeLast(),
+                          textConfirm: 'Подтвердить',
+                          textCancel: 'Отмена',
+                          title: 'Разорвать соединение?',
+                          description: 'Вы действительно хотите разорвать соединение?',
+                        );
+                      },
+                      onRefresh: () {
+                        sl<HomeBloc>().add(const HomeRefreshEvent());
+                      },
+                    ),
+                  ],
                 ),
                 if (state.status == StateStatus.loading)
                   const Align(alignment: Alignment.bottomCenter, child: BaseLinearProgressIndicator()),
               ],
             );
-          }),
+          },
+        ),
+      ),
     );
   }
 }

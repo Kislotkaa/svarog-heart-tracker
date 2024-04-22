@@ -4,19 +4,20 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:get_it/get_it.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/get_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_history_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_user_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
 
-class DeviceController extends Disposable {
+class DeviceController {
   DeviceController({
     required this.id,
     required this.device,
@@ -24,10 +25,12 @@ class DeviceController extends Disposable {
     required this.insertUserUseCase,
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
+    required this.getUserByPkUseCase,
   });
 
   final BluetoothDevice device;
 
+  final GetUserByPkUseCase getUserByPkUseCase;
   final GetHistoryByPkUseCase getHistoryByPkUseCase;
   final InsertHistoryUseCase insertHistoryUseCase;
   final InsertUserUseCase insertUserUseCase;
@@ -53,19 +56,22 @@ class DeviceController extends Disposable {
 
   List<int> listHeartRate = [];
 
+  final stream = Stream.periodic(const Duration(milliseconds: 500)).asBroadcastStream();
   late List<BluetoothService> services = [];
-  late StreamSubscription<dynamic> streamSubscription;
+  late StreamSubscription streamSubscription;
 
   Future<void> onInit() async {
     await getServiceDevice();
     await saveUser();
   }
 
-  @override
-  Future<FutureOr> onDispose() async {
-    await _unSubscribeCharacteristics();
-    await saveHeartRateDB(ignoreTimer: true);
-    throw UnimplementedError();
+  Future<void> onDispose() async {
+    try {
+      await _unSubscribeCharacteristics();
+      await saveHeartRateDB(ignoreTimer: true);
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
   }
 
   /// Отвечает за чтение характеристики датчика
@@ -73,13 +79,11 @@ class DeviceController extends Disposable {
   Future<void> getServiceDevice() async {
     try {
       services = await device.discoverServices();
-      BluetoothService? service;
-      BluetoothCharacteristic? characteristic;
 
       _getConsoleService(kDebugMode); // показать все доступные сервисы
 
-      service = _getService(ble_service_tracker);
-      characteristic = _getCharacteristic(ble_character_heart_rate, service);
+      final BluetoothService? service = _getService(ble_service_tracker);
+      final BluetoothCharacteristic? characteristic = _getCharacteristic(ble_character_heart_rate, service);
       await _subscribeCharacteristics(characteristic);
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
@@ -89,13 +93,12 @@ class DeviceController extends Disposable {
   /// Методы обработки и сохранения данных
   ///
   void setHeartDifference() {
-    try {
-      var preLast = listHeartRate[listHeartRate.length - 6];
-      var last = listHeartRate.last;
-      heartDifference = last - preLast;
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
+    if (listHeartRate.length < 6) {
+      return;
     }
+    var preLast = listHeartRate[listHeartRate.length - 6];
+    var last = listHeartRate.last;
+    heartDifference = last - preLast;
   }
 
   void setHeartReal(List<int> value) {
@@ -114,7 +117,7 @@ class DeviceController extends Disposable {
         secondsOff++;
         if (secondsOff >= 20) {
           await saveHeartRateDB(ignoreTimer: true);
-          sl<HomeBloc>().add(HomeDisconnectDeviceEvent(device: device));
+          sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: device));
         }
       } else if (realHeart < 145) {
         secondsGreen++;
@@ -128,14 +131,10 @@ class DeviceController extends Disposable {
   }
 
   Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
-    try {
-      if (ignoreTimer && seconds > 180) {
-        await _saveHeartRateDB();
-      } else if (seconds % 180 == 0 && seconds != 0) {
-        await _saveHeartRateDB();
-      }
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
+    if (ignoreTimer && seconds > 180) {
+      await _saveHeartRateDB();
+    } else if (seconds % 10 == 0 && seconds != 0) {
+      await _saveHeartRateDB();
     }
   }
 
@@ -191,7 +190,7 @@ class DeviceController extends Disposable {
 
   Future<List<int>?> getHistory() async {
     final failurOfHistory = await getHistoryByPkUseCase(idTraining);
-    failurOfHistory.fold(
+    return failurOfHistory.fold(
       (l) {
         return null;
       },
@@ -199,23 +198,20 @@ class DeviceController extends Disposable {
         return history?.yHeart;
       },
     );
-    return null;
   }
 
   /// Вспомогательыне методы
 
   int getHeartRateAdaptive(List<int?>? value) {
-    try {
-      if (value != null) {
-        return value[1] ?? 0;
-      }
-    } catch (e) {}
+    if (value != null) {
+      return value[1] ?? 0;
+    }
     return 0;
   }
 
   BluetoothService? _getService(String serviceId) {
     try {
-      return services.firstWhereOrNull((element) => element.uuid.toString() == serviceId);
+      return services.firstWhereOrNull((element) => element.uuid.str128 == serviceId);
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
@@ -228,8 +224,7 @@ class DeviceController extends Disposable {
   ) {
     try {
       if (serviceTracker != null) {
-        return serviceTracker.characteristics
-            .firstWhereOrNull((element) => element.uuid.toString() == characteristicId);
+        return serviceTracker.characteristics.firstWhereOrNull((element) => element.uuid.str128 == characteristicId);
       }
       return null;
     } catch (e, s) {
@@ -256,50 +251,65 @@ class DeviceController extends Disposable {
   }
 
   Future<void> saveUser() async {
+    final failurOrUser = await getUserByPkUseCase(id);
+
+    late UserModel? userModel;
+    failurOrUser.fold(
+      (l) {
+        userModel = null;
+      },
+      (user) {
+        userModel = user;
+      },
+    );
+
     final params = UserParams(
       id: id,
       deviceName: device.advName,
-      personName: name,
+      personName: userModel?.personName ?? name,
+      isAutoConnect: userModel?.isAutoConnect,
     );
+
     final failurOrInserted = await insertUserUseCase(params);
 
     failurOrInserted.fold(
       (l) {
         log(l.toString());
       },
-      (success) {},
+      (success) {
+        log('success');
+      },
     );
   }
 
   Future<void> _subscribeCharacteristics(
     BluetoothCharacteristic? characteristic,
   ) async {
-    final stream = Stream.periodic(const Duration(milliseconds: 500));
-    if (characteristic != null) {
-      await characteristic.setNotifyValue(true);
-      var isSecond = false;
+    try {
+      if (characteristic != null) {
+        await characteristic.setNotifyValue(true);
+        var isSecond = false;
 
-      characteristic.onValueReceived.listen(setHeartReal);
+        characteristic.onValueReceived.listen(setHeartReal);
 
-      streamSubscription = stream.listen((event) async {
-        saveHeartList(); // Запомнить текущий пульс
+        streamSubscription = stream.listen((event) async {
+          saveHeartList(); // Запомнить текущий пульс
 
-        setHeartDifference(); // Пульс уменьшается или увеличивается
+          setHeartDifference(); // Пульс уменьшается или увеличивается
 
-        saveTimeTraining(isSecond); // Установить текущее время тренировки
+          saveTimeTraining(isSecond); // Установить текущее время тренировки
 
-        saveHeartRateDB(); // Запомнить текущий пульс
+          saveHeartRateDB(); // Запомнить текущий пульс
 
-        isSecond = !isSecond;
-      });
+          isSecond = !isSecond;
+        });
+      }
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
     }
   }
 
   Future<void> _unSubscribeCharacteristics() async {
-    try {
-      await streamSubscription.cancel();
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    }
+    await streamSubscription.cancel();
   }
 }

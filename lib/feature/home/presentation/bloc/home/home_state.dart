@@ -5,12 +5,14 @@ class HomeState extends Equatable {
   final String? errorMessage;
   final String? errorTitle;
   final List<DeviceController> list;
+  final List<UserModel> users;
 
   const HomeState.initial() : this._();
 
   const HomeState._({
     this.status = StateStatus.initial,
     this.list = const [],
+    this.users = const [],
     this.errorMessage,
     this.errorTitle,
   });
@@ -18,12 +20,14 @@ class HomeState extends Equatable {
   HomeState copyWith({
     StateStatus? status,
     List<DeviceController>? list,
+    List<UserModel>? users,
     String? errorMessage,
     String? errorTitle,
   }) =>
       HomeState._(
         status: status ?? this.status,
         list: list ?? this.list,
+        users: users ?? this.users,
         errorMessage: errorMessage,
         errorTitle: errorTitle,
       );
@@ -34,6 +38,7 @@ class HomeState extends Equatable {
   List<Object?> get props => [
         status,
         list,
+        users,
         errorMessage,
         errorTitle,
       ];

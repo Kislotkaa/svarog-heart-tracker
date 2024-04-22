@@ -7,12 +7,13 @@ abstract class UserHistoryDataSource {
   Future<UserHistoryModel?> getHistoryByPk(String id);
   Future<void> insertHistory(UserHistoryModel params);
   Future<void> removeHistoryByPk(String id);
+  Future<void> clearDatabase();
 }
 
 class UserHistoryDataSourceImpl extends UserHistoryDataSource {
   final SqlLiteService sqlLiteService;
   final String _tableName = 'user_history';
-  get _db => sqlLiteService.db;
+  Database get _db => sqlLiteService.db;
 
   UserHistoryDataSourceImpl({required this.sqlLiteService});
 
@@ -23,13 +24,12 @@ class UserHistoryDataSourceImpl extends UserHistoryDataSource {
       where: '"id" = ?',
       whereArgs: [id],
     );
-    late UserHistoryModel? returnData;
 
     if (result.isNotEmpty) {
-      returnData = UserHistoryModel.fromMap(result.first);
+      return UserHistoryModel.fromMap(result.first);
     }
 
-    return returnData;
+    return null;
   }
 
   @override
@@ -63,5 +63,11 @@ class UserHistoryDataSourceImpl extends UserHistoryDataSource {
       where: '"id" = ?',
       whereArgs: [id],
     );
+  }
+
+  @override
+  Future<void> clearDatabase() async {
+    await _db.rawDelete('DELETE FROM user');
+    await _db.rawDelete('DELETE FROM user_history');
   }
 }

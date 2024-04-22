@@ -5,6 +5,7 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/feature/auth/domain/usecases/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/auth/domain/usecases/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/feature/settings/domain/usecases/clear_database_usecase.dart';
 import 'package:svarog_heart_tracker/feature/settings/domain/usecases/set_cache_start_app_usecase.dart';
 
 part 'settings_event.dart';
@@ -19,10 +20,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   /// **[NoParams]** required
   final GetCacheStartAppUseCase getCacheStartAppUseCase;
+
+  /// **[NoParams]** required
+  final ClearDatabaseUseCase clearAllDatabaseUseCase;
   SettingsBloc({
     required this.clearCacheStartAppUseCase,
     required this.setCacheStartAppUseCase,
     required this.getCacheStartAppUseCase,
+    required this.clearAllDatabaseUseCase,
   }) : super(const SettingsState.initial()) {
     on<SettingsDeleteAccountEvent>(
       (event, emit) async {
@@ -61,6 +66,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         emit(
           state.copyWith(
             status: StateStatus.loading,
+            errorMessage: null,
+            errorTitle: null,
+          ),
+        );
+        final failurOrSuccess = await clearAllDatabaseUseCase(NoParams());
+        failurOrSuccess.fold((l) {}, (success) {});
+        emit(
+          state.copyWith(
+            status: StateStatus.success,
             errorMessage: null,
             errorTitle: null,
           ),

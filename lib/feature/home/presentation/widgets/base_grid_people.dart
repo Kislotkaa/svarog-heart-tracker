@@ -54,11 +54,9 @@ class BaseGridPeople extends StatelessWidget {
             }
             return GestureDetector(
               onLongPress: () => onRemove(list[i]),
-              onTap: () => router.push(const HistoryDetailRoute()),
+              onTap: () => router.push(HistoryDetailRoute(userId: list[i].id, deviceController: list[i])),
               child: BaseCardPeople(
-                name: list[i].name,
-                heartRate: list[i].realHeart,
-                heartRateDifference: list[i].heartDifference,
+                deviceController: list[i],
               ),
             );
           } else {

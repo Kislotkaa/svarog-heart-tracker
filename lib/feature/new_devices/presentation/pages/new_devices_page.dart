@@ -12,12 +12,12 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_confirm_dialog_widget.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
-import 'package:svarog_heart_tracker/feature/new_devices/presentation/widgets/base_choose_name_dialog_widget.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/widgets/base_list_new_device_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
@@ -50,40 +50,38 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const BaseAppBarWidget(
-        title: 'Новые устройства',
-        needClose: true,
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
-            bottom: false,
-            child: Column(
+    return BlocBuilder<ScanDeviceBloc, ScanDeviceState>(
+        buildWhen: (prev, next) => prev.scanResult.length != next.scanResult.length,
+        builder: (context, scanDeviceState) {
+          return Scaffold(
+            appBar: BaseAppBarWidget(
+              title: scanDeviceState.textStatus,
+              needClose: true,
+            ),
+            body: Stack(
               children: [
-                BlocBuilder<ConnectedDeviceBloc, ConnectedDeviceState>(
-                  // buildWhen: (prev, next) => true,
-                  builder: (context, connectedState) {
-                    return BlocBuilder<PreviouslyConnectedBloc, PreviouslyConnectedState>(
-                      // buildWhen: (prev, next) => true,
-                      builder: (context, previuyslState) {
-                        return BlocBuilder<ScanDeviceBloc, ScanDeviceState>(
-                          // buildWhen: (prev, next) => true,
-                          builder: (context, scanDeviceState) {
+                Column(
+                  children: [
+                    BlocBuilder<ConnectedDeviceBloc, ConnectedDeviceState>(
+                      buildWhen: (prev, next) => prev.connectedDevices.length != next.connectedDevices.length,
+                      builder: (context, connectedState) {
+                        return BlocBuilder<PreviouslyConnectedBloc, PreviouslyConnectedState>(
+                          buildWhen: (prev, next) => prev.previouslyConnected.length != next.previouslyConnected.length,
+                          builder: (context, previuyslState) {
                             if (scanDeviceState.scanResult.isEmpty == false) {
                               return Expanded(
                                 child: BaseListNewDeviceWidget(
                                   connectOrDisconnect: (BluetoothDevice device) {
-                                    var result = sl<ConnectedDeviceBloc>().state.connectedDevices.firstWhereOrNull(
+                                    var result = connectedState.connectedDevices.firstWhereOrNull(
                                         (element) => element.blueDevice.remoteId.str == device.remoteId.str);
                                     if (result != null) {
                                       showConfirmDialog(
                                         context: context,
                                         title: 'Разорвать соединение?',
-                                        text: 'Вы действительно хотите разорвать соединение?',
+                                        description: 'Вы действительно хотите разорвать соединение?',
                                         onTapConfirm: () {
-                                          Navigator.pop(context);
-                                          sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(device: device));
+                                          router.removeLast();
+                                          sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(blueDevice: device));
                                         },
                                         onTapCancel: () => Navigator.pop(context),
                                         textConfirm: 'Подтвердить',
@@ -105,7 +103,8 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
                                           controller: controller,
                                           onTapConfirm: () async {
                                             if (controller.text.isNotEmpty) {
-                                              Navigator.pop(context);
+                                              router.removeLast();
+
                                               sl<ConnectDeviceBloc>().add(
                                                   ConnectDeviceConnectEvent(device: device, name: controller.text));
                                             }
@@ -141,31 +140,29 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
                           },
                         );
                       },
-                    );
-                  },
+                    ),
+                  ],
                 ),
+                BlocBuilder<ScanDeviceBloc, ScanDeviceState>(
+                  buildWhen: (prev, next) => prev.status != next.status,
+                  builder: (context, state) {
+                    if (state.status == StateStatus.loading) {
+                      return const Align(
+                        alignment: Alignment.bottomCenter,
+                        child: BaseLinearProgressIndicator(),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                )
               ],
             ),
-          ),
-          BlocBuilder<ScanDeviceBloc, ScanDeviceState>(
-            buildWhen: (prev, next) => prev.status != next.status,
-            builder: (context, state) {
-              if (state.status == StateStatus.loading) {
-                return const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: BaseLinearProgressIndicator(),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          )
-        ],
-      ),
-    );
+          );
+        });
   }
 
   bool haveConnect(List<NewDeviceModel> connectedDevices, BluetoothDevice blueDevice) {
-    var result = connectedDevices.firstWhereOrNull(
+    late NewDeviceModel? result = connectedDevices.firstWhereOrNull(
       (element) => blueDevice.remoteId.str == element.blueDevice.remoteId.str,
     );
     if (result == null) return false;
@@ -196,12 +193,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
 
       late List<NewDeviceModel> scanResult = [];
 
-      final filtered = result.where((element) =>
-          element.advertisementData.serviceUuids
-              .firstWhereOrNull((element) => (element.str.toLowerCase()).contains('180d')) !=
-          null);
-
-      for (var element in filtered) {
+      for (var element in result) {
         String? deviceName = element.advertisementData.advName;
         String? deviceNumber = element.device.remoteId.str;
         var model = NewDeviceModel(
@@ -212,9 +204,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
         );
 
         scanResult.add(model);
-        final textStatus = 'Список доступных устройств: ${filtered.length}';
-
-        print(textStatus);
+        final textStatus = 'Список доступных: ${result.length}';
 
         scanDeviceBloc.add(
           ScanDeviceSetScanResultEvent(
@@ -227,11 +217,11 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
   }
 
   void initConnectedDevice() {
-    final connectDeviceBloc = sl<ConnectedDeviceBloc>();
-    connectDeviceBloc.add(const ConnectedDeviceInitialEvent());
+    final connectedDeviceBloc = sl<ConnectedDeviceBloc>();
+    connectedDeviceBloc.add(const ConnectedDeviceInitialEvent());
 
     subscriptionConnected = Stream.periodic(const Duration(seconds: 1)).listen((event) async {
-      var list = await connectDeviceBloc.appBluetoothService.getConnectedDevices();
+      var list = await connectedDeviceBloc.appBluetoothService.getConnectedDevices();
       late List<NewDeviceModel> connectedDevices = [];
 
       for (var element in list) {
@@ -242,8 +232,8 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
           deviceNumber: '',
         );
         connectedDevices.add(model);
-        connectDeviceBloc.add(ConnectedDeviceSetScanResultEvent(connectedDevices: connectedDevices));
       }
+      connectedDeviceBloc.add(ConnectedDeviceSetScanResultEvent(connectedDevices: connectedDevices));
     });
   }
 

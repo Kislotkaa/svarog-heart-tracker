@@ -15,7 +15,7 @@ class BaseListNewDeviceWidget extends StatelessWidget {
   });
 
   final List<NewDeviceModel> scanResult;
-  final Function(BluetoothDevice device) haveConnect;
+  final bool Function(BluetoothDevice device) haveConnect;
   final Function(String id) isPreviouslyConnected;
   final Function(String id) getName;
   final Function(BluetoothDevice device) connectOrDisconnect;

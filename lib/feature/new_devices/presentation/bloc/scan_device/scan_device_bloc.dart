@@ -17,9 +17,9 @@ class ScanDeviceBloc extends Bloc<ScanDeviceEvent, ScanDeviceState> {
           state.copyWith(
             status: StateStatus.loading,
             textStatus: 'Поиск свободных устройств...',
+            scanResult: [],
           ),
         );
-        await appBluetoothService.startScanDevice();
       } catch (e, s) {
         ErrorHandler.getMessage(e, s);
       }
@@ -35,8 +35,6 @@ class ScanDeviceBloc extends Bloc<ScanDeviceEvent, ScanDeviceState> {
       );
     });
 
-    on<ScanDeviceDisposeEvent>((event, emit) async {
-      await appBluetoothService.stopScanDevice();
-    });
+    on<ScanDeviceDisposeEvent>((event, emit) async {});
   }
 }

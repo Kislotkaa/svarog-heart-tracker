@@ -17,7 +17,6 @@ class ConnectedDeviceBloc extends Bloc<ConnectedDeviceEvent, ConnectedDeviceStat
         ),
       );
     });
-
     on<ConnectedDeviceDisposeEvent>((event, emit) {});
     on<ConnectedDeviceSetScanResultEvent>((event, emit) {
       emit(

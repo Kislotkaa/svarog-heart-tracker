@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
@@ -6,10 +7,10 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_confirm_dialog_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_global_loading_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -62,7 +63,7 @@ class SettingsPage extends StatelessWidget {
                                       showConfirmDialog(
                                         context: context,
                                         title: 'Отчистить историю?',
-                                        text: 'Вы действительно хотите удалить историю и всё что с ней связано?',
+                                        description: 'Вы действительно хотите удалить историю и всё что с ней связано?',
                                         onTapConfirm: () {
                                           Navigator.pop(context);
                                           sl<SettingsBloc>().add(const SettingsDeleteHistoryEvent());
@@ -87,6 +88,22 @@ class SettingsPage extends StatelessWidget {
                             Text(
                               'Дополнительные',
                               style: appTheme.textTheme.buttonExtrabold16,
+                            ),
+                            BlocBuilder<ThemeCubit, ThemeState>(
+                              builder: (context, state) {
+                                return BaseSettings(
+                                  onTap: () => sl<ThemeCubit>().switchTheme(),
+                                  leftWidget: Icon(
+                                    Icons.light_mode_outlined,
+                                    color: appTheme.textGrayColor,
+                                  ),
+                                  rightWidget: CupertinoSwitch(
+                                    value: state.isDarkMode,
+                                    onChanged: (_) => sl<ThemeCubit>().switchTheme(),
+                                  ),
+                                  text: 'Темная тема',
+                                );
+                              },
                             ),
                             BaseSettings(
                               onTap: () => router.push(const AboutRoute()),
@@ -122,7 +139,7 @@ class SettingsPage extends StatelessWidget {
                                 showConfirmDialog(
                                   context: context,
                                   title: 'Выйти?',
-                                  text: 'Вы действительно хотите выйти с аккаунта?',
+                                  description: 'Вы действительно хотите выйти с аккаунта?',
                                   textConfirm: 'Подтвердить',
                                   textCancel: 'Отмена',
                                   onTapConfirm: () {
@@ -143,7 +160,7 @@ class SettingsPage extends StatelessWidget {
                                 showConfirmDialog(
                                   context: context,
                                   title: 'Удалить аккаунт?',
-                                  text: 'Вы действительно хотите удалить аккаунт?',
+                                  description: 'Вы действительно хотите удалить аккаунт?',
                                   textConfirm: 'Подтвердить',
                                   textCancel: 'Отмена',
                                   onTapConfirm: () {
