@@ -26,7 +26,10 @@ import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_history
 import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/domain/usecases/get_users_usecase.dart';
-import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/new_device_bloc.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/domain/usecases/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
@@ -115,7 +118,10 @@ Future<void> init() async {
   sl.registerLazySingleton(() => AuthBloc(setCacheStartAppUserCase: sl(), getCacheStartAppUserCase: sl()));
   sl.registerLazySingleton(() => SplashBloc(getCacheStartAppUserCase: sl()));
   sl.registerLazySingleton(() => HomeBloc(getConnectedDeviceUseCase: sl()));
-  sl.registerLazySingleton(() => NewDeviceBloc(getUsersUseCase: sl()));
+  sl.registerLazySingleton(() => ConnectedDeviceBloc(appBluetoothService: sl()));
+  sl.registerLazySingleton(() => ConnectDeviceBloc(appBluetoothService: sl()));
+  sl.registerLazySingleton(() => PreviouslyConnectedBloc(appBluetoothService: sl(), getUsersUserCase: sl()));
+  sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
 
   sl.registerLazySingleton(() => SettingsBloc(
         clearCacheStartAppUseCase: sl(),

@@ -17,11 +17,11 @@ import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
 
 class DeviceController extends Disposable {
-  DeviceController(
-    this.insertUserUseCase, {
+  DeviceController({
+    required this.id,
     required this.device,
     required this.name,
-    required this.id,
+    required this.insertUserUseCase,
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
   });
@@ -209,8 +209,7 @@ class DeviceController extends Disposable {
       if (value != null) {
         return value[1] ?? 0;
       }
-    } catch (e) {
-    }
+    } catch (e) {}
     return 0;
   }
 

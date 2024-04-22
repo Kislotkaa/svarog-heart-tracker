@@ -13,7 +13,7 @@ class BaseButtonWidget extends StatelessWidget {
     this.color,
     this.textColor,
     this.isOutLine = false,
-    this.visualFeedBack = true,
+    this.visualFeedBack = false,
     this.phisicalFeedBack = false,
     this.margin,
   }) : super(key: key);

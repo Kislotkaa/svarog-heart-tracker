@@ -56,5 +56,24 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         );
       },
     );
+
+    on<HomAddDeviceControllerEvent>(
+      (event, emit) {
+        late List<DeviceController> list = state.list;
+        var result = list.firstWhereOrNull((element) => element.id == event.deviceController.id);
+        if (result == null) {
+          list.add(event.deviceController);
+        } else {
+          list.removeWhere((element) => element.id == event.deviceController.id);
+          list.add(event.deviceController);
+        }
+
+        emit(
+          state.copyWith(
+            list: list,
+          ),
+        );
+      },
+    );
   }
 }

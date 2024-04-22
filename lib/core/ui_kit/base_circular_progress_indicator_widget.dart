@@ -10,7 +10,7 @@ class BaseCircularProgressIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: CircularProgressIndicator(
-        color: appTheme.primaryColor,
+        color: appTheme.textColor,
       ),
     );
   }
@@ -24,7 +24,7 @@ class BaseLinearProgressIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LinearProgressIndicator(
-      color: appTheme.primaryColor,
+      color: appTheme.textColor,
       backgroundColor: Colors.transparent,
     );
   }

@@ -1,39 +1,30 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
+import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/service/app_bluetooth_service.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/domain/usecases/get_users_usecase.dart';
-import 'package:svarog_heart_tracker/locator.dart';
 
-part 'new_device_event.dart';
-part 'new_device_state.dart';
+part 'previously_connected_event.dart';
+part 'previously_connected_state.dart';
 
-class NewDeviceBloc extends Bloc<NewDeviceEvent, NewDeviceState> {
+class PreviouslyConnectedBloc extends Bloc<PreviouslyConnectedEvent, PreviouslyConnectedState> {
   /// **[NoParams]** required
-  final GetUsersUseCase getUsersUseCase;
-  NewDeviceBloc({required this.getUsersUseCase}) : super(const NewDeviceState.initial()) {
-    on<NewDeviceRefreshEvent>((event, emit) async {
+  final GetUsersUseCase getUsersUserCase;
+
+  final AppBluetoothService appBluetoothService;
+  PreviouslyConnectedBloc({required this.appBluetoothService, required this.getUsersUserCase})
+      : super(const PreviouslyConnectedState.initial()) {
+    on<PreviouslyConnectedGetUsersEvent>((event, emit) async {
       emit(
         state.copyWith(
           status: StateStatus.loading,
-          errorTitle: null,
           errorMessage: null,
+          errorTitle: null,
         ),
       );
-    });
-    on<NewDeviceScanEvent>((event, emit) async {
-      emit(
-        state.copyWith(
-          status: StateStatus.loading,
-          errorTitle: null,
-          errorMessage: null,
-        ),
-      );
-
-      final failurOrUsers = await getUsersUseCase(NoParams());
-
+      final failurOrUsers = await getUsersUserCase(NoParams());
       failurOrUsers.fold(
         (l) {
           emit(
@@ -44,13 +35,11 @@ class NewDeviceBloc extends Bloc<NewDeviceEvent, NewDeviceState> {
             ),
           );
         },
-        (users) async {
-          sl<AppBluetoothService>().addpreviouslyConnected(users);
-          sl<AppBluetoothService>().startScanDevice();
-
+        (users) {
           emit(
             state.copyWith(
               status: StateStatus.success,
+              previouslyConnected: users,
             ),
           );
         },

@@ -1,30 +1,30 @@
-part of 'new_device_bloc.dart';
+part of 'connect_device_bloc.dart';
 
-class NewDeviceState extends Equatable {
+class ConnectDeviceState extends Equatable {
   final StateStatus status;
   final String? errorMessage;
   final String? errorTitle;
 
-  const NewDeviceState.initial() : this._();
+  const ConnectDeviceState.initial() : this._();
 
-  const NewDeviceState._({
+  const ConnectDeviceState._({
     this.status = StateStatus.initial,
     this.errorMessage,
     this.errorTitle,
   });
 
-  NewDeviceState copyWith({
+  ConnectDeviceState copyWith({
     StateStatus? status,
     String? errorMessage,
     String? errorTitle,
   }) =>
-      NewDeviceState._(
+      ConnectDeviceState._(
         status: status ?? this.status,
         errorMessage: errorMessage,
         errorTitle: errorTitle,
       );
 
-  NewDeviceState setToDefault() => const NewDeviceState.initial();
+  ConnectDeviceState setToDefault() => const ConnectDeviceState.initial();
 
   @override
   List<Object?> get props => [

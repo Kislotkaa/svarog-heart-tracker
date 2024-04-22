@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/new_device_model.dart';
@@ -37,19 +38,23 @@ class BaseNewDeviceWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: appTheme.textTheme.bodySemibold16,
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  number,
-                  style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.textGrayColor),
-                )
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: appTheme.textTheme.bodySemibold16,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    number,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.textGrayColor),
+                  )
+                ],
+              ),
             )
           ],
         ),

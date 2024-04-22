@@ -8,7 +8,7 @@ class BaseCapWidget extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.caption,
-    required this.onRefresh,
+    this.onRefresh,
     this.textLink,
     this.onTap,
   }) : super(key: key);
