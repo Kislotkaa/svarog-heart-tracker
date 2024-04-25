@@ -18,6 +18,10 @@ class AppThemeData {
         statusBarBrightness: Brightness.dark,
       ),
     ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      circularTrackColor: AppStaticColors.black,
+      color: AppStaticColors.white,
+    ),
     dividerColor: AppDarkColors.gray,
     brightness: Brightness.dark,
     unselectedWidgetColor: AppDarkColors.text,
@@ -128,6 +132,10 @@ class AppThemeData {
         statusBarIconBrightness: Platform.isIOS ? Brightness.light : Brightness.dark,
         statusBarBrightness: Brightness.light,
       ),
+    ),
+    progressIndicatorTheme: const ProgressIndicatorThemeData(
+      circularTrackColor: AppStaticColors.white,
+      color: AppStaticColors.black,
     ),
     brightness: Brightness.light,
     dividerColor: AppLightColors.gray,
