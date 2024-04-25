@@ -42,7 +42,6 @@ class _AutoConnectPageState extends State<AutoConnectPage> {
         autoConnectState.scanResult.forEach((elementDevice) async {
           var result = autoConnectState.users
               .firstWhereOrNull((elementConnected) => elementConnected.id == elementDevice.device.remoteId.str);
-          print(result);
           if (result != null && result.isAutoConnect == true) {
             sl<AutoConnectBloc>().add(AutoConnectConnectEvent(elementDevice.device, result.personName));
           }
@@ -64,8 +63,6 @@ class _AutoConnectPageState extends State<AutoConnectPage> {
     subscriptionScanDevice = Stream.periodic(const Duration(seconds: 6)).listen((event) async {
       authoConnectBloc.appBluetoothService.startScanDevice(duration: const Duration(seconds: 2));
       var scanResult = authoConnectBloc.appBluetoothService.scanResult;
-
-      print(scanResult);
 
       authoConnectBloc.add(AutoConnectSetScanResultEvent(scanResult));
     });

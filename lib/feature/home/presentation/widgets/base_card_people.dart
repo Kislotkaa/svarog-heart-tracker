@@ -43,7 +43,7 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
           if (widget.deviceController.realHeart == 0) {
             iconHeart = Icon(
               Icons.favorite,
-              color: Theme.of(context).dividerColor,
+              color: appTheme.grayColor,
               size: 62,
             );
           } else if (widget.deviceController.realHeart < 145) {
@@ -78,7 +78,7 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
           } else {
             iconHeartDifference = Icon(
               Icons.horizontal_rule_rounded,
-              color: Theme.of(context).dividerColor,
+              color: appTheme.grayColor,
             );
           }
           return Container(
@@ -101,7 +101,7 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline5,
+                    style: appTheme.textTheme.subheaderExtrabold18,
                   ),
                 ),
                 Expanded(
@@ -128,11 +128,11 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
                       AutoSizeText.rich(
                         TextSpan(
                           text: widget.deviceController.realHeart.toString(),
-                          style: Theme.of(context).textTheme.headline3,
+                          style: appTheme.textTheme.smallButtonExtrabold12,
                           children: <TextSpan>[
                             TextSpan(
                               text: ' уд/м',
-                              style: Theme.of(context).textTheme.caption,
+                              style: appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
                             ),
                           ],
                         ),

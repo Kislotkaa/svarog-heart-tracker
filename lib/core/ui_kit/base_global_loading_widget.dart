@@ -19,7 +19,7 @@ class BaseGlobalLoadingWidget extends StatelessWidget {
           width: 120,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: Theme.of(context).cardColor,
+            color: appTheme.cardColor,
             boxShadow: [appTheme.cardShadow],
             border: Border.all(color: appTheme.cardColor),
           ),

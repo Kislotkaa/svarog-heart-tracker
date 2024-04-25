@@ -159,7 +159,7 @@ class HowToUsePage extends StatelessWidget {
   TextSpan _buildTextHint(String text, BuildContext context) {
     return TextSpan(
       text: text,
-      style: appTheme.textTheme.captionSemibold14.copyWith(color: Theme.of(context).hintColor),
+      style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.textGrayColor),
     );
   }
 

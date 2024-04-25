@@ -81,7 +81,7 @@ class BaseHistoryStatsWidget extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10, right: 16, left: 16, bottom: 16),
               height: 105,
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
+                color: appTheme.cardColor,
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

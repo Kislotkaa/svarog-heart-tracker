@@ -12,7 +12,7 @@ import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
-import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,7 +45,7 @@ class SettingsPage extends StatelessWidget {
                               'История',
                               style: appTheme.textTheme.buttonExtrabold16,
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () => router.push(const HistoryRoute()),
                               leftWidget: Icon(
                                 Icons.wysiwyg_rounded,
@@ -58,7 +58,7 @@ class SettingsPage extends StatelessWidget {
                               future: sl<SqlLiteService>().dataBaseIsEmpty(),
                               builder: (context, snapshot) {
                                 if (snapshot.data == false) {
-                                  return BaseSettings(
+                                  return BaseSettingsWidget(
                                     onTap: () {
                                       showConfirmDialog(
                                         context: context,
@@ -91,7 +91,7 @@ class SettingsPage extends StatelessWidget {
                             ),
                             BlocBuilder<ThemeCubit, ThemeState>(
                               builder: (context, state) {
-                                return BaseSettings(
+                                return BaseSettingsWidget(
                                   onTap: () => sl<ThemeCubit>().switchTheme(),
                                   leftWidget: Icon(
                                     Icons.light_mode_outlined,
@@ -105,7 +105,7 @@ class SettingsPage extends StatelessWidget {
                                 );
                               },
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () => router.push(const AboutRoute()),
                               leftWidget: Icon(
                                 Icons.warning_amber_rounded,
@@ -113,7 +113,7 @@ class SettingsPage extends StatelessWidget {
                               ),
                               text: 'О нас',
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () => router.push(const HowToUseRoute()),
                               leftWidget: Icon(
                                 Icons.question_mark,
@@ -121,7 +121,7 @@ class SettingsPage extends StatelessWidget {
                               ),
                               text: 'Как пользоваться',
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () => launchUrl(Uri.parse(EnvironmentConfig.APP_POLIT_URL)),
                               leftWidget: Icon(
                                 Icons.document_scanner_outlined,
@@ -134,7 +134,7 @@ class SettingsPage extends StatelessWidget {
                               'Аккаунт',
                               style: appTheme.textTheme.buttonExtrabold16,
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () {
                                 showConfirmDialog(
                                   context: context,
@@ -155,7 +155,7 @@ class SettingsPage extends StatelessWidget {
                               ),
                               text: 'Выйти с аккаунта',
                             ),
-                            BaseSettings(
+                            BaseSettingsWidget(
                               onTap: () {
                                 showConfirmDialog(
                                   context: context,

@@ -53,7 +53,7 @@ class _BaseActiveStatsWidgetState extends State<BaseActiveStatsWidget> with Tick
           if (deviceController.realHeart == 0) {
             iconHeart = Icon(
               Icons.favorite,
-              color: Theme.of(context).dividerColor,
+              color: appTheme.grayColor,
               size: 62,
             );
           } else if (deviceController.realHeart < 145) {
@@ -125,7 +125,7 @@ class _BaseActiveStatsWidgetState extends State<BaseActiveStatsWidget> with Tick
                 height: 230,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  color: Theme.of(context).cardColor,
+                  color: appTheme.cardColor,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,

@@ -109,7 +109,7 @@ class _BaseStatusBluetoothWidgetState extends State<BaseStatusBluetoothWidget> {
       },
       child: Icon(
         Icons.bluetooth_disabled_rounded,
-        color: Theme.of(context).iconTheme.color!.withOpacity(0.3),
+        color: appTheme.textColor.withOpacity(0.3),
       ),
     );
   }

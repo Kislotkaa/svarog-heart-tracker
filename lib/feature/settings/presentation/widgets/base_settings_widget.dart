@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 
-class BaseSettings extends StatelessWidget {
-  const BaseSettings({
+class BaseSettingsWidget extends StatelessWidget {
+  const BaseSettingsWidget({
     Key? key,
     required this.text,
     this.textColor,
@@ -26,7 +26,7 @@ class BaseSettings extends StatelessWidget {
           margin: const EdgeInsets.only(top: 16),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: appTheme.cardColor,
             boxShadow: [appTheme.cardShadow],
             borderRadius: BorderRadius.circular(16),
           ),
