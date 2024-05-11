@@ -9,7 +9,7 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_global_loading_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database_service/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/sqllite_service.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings_widget.dart';
@@ -74,7 +74,7 @@ class SettingsPage extends StatelessWidget {
                                       );
                                     },
                                     leftWidget: Icon(
-                                      Icons.signal_cellular_no_sim_outlined,
+                                      Icons.delete_outline_rounded,
                                       color: appTheme.errorColor,
                                     ),
                                     text: 'Отчистить историю',

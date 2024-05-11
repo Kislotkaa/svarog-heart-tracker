@@ -1,14 +1,17 @@
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/delete_user_history_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/get_user_history_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/set_cache_start_app_usecase.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/update_user_use_case.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/delete_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/update_user_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
+import 'package:svarog_heart_tracker/locator.dart';
 
 part 'history_detail_event.dart';
 part 'history_detail_state.dart';
@@ -35,10 +38,12 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
     on<HistoryDetailInitialEvent>((event, emit) async {
       emit(state.copyWith(
         status: StateStatus.loading,
-        deviceController: event.deviceController,
+        deviceController: null,
         errorMessage: null,
         errorTitle: null,
       ));
+
+      final deviceController = sl<HomeBloc>().state.list.firstWhereOrNull((element) => element.id == event.userId);
 
       final failurOrUser = await getUserByPkUseCase(event.userId);
 
@@ -54,10 +59,13 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
           return;
         },
         (user) {
-          emit(state.copyWith(
-            status: StateStatus.success,
-            user: user,
-          ));
+          emit(
+            state.copyWith(
+              status: StateStatus.success,
+              user: user,
+              deviceController: deviceController,
+            ),
+          );
         },
       );
 

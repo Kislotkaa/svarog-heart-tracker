@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
-import 'package:svarog_heart_tracker/core/constant/duration.dart';
+import 'package:svarog_heart_tracker/core/theme/utils/duration.dart';
 
 class AuthAnimatedLogo extends StatefulWidget {
   const AuthAnimatedLogo({super.key, required this.focusNode});

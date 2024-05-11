@@ -8,7 +8,7 @@ import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_
 import 'package:svarog_heart_tracker/feature/about/presentation/pages/about_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_page.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/pages/auth_admin_page.dart';
-import 'package:svarog_heart_tracker/feature/history/pages/history_page.dart';
+import 'package:svarog_heart_tracker/feature/history/presentation/pages/history_page.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/history_detail_page.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/pages/home_page.dart';
 import 'package:svarog_heart_tracker/feature/hot_to_use/pages/how_to_use_page.dart';

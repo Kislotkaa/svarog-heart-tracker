@@ -17,7 +17,7 @@ import 'package:svarog_heart_tracker/locator.dart';
 
 @RoutePage()
 class HistoryDetailPage extends StatefulWidget {
-  const HistoryDetailPage({Key? key, required this.userId, required this.deviceController}) : super(key: key);
+  const HistoryDetailPage({Key? key, required this.userId, this.deviceController}) : super(key: key);
 
   final String userId;
   final DeviceController? deviceController;

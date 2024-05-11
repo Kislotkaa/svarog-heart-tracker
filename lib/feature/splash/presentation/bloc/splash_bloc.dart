@@ -5,7 +5,7 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/l10n/generated/l10n.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
-import 'package:svarog_heart_tracker/feature/auth/domain/usecases/get_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/get_cache_start_app_usecase.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';

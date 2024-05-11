@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/models/new_device_model.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
@@ -31,12 +31,10 @@ class NewDevicesPage extends StatefulWidget {
 
 class _NewDevicesPageState extends State<NewDevicesPage> {
   late StreamSubscription<dynamic>? subscriptionScanDevice;
-  late StreamSubscription<dynamic>? subscriptionConnected;
 
   @override
   void initState() {
     initScanDevice();
-    initConnectedDevice();
     sl<PreviouslyConnectedBloc>().add(const PreviouslyConnectedGetUsersEvent());
     super.initState();
   }
@@ -44,7 +42,6 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
   @override
   void dispose() {
     disposeScanDevice();
-    disposeConnectedDevice();
     super.dispose();
   }
 
@@ -216,36 +213,9 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
     });
   }
 
-  void initConnectedDevice() {
-    final connectedDeviceBloc = sl<ConnectedDeviceBloc>();
-    connectedDeviceBloc.add(const ConnectedDeviceInitialEvent());
-
-    subscriptionConnected = Stream.periodic(const Duration(seconds: 1)).listen((event) async {
-      var list = await connectedDeviceBloc.appBluetoothService.getConnectedDevices();
-      late List<NewDeviceModel> connectedDevices = [];
-
-      for (var element in list) {
-        var model = NewDeviceModel(
-          blueDevice: element,
-          deviceId: '',
-          deviceName: '',
-          deviceNumber: '',
-        );
-        connectedDevices.add(model);
-      }
-      connectedDeviceBloc.add(ConnectedDeviceSetScanResultEvent(connectedDevices: connectedDevices));
-    });
-  }
-
   void disposeScanDevice() {
     final scanDeviceBloc = sl<ScanDeviceBloc>();
     subscriptionScanDevice?.cancel();
     scanDeviceBloc.add(const ScanDeviceDisposeEvent());
-  }
-
-  void disposeConnectedDevice() {
-    final connectedDeviceBloc = sl<ConnectedDeviceBloc>();
-    subscriptionConnected?.cancel();
-    connectedDeviceBloc.add(const ConnectedDeviceDisposeEvent());
   }
 }

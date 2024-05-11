@@ -8,11 +8,11 @@ import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/domain/usecases/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
-import 'package:svarog_heart_tracker/feature/home/domain/usecases/get_history_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_history_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/domain/usecases/insert_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/insert_user_history_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -31,8 +31,8 @@ class DeviceController {
   final BluetoothDevice device;
 
   final GetUserByPkUseCase getUserByPkUseCase;
-  final GetHistoryByPkUseCase getHistoryByPkUseCase;
-  final InsertHistoryUseCase insertHistoryUseCase;
+  final GetUserHistoryByPkUseCase getHistoryByPkUseCase;
+  final InsertUserHistoryUseCase insertHistoryUseCase;
   final InsertUserUseCase insertUserUseCase;
 
   final String name;
@@ -133,7 +133,7 @@ class DeviceController {
   Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
     if (ignoreTimer && seconds > 180) {
       await _saveHeartRateDB();
-    } else if (seconds % 10 == 0 && seconds != 0) {
+    } else if (seconds % 180 == 0 && seconds != 0) {
       await _saveHeartRateDB();
     }
   }

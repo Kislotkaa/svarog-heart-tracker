@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 
+part 'user_history_model.g.dart';
+
+@HiveType(typeId: 1)
 class UserHistoryModel {
   UserHistoryModel({
     required this.id,
@@ -13,20 +17,33 @@ class UserHistoryModel {
     required this.redTimeHeart,
     required this.orangeTimeHeart,
     required this.greenTimeHeart,
+    this.calories,
     this.createAt,
     this.finishedAt,
   });
-
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String userId;
+  @HiveField(2)
   final List<int> yHeart;
+  @HiveField(3)
   final int maxHeart;
+  @HiveField(4)
   final int minHeart;
+  @HiveField(5)
   final int avgHeart;
+  @HiveField(6)
   final int redTimeHeart;
+  @HiveField(7)
   final int orangeTimeHeart;
+  @HiveField(8)
   final int greenTimeHeart;
+  @HiveField(9)
+  final double? calories;
+  @HiveField(10)
   final DateTime? createAt;
+  @HiveField(11)
   final DateTime? finishedAt;
 
   UserHistoryModel copyWith({
@@ -39,6 +56,7 @@ class UserHistoryModel {
     int? redTimeHeart,
     int? orangeTimeHeart,
     int? greenTimeHeart,
+    double? calories,
     DateTime? createAt,
     DateTime? finishedAt,
   }) {
@@ -52,6 +70,7 @@ class UserHistoryModel {
       redTimeHeart: redTimeHeart ?? this.redTimeHeart,
       orangeTimeHeart: orangeTimeHeart ?? this.orangeTimeHeart,
       greenTimeHeart: greenTimeHeart ?? this.greenTimeHeart,
+      calories: calories,
       createAt: createAt ?? this.createAt,
       finishedAt: finishedAt ?? this.finishedAt,
     );
@@ -69,6 +88,7 @@ class UserHistoryModel {
     result.addAll({'redTimeHeart': redTimeHeart});
     result.addAll({'orangeTimeHeart': orangeTimeHeart});
     result.addAll({'greenTimeHeart': greenTimeHeart});
+    result.addAll({'calories': calories});
     if (createAt != null) {
       result.addAll({'createAt': createAt!.millisecondsSinceEpoch});
     }
@@ -90,6 +110,7 @@ class UserHistoryModel {
       redTimeHeart: map['redTimeHeart']?.toInt() ?? 0,
       orangeTimeHeart: map['orangeTimeHeart']?.toInt() ?? 0,
       greenTimeHeart: map['greenTimeHeart']?.toInt() ?? 0,
+      calories: map['calories'] != null ? map['calories'] as double : null,
       createAt: map['createAt'] != null ? DateTime.fromMillisecondsSinceEpoch(map['createAt']) : null,
       finishedAt: map['finishedAt'] != null ? DateTime.fromMillisecondsSinceEpoch(map['finishedAt']) : null,
     );
@@ -101,7 +122,7 @@ class UserHistoryModel {
 
   @override
   String toString() {
-    return 'UserHistoryModel(id: $id, userId: $userId, yHeart: $yHeart, maxHeart: $maxHeart, minHeart: $minHeart, avgHeart: $avgHeart, redTimeHeart: $redTimeHeart, orangeTimeHeart: $orangeTimeHeart, greenTimeHeart: $greenTimeHeart, createAt: $createAt, finishedAt: $finishedAt)';
+    return 'UserHistoryModel(id: $id, userId: $userId, yHeart: $yHeart, maxHeart: $maxHeart, minHeart: $minHeart, avgHeart: $avgHeart, redTimeHeart: $redTimeHeart, orangeTimeHeart: $orangeTimeHeart, greenTimeHeart: $greenTimeHeart, calories: $calories, createAt: $createAt, finishedAt: $finishedAt)';
   }
 
   @override
@@ -118,6 +139,7 @@ class UserHistoryModel {
         other.redTimeHeart == redTimeHeart &&
         other.orangeTimeHeart == orangeTimeHeart &&
         other.greenTimeHeart == greenTimeHeart &&
+        other.calories == calories &&
         other.createAt == createAt &&
         other.finishedAt == finishedAt;
   }
@@ -133,6 +155,7 @@ class UserHistoryModel {
         redTimeHeart.hashCode ^
         orangeTimeHeart.hashCode ^
         greenTimeHeart.hashCode ^
+        calories.hashCode ^
         createAt.hashCode ^
         finishedAt.hashCode;
   }

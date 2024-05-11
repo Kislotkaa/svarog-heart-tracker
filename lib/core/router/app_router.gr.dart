@@ -291,7 +291,7 @@ class HistoryDetailRoute extends PageRouteInfo<HistoryDetailRouteArgs> {
   HistoryDetailRoute({
     Key? key,
     required String userId,
-    required DeviceController deviceController,
+    DeviceController? deviceController,
     List<PageRouteInfo>? children,
   }) : super(
           HistoryDetailRoute.name,
@@ -312,14 +312,14 @@ class HistoryDetailRouteArgs {
   const HistoryDetailRouteArgs({
     this.key,
     required this.userId,
-    required this.deviceController,
+    this.deviceController,
   });
 
   final Key? key;
 
   final String userId;
 
-  final DeviceController deviceController;
+  final DeviceController? deviceController;
 
   @override
   String toString() {

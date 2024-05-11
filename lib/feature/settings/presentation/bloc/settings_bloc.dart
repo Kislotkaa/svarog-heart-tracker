@@ -3,10 +3,10 @@ import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
-import 'package:svarog_heart_tracker/feature/auth/domain/usecases/get_cache_start_app_usecase.dart';
-import 'package:svarog_heart_tracker/feature/auth/domain/usecases/set_cache_start_app_usecase.dart';
-import 'package:svarog_heart_tracker/feature/settings/domain/usecases/clear_database_usecase.dart';
-import 'package:svarog_heart_tracker/feature/settings/domain/usecases/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/clear_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/get_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/service/database/usecase/clear_database_usecase.dart';
 
 part 'settings_event.dart';
 part 'settings_state.dart';

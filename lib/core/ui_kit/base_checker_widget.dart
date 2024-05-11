@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:svarog_heart_tracker/core/constant/duration.dart';
+import 'package:svarog_heart_tracker/core/theme/utils/duration.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 
 class BaseCheckerWidget extends StatefulWidget {

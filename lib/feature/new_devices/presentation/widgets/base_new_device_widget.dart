@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
-import 'package:svarog_heart_tracker/core/models/new_device_model.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_checker_widget.dart';
 
 class BaseNewDeviceWidget extends StatelessWidget {
