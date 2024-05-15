@@ -23,7 +23,7 @@ class AppNotificationService {
 
       await localNotification?.initialize(
         const InitializationSettings(
-          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+          android: AndroidInitializationSettings('launcher_notification'),
           iOS: DarwinInitializationSettings(
             requestSoundPermission: false,
             requestBadgePermission: false,
