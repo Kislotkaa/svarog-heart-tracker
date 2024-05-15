@@ -19,25 +19,28 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
     return UserModel(
       id: fields[0] as String,
       userDetailId: fields[1] as String?,
-      personName: fields[2] as String,
-      deviceName: fields[3] as String,
-      isAutoConnect: fields[4] as bool?,
+      userSettingsId: fields[2] as String?,
+      personName: fields[3] as String,
+      deviceName: fields[4] as String,
+      isAutoConnect: fields[5] as bool?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.userDetailId)
       ..writeByte(2)
-      ..write(obj.personName)
+      ..write(obj.userSettingsId)
       ..writeByte(3)
-      ..write(obj.deviceName)
+      ..write(obj.personName)
       ..writeByte(4)
+      ..write(obj.deviceName)
+      ..writeByte(5)
       ..write(obj.isAutoConnect);
   }
 

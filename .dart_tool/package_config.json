@@ -206,6 +206,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "dbus",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/dbus-0.7.10",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "device_info",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/device_info-2.0.3",
       "packageUri": "lib/",
@@ -294,6 +300,24 @@
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
       "packageUri": "lib/",
       "languageVersion": "2.19"
+    },
+    {
+      "name": "flutter_local_notifications",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/flutter_local_notifications-17.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_linux",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/flutter_local_notifications_linux-4.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_platform_interface",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/flutter_local_notifications_platform_interface-7.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_localizations",
@@ -776,6 +800,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "timezone",
+      "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/timezone-0.9.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
       "name": "timing",
       "rootUri": "file:///Users/maksimfeduskin/.pub-cache/hosted/pub.dev/timing-1.0.1",
       "packageUri": "lib/",
@@ -920,7 +950,7 @@
       "languageVersion": "3.1"
     }
   ],
-  "generated": "2024-05-09T13:56:42.930330Z",
+  "generated": "2024-05-15T15:57:47.517011Z",
   "generator": "pub",
-  "generatorVersion": "3.3.4"
+  "generatorVersion": "3.3.1"
 }

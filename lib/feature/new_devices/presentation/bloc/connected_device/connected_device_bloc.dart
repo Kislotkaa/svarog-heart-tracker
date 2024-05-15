@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
 
 part 'connected_device_event.dart';
 part 'connected_device_state.dart';

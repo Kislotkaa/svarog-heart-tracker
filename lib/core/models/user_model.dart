@@ -8,8 +8,8 @@ part 'user_model.g.dart';
 class UserModel {
   UserModel({
     required this.id,
-     
-     this.userDetailId,
+    this.userDetailId,
+    this.userSettingsId,
     required this.personName,
     required this.deviceName,
     this.isAutoConnect = false,
@@ -20,15 +20,18 @@ class UserModel {
   @HiveField(1)
   final String? userDetailId;
   @HiveField(2)
-  final String personName;
+  final String? userSettingsId;
   @HiveField(3)
-  final String deviceName;
+  final String personName;
   @HiveField(4)
+  final String deviceName;
+  @HiveField(5)
   final bool? isAutoConnect;
 
   UserModel copyWith({
     String? id,
     String? userDetailId,
+    String? userSettingsId,
     String? personName,
     String? deviceName,
     bool? isAutoConnect,
@@ -36,6 +39,7 @@ class UserModel {
     return UserModel(
       id: id ?? this.id,
       userDetailId: userDetailId,
+      userSettingsId: userSettingsId,
       personName: personName ?? this.personName,
       deviceName: deviceName ?? this.deviceName,
       isAutoConnect: isAutoConnect ?? this.isAutoConnect,
@@ -47,6 +51,7 @@ class UserModel {
 
     result.addAll({'id': id});
     result.addAll({'userDetailId': userDetailId});
+    result.addAll({'userSettingsId': userSettingsId});
     result.addAll({'personName': personName});
     result.addAll({'deviceName': deviceName});
     result.addAll({
@@ -64,6 +69,7 @@ class UserModel {
     return UserModel(
       id: map['id'] ?? '',
       userDetailId: map['userDetailId'],
+      userSettingsId: map['userSettingsId'],
       personName: map['personName'] ?? '',
       deviceName: map['deviceName'],
       isAutoConnect: map['isAutoConnect'] == 1 ? true : false,
@@ -76,7 +82,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, userDetailId: $userDetailId, personName: $personName, deviceName: $deviceName, isAutoConnect: $isAutoConnect)';
+    return 'UserModel(id: $id, userDetailId: $userDetailId, userSettingsId: $userSettingsId, personName: $personName, deviceName: $deviceName, isAutoConnect: $isAutoConnect)';
   }
 
   @override
@@ -86,6 +92,7 @@ class UserModel {
     return other is UserModel &&
         other.id == id &&
         other.userDetailId == userDetailId &&
+        other.userSettingsId == userSettingsId &&
         other.personName == personName &&
         other.deviceName == deviceName &&
         other.isAutoConnect == isAutoConnect;
@@ -93,6 +100,11 @@ class UserModel {
 
   @override
   int get hashCode {
-    return id.hashCode ^ userDetailId.hashCode ^ personName.hashCode ^ deviceName.hashCode ^ isAutoConnect.hashCode;
+    return id.hashCode ^
+        userDetailId.hashCode ^
+        userSettingsId.hashCode ^
+        personName.hashCode ^
+        deviceName.hashCode ^
+        isAutoConnect.hashCode;
   }
 }

@@ -5,43 +5,45 @@ import 'package:svarog_heart_tracker/core/cubit/intl_cubit/repository/intl_repos
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/repository/theme_repository.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/app_bluetooth_service.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/hive_service.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/sqllite_service.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/clear_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/clear_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/settings_utils.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/datasourse/start_app_datasource.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/repository/start_app_repository.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/get_cache_start_app_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/start_app/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/datasourse/start_app_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/database/repository/start_app_repository.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/get_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
 import 'package:svarog_heart_tracker/feature/history/presentation/bloc/history_bloc.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/delete_user_history_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/update_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/delete_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/datasourse/bluetooth_datasource.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/datasourse/user_datasource.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/datasourse/user_history_datasource.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/repository/bluetooth_repository.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/repository/user_history_repository.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/repository/user_repository.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/usecase/get_connected_device_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user_history/insert_user_history_usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/insert_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/datasourse/bluetooth_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/database/datasourse/user_history_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/repository/bluetooth_repository.dart';
+import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
+import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/usecase/get_connected_device_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_users_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/clear_database_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/clear_database_usecase.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
+import 'package:svarog_heart_tracker/feature/user_serttings/presentation/bloc/user_settings_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -138,6 +140,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
   sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl()));
+  sl.registerLazySingleton(() => UserSettingsBloc());
 
   sl.registerLazySingleton(() => HistoryDetailBloc(
         getUserByPkUseCase: sl(),
@@ -158,7 +161,9 @@ Future<void> init() async {
   final appBluetoothService = AppBluetoothService()..init();
   final sqlLiteService = SqlLiteService()..init();
   final hiveService = HiveService()..init();
+  final appNotificationService = AppNotificationService()..init();
 
+  sl.registerLazySingleton(() => appNotificationService);
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => sqlLiteService);
   sl.registerLazySingleton(() => hiveService);

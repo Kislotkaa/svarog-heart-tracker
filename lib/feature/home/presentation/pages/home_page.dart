@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
+import 'package:svarog_heart_tracker/core/models/local_nitification_model.dart';
+import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
@@ -59,6 +61,17 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         actions: const [BaseStatusBluetoothWidget()],
+      ),
+      floatingActionButton: IconButton(
+        onPressed: () {
+          sl<AppNotificationService>().showNotification(
+            LocalNotificationModel(
+              title: 'title',
+              description: 'description',
+            ),
+          );
+        },
+        icon: const Icon(Icons.notification_add),
       ),
       body: BlocBuilder<HomeBloc, HomeState>(
         buildWhen: (prev, next) => prev.list.length != next.list.length,

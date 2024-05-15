@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/locator.dart';

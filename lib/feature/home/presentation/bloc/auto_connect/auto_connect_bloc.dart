@@ -6,8 +6,8 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/app_bluetooth_service.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_users_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 

@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_users_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 
 part 'history_event.dart';
 part 'history_state.dart';

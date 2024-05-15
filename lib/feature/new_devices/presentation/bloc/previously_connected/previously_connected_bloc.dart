@@ -3,8 +3,8 @@ import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
-import 'package:svarog_heart_tracker/core/utils/service/bluetooth/app_bluetooth_service.dart';
-import 'package:svarog_heart_tracker/core/utils/service/database/usecase/user/get_users_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 
 part 'previously_connected_event.dart';
 part 'previously_connected_state.dart';
