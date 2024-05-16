@@ -2,18 +2,17 @@ import 'package:dartz/dartz.dart';
 import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_settings_datasource.dart';
-import 'package:svarog_heart_tracker/feature/user_serttings/data/user_settings_params.dart';
 
-abstract class UserHistoryRepository {
+abstract class UserSettingsRepository {
   Future<Either<Failure, UserSettingsModel>> getUserSettingsByPk(String id);
-  Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsParams params);
+  Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params);
   Future<Either<Failure, void>> clearDatabase();
 }
 
-class UserHistoryRepositoryImpl extends UserHistoryRepository {
+class UserSettingsRepositoryImpl extends UserSettingsRepository {
   final UserSettingsDataSource userSettingsDataSource;
 
-  UserHistoryRepositoryImpl({
+  UserSettingsRepositoryImpl({
     required this.userSettingsDataSource,
   });
 
@@ -29,7 +28,7 @@ class UserHistoryRepositoryImpl extends UserHistoryRepository {
   }
 
   @override
-  Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsParams params) async {
+  Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params) async {
     try {
       final model = await userSettingsDataSource.updateUserSettingsByPk(params);
 

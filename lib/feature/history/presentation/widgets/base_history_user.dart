@@ -1,7 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/feature/history/presentation/bloc/history_bloc.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 class BaseHistoryUser extends StatelessWidget {
@@ -29,7 +32,16 @@ class BaseHistoryUser extends StatelessWidget {
             key: ValueKey<String>(user.deviceName),
             direction: DismissDirection.endToStart,
             confirmDismiss: (direction) async {
-              sl<HistoryBloc>().add(const DeleteHistoryEvent());
+              if (sl<HomeBloc>().state.list.firstWhereOrNull((element) => element.id == user.id) != null) {
+                AppSnackbar.showTextFloatingSnackBar(
+                  title: 'Предупреждение',
+                  description: 'В момент активности пользователя удалять историю подключения запрещено!',
+                  overlayState: Overlay.of(context),
+                  status: SnackStatusEnum.warning,
+                );
+                return false;
+              }
+              sl<HistoryBloc>().add(DeleteHistoryEvent(id: user.id));
               return true;
             },
             secondaryBackground: Container(

@@ -5,7 +5,10 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
+import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 class HiveService {
@@ -52,7 +55,7 @@ class HiveService {
     );
     await box.add(
       UserModel(
-        id: '3',
+        id: '123',
         personName: 'personName',
         deviceName: 'deviceName',
       ),
@@ -62,11 +65,8 @@ class HiveService {
 
     for (var key in keys) {
       final user = await box.get(key);
-      print('${user}');
+      print('key:$key - user:${user}');
     }
-
-    print('last :${await box.getAt(box.length - 1)}');
-    print('first :${await box.getAt(0)}');
   }
 
   Future<void> clearDataBase() async {
@@ -93,11 +93,16 @@ class HiveService {
 
   void _registreAdapter() {
     Hive.registerAdapter(UserModelAdapter());
+    Hive.registerAdapter(UserHistoryModelAdapter());
+    Hive.registerAdapter(UserDetailModelAdapter());
+    Hive.registerAdapter(UserModelAdapter());
   }
 
   Future<void> _registreBox() async {
-    await Hive.openLazyBox<UserModel>(DB_USERS_KEY);
-    await Hive.openLazyBox(DB_USER_HISTORY_KEY);
-    await Hive.openLazyBox(DB_USER_DETAIL_KEY);
+    List<LazyBox> listLazyBox = [];
+    listLazyBox.add(await Hive.openLazyBox<UserModel>(DB_USERS_KEY));
+    listLazyBox.add(await Hive.openLazyBox<UserHistoryModel>(DB_USER_HISTORY_KEY));
+    listLazyBox.add(await Hive.openLazyBox<UserDetailModel>(DB_USER_DETAIL_KEY));
+    listLazyBox.add(await Hive.openLazyBox<UserSettingsModel>(DB_USER_DETAIL_KEY));
   }
 }

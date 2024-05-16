@@ -48,7 +48,7 @@ class UserSettingsModel {
       'greenZone': greenZone,
       'orangeZone': orangeZone,
       'timeNotification': timeNotification,
-      'notificationEnable': notificationEnable,
+      'notificationEnable': notificationEnable ? 1 : 0,
     };
   }
 
@@ -58,7 +58,7 @@ class UserSettingsModel {
       greenZone: map['greenZone'] as int,
       orangeZone: map['orangeZone'] as int,
       timeNotification: map['timeNotification'] as int,
-      notificationEnable: map['notificationEnable'] as bool,
+      notificationEnable: map['isAutoConnect'] == 1 ? true : false,
     );
   }
 

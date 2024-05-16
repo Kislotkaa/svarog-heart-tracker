@@ -19,7 +19,6 @@ class UserHistoryDataSourceImpl extends UserHistoryDataSource {
 
   @override
   Future<UserHistoryModel?> getHistoryByPk(String id) async {
-    
     final result = await _db.query(
       _tableName,
       where: '"id" = ?',

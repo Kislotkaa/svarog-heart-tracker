@@ -1,12 +1,11 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
-import 'package:svarog_heart_tracker/feature/user_serttings/data/user_settings_params.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class UserSettingsDataSource {
   Future<UserSettingsModel> getUserSettingsByPk(String id);
-  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsParams params);
+  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params);
   Future<void> clearDatabase();
 }
 
@@ -33,18 +32,15 @@ class UserHistoryDataSourceImpl extends UserSettingsDataSource {
   }
 
   @override
-  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsParams params) async {
-    if (params.settings == null) {
-      params = params.copyWith(settings: UserSettingsModel(id: const Uuid().v4()));
-    }
+  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params) async {
     await _db.update(
       _tableName,
       conflictAlgorithm: ConflictAlgorithm.replace,
-      params.settings!.toMap(),
+      params.toMap(),
       where: '"id" = ?',
       whereArgs: [params.id],
     );
-    return params.settings!;
+    return params;
   }
 
   @override

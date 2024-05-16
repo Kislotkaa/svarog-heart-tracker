@@ -16,5 +16,6 @@ class GetHistoryEvent extends HistoryEvent {
 }
 
 class DeleteHistoryEvent extends HistoryEvent {
-  const DeleteHistoryEvent();
+  final String id;
+  const DeleteHistoryEvent({required this.id});
 }

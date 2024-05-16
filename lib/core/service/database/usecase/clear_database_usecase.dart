@@ -3,10 +3,10 @@ import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
 
-class ClearDatabaseUseCase extends UseCase<void, NoParams> {
+class ClearAllUserHistoryUseCase extends UseCase<void, NoParams> {
   final UserHistoryRepository userHistoryRepository;
 
-  ClearDatabaseUseCase(this.userHistoryRepository);
+  ClearAllUserHistoryUseCase(this.userHistoryRepository);
 
   @override
   Future<Either<Failure, void>> call(NoParams params) async {

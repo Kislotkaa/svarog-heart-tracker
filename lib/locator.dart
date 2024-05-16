@@ -10,6 +10,7 @@ import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_servic
 import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/clear_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/settings_utils.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/start_app_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/start_app_repository.dart';
@@ -127,7 +128,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => GetUserHistoryUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => DeleteUserHistoryByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
-  sl.registerLazySingleton(() => ClearDatabaseUseCase(sl()));
+  sl.registerLazySingleton(() => ClearAllUserHistoryUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveUserByPkUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
@@ -139,7 +141,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => PreviouslyConnectedBloc(appBluetoothService: sl(), getUsersUserCase: sl()));
   sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
-  sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl()));
+  sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl(), removeUserByPkUseCase: sl()));
   sl.registerLazySingleton(() => UserSettingsBloc());
 
   sl.registerLazySingleton(() => HistoryDetailBloc(

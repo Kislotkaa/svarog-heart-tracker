@@ -22,7 +22,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final GetCacheStartAppUseCase getCacheStartAppUseCase;
 
   /// **[NoParams]** required
-  final ClearDatabaseUseCase clearAllDatabaseUseCase;
+  final ClearAllUserHistoryUseCase clearAllDatabaseUseCase;
   SettingsBloc({
     required this.clearCacheStartAppUseCase,
     required this.setCacheStartAppUseCase,

@@ -3,10 +3,10 @@ import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
 
-class UpdateUserUseCase extends UseCase<void, String> {
+class RemoveUserByPkUseCase extends UseCase<void, String> {
   final UserRepository userRepository;
 
-  UpdateUserUseCase(this.userRepository);
+  RemoveUserByPkUseCase(this.userRepository);
 
   @override
   Future<Either<Failure, void>> call(String params) async {
