@@ -19,7 +19,7 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/set
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
 import 'package:svarog_heart_tracker/feature/history/presentation/bloc/history_bloc.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/delete_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
@@ -126,7 +126,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => InsertUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => InsertUserUseCase(sl()));
   sl.registerLazySingleton(() => GetUserHistoryUserByPkUseCase(sl()));
-  sl.registerLazySingleton(() => DeleteUserHistoryByPkUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveUserHistoryByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
   sl.registerLazySingleton(() => ClearAllUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => RemoveUserByPkUseCase(sl()));

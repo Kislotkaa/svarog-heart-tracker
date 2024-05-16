@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/delete_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
@@ -24,7 +24,7 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
   final GetUserHistoryUserByPkUseCase getUserHistoryUserByPkUseCase;
 
   /// **[String]** required
-  final DeleteUserHistoryByPkUseCase deleteUserHistoryByPkUseCase;
+  final RemoveUserHistoryByPkUseCase deleteUserHistoryByPkUseCase;
 
   /// **[UserParams]** required
   final UpdateUserUseCase updateUserUseCase;

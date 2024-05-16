@@ -95,7 +95,7 @@ class HiveService {
     Hive.registerAdapter(UserModelAdapter());
     Hive.registerAdapter(UserHistoryModelAdapter());
     Hive.registerAdapter(UserDetailModelAdapter());
-    Hive.registerAdapter(UserModelAdapter());
+    Hive.registerAdapter(UserSettingsModelAdapter());
   }
 
   Future<void> _registreBox() async {
