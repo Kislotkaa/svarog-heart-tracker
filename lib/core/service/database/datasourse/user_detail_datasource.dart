@@ -1,29 +1,29 @@
 import 'package:hive/hive.dart';
 import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
-import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 
-abstract class UserSettingsDataSource {
-  Future<UserSettingsModel?> getUserSettingsByPk(String id);
-  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params);
+abstract class UserDetailDataSource {
+  Future<UserDetailModel?> getUserSettingsByPk(String id);
+  Future<UserDetailModel> updateUserSettingsByPk(UserDetailModel params);
   Future<void> clearDatabase();
 }
 
-class UserSettingsDataSourceHiveImpl extends UserSettingsDataSource {
+class UserDetailDataSourceHiveImpl extends UserDetailDataSource {
   final HiveService hiveService;
-  final box = Hive.lazyBox<UserSettingsModel>(DB_USER_SETTINGS_KEY);
+  final box = Hive.lazyBox<UserDetailModel>(DB_USER_DETAIL_KEY);
 
-  UserSettingsDataSourceHiveImpl({required this.hiveService});
+  UserDetailDataSourceHiveImpl({required this.hiveService});
 
   @override
-  Future<UserSettingsModel?> getUserSettingsByPk(String id) async {
+  Future<UserDetailModel?> getUserSettingsByPk(String id) async {
     final result = await hiveService.query(box, where: (element) => element.id == id);
 
     return result.firstOrNull;
   }
 
   @override
-  Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params) async {
+  Future<UserDetailModel> updateUserSettingsByPk(UserDetailModel params) async {
     await hiveService.update(
       box,
       where: (element) => element.id == params.id,

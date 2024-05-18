@@ -46,7 +46,8 @@ class AppBluetoothService {
     }
   }
 
-  Future<void> init() async {
+  Future<AppBluetoothService> init() async {
     await disconnectDeviceAll();
+    return this;
   }
 }

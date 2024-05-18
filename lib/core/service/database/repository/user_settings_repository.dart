@@ -4,7 +4,7 @@ import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_settings_datasource.dart';
 
 abstract class UserSettingsRepository {
-  Future<Either<Failure, UserSettingsModel>> getUserSettingsByPk(String id);
+  Future<Either<Failure, UserSettingsModel?>> getUserSettingsByPk(String id);
   Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params);
   Future<Either<Failure, void>> clearDatabase();
 }
@@ -17,7 +17,7 @@ class UserSettingsRepositoryImpl extends UserSettingsRepository {
   });
 
   @override
-  Future<Either<Failure, UserSettingsModel>> getUserSettingsByPk(String id) async {
+  Future<Either<Failure, UserSettingsModel?>> getUserSettingsByPk(String id) async {
     try {
       final model = await userSettingsDataSource.getUserSettingsByPk(id);
 

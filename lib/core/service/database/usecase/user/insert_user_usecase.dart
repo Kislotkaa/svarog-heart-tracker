@@ -5,13 +5,13 @@ import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
 
 class InsertUserUseCase extends UseCase<void, UserParams> {
-  final UserRepository userHistoryRepository;
+  final UserRepository userRepository;
 
-  InsertUserUseCase(this.userHistoryRepository);
+  InsertUserUseCase(this.userRepository);
 
   @override
   Future<Either<Failure, void>> call(UserParams params) async {
-    final model = await userHistoryRepository.insertUser(params);
+    final model = await userRepository.insertUser(params);
     return model;
   }
 }

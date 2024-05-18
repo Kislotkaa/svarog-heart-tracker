@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
-import 'package:svarog_heart_tracker/core/models/local_nitification_model.dart';
+import 'package:svarog_heart_tracker/core/models/local_notification_model.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 FlutterLocalNotificationsPlugin? localNotification;

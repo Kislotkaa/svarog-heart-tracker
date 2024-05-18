@@ -88,7 +88,9 @@ class UserHistoryModel {
     result.addAll({'redTimeHeart': redTimeHeart});
     result.addAll({'orangeTimeHeart': orangeTimeHeart});
     result.addAll({'greenTimeHeart': greenTimeHeart});
-    result.addAll({'calories': calories});
+    if (calories != null) {
+      result.addAll({'calories': calories});
+    }
     if (createAt != null) {
       result.addAll({'createAt': createAt!.millisecondsSinceEpoch});
     }

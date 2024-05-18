@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/models/start_app_model.dart';
-import 'package:svarog_heart_tracker/core/service/database/datasourse/start_app_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/datasource/start_app_datasource.dart';
 
 abstract class StartAppRepository {
   Future<Either<Failure, StartAppModel?>> getStartAppModel();

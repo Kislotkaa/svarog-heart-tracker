@@ -1,10 +1,10 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svarog_heart_tracker/core/constant/sprefs_keys.dart';
 
-class GlobalSettingsDataSourceImpl {
+class GlobalSettingsService {
   final SharedPreferences sharedPreferences;
 
-  GlobalSettingsDataSourceImpl({required this.sharedPreferences});
+  GlobalSettingsService({required this.sharedPreferences});
 
   bool getMigratedHive() {
     final result = sharedPreferences.getBool(SPrefsKeys.IS_MIGRATED_HIVE);

@@ -46,7 +46,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 'Авто\nсопряжение',
                 textAlign: TextAlign.center,
                 maxLines: 2,
-                style: appTheme.textTheme.captionSemibold14,
+                style: appTheme.textTheme.smallCaptionSemibold12,
               ),
               CupertinoSwitch(
                 onChanged: (bool value) => sl<HistoryDetailBloc>().add(const HistoryDetailSwitchAutoConnectEvent()),

@@ -5,13 +5,13 @@ import 'package:svarog_heart_tracker/core/service/database/repository/user_setti
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 
 class GetUserSettingsByPkUseCase extends UseCase<UserSettingsModel?, String> {
-  final UserSettingsRepository userRepository;
+  final UserSettingsRepository userSettingsRepository;
 
-  GetUserSettingsByPkUseCase(this.userRepository);
+  GetUserSettingsByPkUseCase(this.userSettingsRepository);
 
   @override
   Future<Either<Failure, UserSettingsModel?>> call(String params) async {
-    final response = await userRepository.getUserSettingsByPk(params);
+    final response = await userSettingsRepository.getUserSettingsByPk(params);
     return response;
   }
 }

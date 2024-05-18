@@ -1,7 +1,12 @@
+import 'package:hive/hive.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_datasource.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
+import 'package:svarog_heart_tracker/locator.dart';
 
 abstract class UserDataSource {
   Future<List<UserModel>> getUsers();
@@ -9,14 +14,17 @@ abstract class UserDataSource {
   Future<void> insertUser(UserParams params);
   Future<UserModel?> updateUserByPk(UserParams params);
   Future<void> removeUserByPk(String id);
+  Future<void> clearDatabase();
 }
 
-class UserDataSourceImpl extends UserDataSource {
+class UserDataSourceSqlImpl extends UserDataSource {
   final SqlLiteService sqlLiteService;
   final String _tableName = 'user';
-  get _db => sqlLiteService.db;
+  Database get _db => sqlLiteService.db;
 
-  UserDataSourceImpl({required this.sqlLiteService});
+  UserDataSourceSqlImpl({
+    required this.sqlLiteService,
+  });
 
   @override
   Future<List<UserModel>> getUsers() async {
@@ -25,9 +33,9 @@ class UserDataSourceImpl extends UserDataSource {
     );
 
     List<UserModel> returnData = [];
-    result.forEach((element) {
+    for (var element in result) {
       returnData.add(UserModel.fromMap(element));
-    });
+    }
     return returnData;
   }
 
@@ -39,9 +47,9 @@ class UserDataSourceImpl extends UserDataSource {
       whereArgs: [id],
     );
     List<UserModel> returnData = [];
-    result.forEach((element) {
+    for (var element in result) {
       returnData.add(UserModel.fromMap(element));
-    });
+    }
     return returnData.firstOrNull;
   }
 
@@ -54,7 +62,7 @@ class UserDataSourceImpl extends UserDataSource {
     );
     await _db.insert(
       _tableName,
-      conflictAlgorithm: ConflictAlgorithm.ignore,
+      conflictAlgorithm: ConflictAlgorithm.replace,
       userModel.toMap(),
     );
   }
@@ -84,5 +92,75 @@ class UserDataSourceImpl extends UserDataSource {
       whereArgs: [params.id],
     );
     return userModel;
+  }
+
+  @override
+  Future<void> clearDatabase() async {
+    await _db.rawDelete('DELETE FROM $_tableName');
+
+  }
+}
+
+class UserDataSourceHiveImpl extends UserDataSource {
+  final HiveService hiveService;
+  final box = Hive.lazyBox<UserModel>(DB_USERS_KEY);
+  bool? isMigrateHive = sl<GlobalSettingsService>().getMigratedHive();
+
+  UserDataSourceHiveImpl({
+    required this.hiveService,
+    this.isMigrateHive,
+  });
+
+  @override
+  Future<List<UserModel>> getUsers() async {
+    final result = await hiveService.query(box);
+    return result;
+  }
+
+  @override
+  Future<UserModel?> getUserByPk(String id) async {
+    final result = await hiveService.query(box, where: (element) => element.id == id);
+    return result.firstOrNull;
+  }
+
+  @override
+  Future<void> insertUser(UserParams params) async {
+    final userModel = UserModel(
+      id: params.id,
+      userSettingsId: params.userSettingsId,
+      userDetailId: params.userDetailId,
+      personName: params.personName,
+      deviceName: params.deviceName,
+    );
+    await hiveService.insert(box, id: userModel.id, model: userModel);
+  }
+
+  @override
+  Future<void> removeUserByPk(String id) async {
+    await hiveService.delete(box, where: (element) => element.id == id);
+  }
+
+  @override
+  Future<UserModel?> updateUserByPk(UserParams params) async {
+    final userModel = UserModel(
+      id: params.id,
+      userSettingsId: params.userSettingsId,
+      userDetailId: params.userDetailId,
+      personName: params.personName,
+      deviceName: params.deviceName,
+      isAutoConnect: params.isAutoConnect,
+    );
+    await hiveService.update(
+      box,
+      model: userModel,
+      id: userModel.id,
+      where: (element) => element.id == userModel.id,
+    );
+    return userModel;
+  }
+
+  @override
+  Future<void> clearDatabase() async {
+    await hiveService.clearDataBase(box);
   }
 }

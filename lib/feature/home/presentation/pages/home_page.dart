@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/models/local_nitification_model.dart';
+import 'package:svarog_heart_tracker/core/models/local_notification_model.dart';
 import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';

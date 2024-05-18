@@ -38,8 +38,8 @@ class UserModel {
   }) {
     return UserModel(
       id: id ?? this.id,
-      userDetailId: userDetailId,
-      userSettingsId: userSettingsId,
+      userDetailId: userDetailId ?? this.userDetailId,
+      userSettingsId: userSettingsId ?? this.userSettingsId,
       personName: personName ?? this.personName,
       deviceName: deviceName ?? this.deviceName,
       isAutoConnect: isAutoConnect ?? this.isAutoConnect,
@@ -50,8 +50,13 @@ class UserModel {
     final result = <String, dynamic>{};
 
     result.addAll({'id': id});
-    result.addAll({'userDetailId': userDetailId});
-    result.addAll({'userSettingsId': userSettingsId});
+
+    if (userDetailId != null) {
+      result.addAll({'userDetailId': userDetailId});
+    }
+    if (userSettingsId != null) {
+      result.addAll({'userSettingsId': userSettingsId});
+    }
     result.addAll({'personName': personName});
     result.addAll({'deviceName': deviceName});
     result.addAll({

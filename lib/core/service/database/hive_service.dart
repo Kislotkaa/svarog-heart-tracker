@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,8 +14,9 @@ import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 class HiveService {
   late bool isEmpty = true;
+  late List<LazyBox> listBox = [];
 
-  Future<void> init() async {
+  Future<HiveService> init() async {
     try {
       late String tempDir = '';
       if (Platform.isIOS) {
@@ -29,50 +31,87 @@ class HiveService {
       await _registreBox();
 
       log(' Hive Initial path: $path');
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
+    return this;
+  }
 
-      test();
+  Future<List<E>> query<E>(LazyBox<E> box, {bool Function(E element)? where}) async {
+    try {
+      final keys = box.keys.toList().reversed;
+      List<E> listModels = [];
+
+      for (var key in keys) {
+        final model = await box.get(key);
+        if (model != null) {
+          listModels.add(model);
+        }
+      }
+
+      if (where != null && listModels.isNotEmpty) {
+        List<E> filter = [];
+        for (var element in listModels) {
+          if (where(element)) filter.add(element);
+        }
+        listModels = filter;
+      }
+
+      return listModels;
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+      return [];
+    }
+  }
+
+  Future<void> delete<E>(LazyBox<E> box, {required bool Function(E element) where}) async {
+    try {
+      final keys = box.keys.toList().reversed;
+
+      for (var key in keys) {
+        final model = await box.get(key);
+        if (model != null && where(model)) await box.delete(key);
+      }
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
   }
 
-  Future<void> test() async {
-    final box = Hive.lazyBox<UserModel>(DB_USERS_KEY);
-    await box.clear();
-    await box.add(
-      UserModel(
-        id: '1',
-        personName: 'personName',
-        deviceName: 'deviceName',
-      ),
-    );
-    await box.add(
-      UserModel(
-        id: '2',
-        personName: 'personName',
-        deviceName: 'deviceName',
-      ),
-    );
-    await box.add(
-      UserModel(
-        id: '123',
-        personName: 'personName',
-        deviceName: 'deviceName',
-      ),
-    );
+  Future<void> update<E>(
+    LazyBox<E> box, {
+    required String id,
+    required E model,
+    required bool Function(E element) where,
+  }) async {
+    try {
+      final keys = box.keys.toList().reversed;
 
-    var keys = box.keys.toList().reversed;
-
-    for (var key in keys) {
-      final user = await box.get(key);
-      print('key:$key - user:${user}');
+      for (var key in keys) {
+        final element = await box.get(key);
+        if (element != null && where(element)) await box.put(id, model);
+      }
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
     }
   }
 
-  Future<void> clearDataBase() async {
+  Future<void> insert<E>(
+    LazyBox<E> box, {
+    required String id,
+    required E model,
+  }) async {
     try {
-      // await db.rawDelete('DELETE FROM user');
-      // await db.rawDelete('DELETE FROM user_history');
+      await box.put(id, model);
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
+  }
+
+  Future<void> clearDataBase<E>(
+    LazyBox<E> box,
+  ) async {
+    try {
+      await box.clear();
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
@@ -80,10 +119,12 @@ class HiveService {
 
   Future<bool> dataBaseIsEmpty() async {
     try {
-      var isEmptyTables = [];
-      // isEmptyTables.add((await db.rawQuery('SELECT * FROM user')).isEmpty);
-      // isEmptyTables.add((await db.rawQuery('SELECT * FROM user_history')).isEmpty);
-      isEmpty = isEmptyTables.contains(true);
+      var isEmpty = true;
+      for (var box in listBox) {
+        if (box.keys.toList().isNotEmpty) {
+          return false;
+        }
+      }
       return isEmpty;
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
@@ -103,6 +144,21 @@ class HiveService {
     listLazyBox.add(await Hive.openLazyBox<UserModel>(DB_USERS_KEY));
     listLazyBox.add(await Hive.openLazyBox<UserHistoryModel>(DB_USER_HISTORY_KEY));
     listLazyBox.add(await Hive.openLazyBox<UserDetailModel>(DB_USER_DETAIL_KEY));
-    listLazyBox.add(await Hive.openLazyBox<UserSettingsModel>(DB_USER_DETAIL_KEY));
+    listLazyBox.add(await Hive.openLazyBox<UserSettingsModel>(DB_USER_SETTINGS_KEY));
+    listBox = listLazyBox;
   }
+}
+
+enum HiveConflictAlgorithm {
+  abort,
+  ignore,
+  replace,
+}
+
+enum HiveOrderBy {
+  /// В обратном порядке
+  ASC,
+
+  /// По порядку
+  DESC,
 }

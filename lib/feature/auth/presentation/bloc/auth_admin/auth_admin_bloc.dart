@@ -7,7 +7,7 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/l10n/generated/l10n.dart';
 import 'package:svarog_heart_tracker/core/models/start_app_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/start_app/set_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/set_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 part 'auth_admin_event.dart';

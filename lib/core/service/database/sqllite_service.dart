@@ -35,12 +35,13 @@ class SqlLiteService {
     }
   }
 
-  Future<void> init() async {
+  Future<SqlLiteService> init() async {
     try {
       await open();
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
+    return this;
   }
 
   Future<void> _dbInit(Database db) async {

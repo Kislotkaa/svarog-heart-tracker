@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
+import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 
 abstract class UserRepository {
   Future<Either<Failure, List<UserModel>>> getUsers();
@@ -10,6 +10,7 @@ abstract class UserRepository {
   Future<Either<Failure, UserModel?>> updateUserByPk(UserParams params);
   Future<Either<Failure, void>> insertUser(UserParams params);
   Future<Either<Failure, void>> removeUserByPk(String id);
+  Future<Either<Failure, void>> clearDatabase();
 }
 
 class UserRepositoryImpl extends UserRepository {
@@ -69,6 +70,17 @@ class UserRepositoryImpl extends UserRepository {
       final model = await userDataSource.updateUserByPk(params);
 
       return Right(model);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> clearDatabase() async {
+    try {
+      await userDataSource.clearDatabase();
+
+      return const Right(null);
     } on CacheFailure catch (exception) {
       return Left(exception);
     }

@@ -4,7 +4,6 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 
 part 'history_event.dart';
@@ -17,11 +16,10 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   /// **[String]** required
   final RemoveUserByPkUseCase removeUserByPkUseCase;
 
-  /// **[String]** required
-  final RemoveUserHistoryByPkUseCase removeUserHistoryByPkUseCase;
+  // /// **[String]** required
+  // final RemoveUserHistoryByPkUseCase removeUserHistoryByPkUseCase;
 
-  HistoryBloc(
-      {required this.getUsersUseCase, required this.removeUserByPkUseCase, required this.removeUserHistoryByPkUseCase})
+  HistoryBloc({required this.getUsersUseCase, required this.removeUserByPkUseCase})
       : super(const HistoryState.initial()) {
     on<HistoryInitialEvent>((event, emit) async {
       add(const GetHistoryEvent());

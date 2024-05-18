@@ -11,7 +11,7 @@ Future<void> main() async {
   await runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    await di.init();
+    await di.initLocator();
 
     await SentryFlutter.init(
       (options) {

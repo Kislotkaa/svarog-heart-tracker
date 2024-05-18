@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/repository/start_app_repository.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/repository/start_app_repository.dart';
 
 class ClearCacheStartAppUseCase extends UseCase<void, NoParams> {
   final StartAppRepository startAppRepository;
