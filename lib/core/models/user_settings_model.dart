@@ -9,10 +9,10 @@ part 'user_settings_model.g.dart';
 class UserSettingsModel {
   UserSettingsModel({
     required this.id,
-    this.greenZone = 145,
-    this.orangeZone = 160,
-    this.timeNotification = 10,
-    this.notificationEnable = true,
+    this.greenZone = 145, // Порог зелёной зоны
+    this.orangeZone = 160, // Порог красной зоны
+    this.timeNotification = 10, // Время в секундах до уведомления превышений порога красной зоны
+    this.notificationEnable = true, // Оповещения этого пользователя активны?
   });
 
   @HiveField(0)

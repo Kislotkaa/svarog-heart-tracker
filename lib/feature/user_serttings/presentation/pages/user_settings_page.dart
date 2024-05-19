@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/feature/user_serttings/presentation/bloc/user_settings_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 

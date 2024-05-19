@@ -20,8 +20,9 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/g
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/update_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
-import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/clear_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/settings_utils.dart';
@@ -53,7 +54,8 @@ import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/conne
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/clear_database_usecase.dart';
-import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/global_settings/global_settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
 import 'package:svarog_heart_tracker/feature/user_serttings/presentation/bloc/user_settings_bloc.dart';
 
@@ -62,7 +64,7 @@ final sl = GetIt.instance;
 Future<void> initLocator() async {
   // Global Settings
   final sharedPreferences = await SharedPreferences.getInstance();
-  final globalSettingsService = GlobalSettingsService(sharedPreferences: sharedPreferences);
+  final globalSettingsService = GlobalSettingsService(sharedPreferences: sharedPreferences).init();
   await registerHiveOrSqlModules(globalSettingsService);
 
   // --- Cubit --- \\
@@ -161,6 +163,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => ClearAllUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => RemoveUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserSettingsByPkUseCase(sl()));
+  sl.registerLazySingleton(() => InsertUserSettingsByPkUseCase(sl()));
   sl.registerLazySingleton(() => GetUserSettingsByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserDetailByPkUseCase(sl()));
   sl.registerLazySingleton(() => GetUserDetailByPkUseCase(sl()));
@@ -182,6 +185,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
   sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl(), removeUserByPkUseCase: sl()));
   sl.registerLazySingleton(() => UserSettingsBloc());
+  sl.registerLazySingleton(() => GlobalSettingsBloc(globalSettingsService: sl()));
 
   sl.registerLazySingleton(() => HistoryDetailBloc(
         getUserByPkUseCase: sl(),
@@ -215,7 +219,7 @@ Future<void> initLocator() async {
 }
 
 Future<void> registerHiveOrSqlModules(GlobalSettingsService globalSettingsService) async {
-  final isMigrateHive = globalSettingsService.getMigratedHive();
+  final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
 
   if (sl.isRegistered<UserDataSource>()) {
     await sl.unregister<UserDataSource>();

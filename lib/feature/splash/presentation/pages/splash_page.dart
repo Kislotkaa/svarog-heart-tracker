@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_circular_progress_indicator_widget.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 

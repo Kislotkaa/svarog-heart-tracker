@@ -29,8 +29,9 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
         if (event.blueDevice != null) {
           await appBluetoothService.disconnectDevice(event.blueDevice!);
           sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.blueDevice!));
-        } else {
+        } else if (event.deviceController != null) {
           await appBluetoothService.disconnectDevice(event.deviceController!.device);
+          event.deviceController!.onDispose();
           sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.deviceController!.device));
         }
 
@@ -63,6 +64,8 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
           insertHistoryUseCase: sl(),
           insertUserUseCase: sl(),
           getUserByPkUseCase: sl(),
+          getUserSettingsByPkUseCase: sl(),
+          insertUserSettingsByPkUseCase: sl(),
         );
         sl<HomeBloc>().add(HomeAddDeviceControllerEvent(deviceController: deviceController));
         emit(

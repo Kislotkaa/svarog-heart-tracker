@@ -63,6 +63,27 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    EditDialogRoute.name: (routeData) {
+      final args = routeData.argsAs<EditDialogRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: EditDialogPage(
+          title: args.title,
+          initValue: args.initValue,
+          onTapConfirm: args.onTapConfirm,
+          textConfirm: args.textConfirm,
+          textCapitalization: args.textCapitalization,
+          type: args.type,
+          key: args.key,
+        ),
+      );
+    },
+    GlobalSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const GlobalSettingsPage(),
+      );
+    },
     HistoryDetailRoute.name: (routeData) {
       final args = routeData.argsAs<HistoryDetailRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -114,6 +135,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const UnknownPage(),
+      );
+    },
+    UserSettingsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UserSettingsPage(),
       );
     },
   };
@@ -286,6 +313,82 @@ class ConfirmDialogRouteArgs {
 }
 
 /// generated route for
+/// [EditDialogPage]
+class EditDialogRoute extends PageRouteInfo<EditDialogRouteArgs> {
+  EditDialogRoute({
+    required String title,
+    required String? initValue,
+    required void Function(String) onTapConfirm,
+    required String textConfirm,
+    TextCapitalization? textCapitalization,
+    TextInputType? type,
+    Key? key,
+    List<PageRouteInfo>? children,
+  }) : super(
+          EditDialogRoute.name,
+          args: EditDialogRouteArgs(
+            title: title,
+            initValue: initValue,
+            onTapConfirm: onTapConfirm,
+            textConfirm: textConfirm,
+            textCapitalization: textCapitalization,
+            type: type,
+            key: key,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'EditDialogRoute';
+
+  static const PageInfo<EditDialogRouteArgs> page = PageInfo<EditDialogRouteArgs>(name);
+}
+
+class EditDialogRouteArgs {
+  const EditDialogRouteArgs({
+    required this.title,
+    required this.initValue,
+    required this.onTapConfirm,
+    required this.textConfirm,
+    this.textCapitalization,
+    this.type,
+    this.key,
+  });
+
+  final String title;
+
+  final String? initValue;
+
+  final void Function(String) onTapConfirm;
+
+  final String textConfirm;
+
+  final TextCapitalization? textCapitalization;
+
+  final TextInputType? type;
+
+  final Key? key;
+
+  @override
+  String toString() {
+    return 'EditDialogRouteArgs{title: $title, initValue: $initValue, onTapConfirm: $onTapConfirm, textConfirm: $textConfirm, textCapitalization: $textCapitalization, type: $type, key: $key}';
+  }
+}
+
+/// generated route for
+/// [GlobalSettingsPage]
+class GlobalSettingsRoute extends PageRouteInfo<void> {
+  const GlobalSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          GlobalSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'GlobalSettingsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [HistoryDetailPage]
 class HistoryDetailRoute extends PageRouteInfo<HistoryDetailRouteArgs> {
   HistoryDetailRoute({
@@ -421,6 +524,20 @@ class UnknownRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'UnknownRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserSettingsPage]
+class UserSettingsRoute extends PageRouteInfo<void> {
+  const UserSettingsRoute({List<PageRouteInfo>? children})
+      : super(
+          UserSettingsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserSettingsRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

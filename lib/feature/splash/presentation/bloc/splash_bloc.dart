@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/app.dart';
@@ -22,9 +20,9 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
-import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_datasource.dart';
-import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
+import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -206,7 +204,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       // }
 
       /// Миграция на Hive под загрузку splash screen
-      final isMigrateHive = globalSettingsService.getMigratedHive();
+      final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
       late List<UserModel> users = [];
 
       if (isMigrateHive == false) {
@@ -236,7 +234,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         }, (usersReturned) => users = usersReturned);
 
         /// Перебираем полученных пользователей
-        log('users count = ${users.length}');
         for (var elementUser in users) {
           late UserModel user = elementUser;
 
@@ -292,7 +289,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
             );
             return;
           }, (historisReturned) => historis = historisReturned);
-          log('historis count = ${historis.length}');
 
           // Перебираем полученную историю пользователя и добавляем её в Hive бд
           for (var elementHistory in historis) {

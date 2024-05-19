@@ -6,8 +6,8 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_main_layout.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_main_layout.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/widgets/base_active_stats_widget.dart';
@@ -60,7 +60,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                           showConfirmDialog(
                             context: context,
                             title: 'Удалить всю историю?',
-                            description: 'Вы действительно хотите зевозвратно удалть всю историю?',
+                            description: 'Вы действительно хотите безвозвратно удалить всю историю?',
                             onTapConfirm: () {
                               router.removeLast();
                               sl<HistoryDetailBloc>().add(const HistoryDetailDeleteAllEvent());

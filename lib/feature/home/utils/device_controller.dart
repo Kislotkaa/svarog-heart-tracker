@@ -4,16 +4,21 @@ import 'dart:developer';
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
-import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
+import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
+import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
+import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
+import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
 
@@ -26,14 +31,19 @@ class DeviceController {
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
     required this.getUserByPkUseCase,
+    required this.getUserSettingsByPkUseCase,
+    required this.insertUserSettingsByPkUseCase,
   });
 
-  final BluetoothDevice device;
+  late UserSettingsModel userSettings;
 
+  final BluetoothDevice device;
+  final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
   final GetUserByPkUseCase getUserByPkUseCase;
   final GetUserHistoryByPkUseCase getHistoryByPkUseCase;
   final InsertUserHistoryUseCase insertHistoryUseCase;
   final InsertUserUseCase insertUserUseCase;
+  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
 
   final String name;
   final String id;
@@ -60,9 +70,12 @@ class DeviceController {
   late List<BluetoothService> services = [];
   late StreamSubscription streamSubscription;
 
+  final globalSettingsService = sl<GlobalSettingsService>();
+  GlobalSettingsModel get appSettings => globalSettingsService.appSettings;
+
   Future<void> onInit() async {
+    await getAndSaveUser();
     await getServiceDevice();
-    await saveUser();
   }
 
   Future<void> onDispose() async {
@@ -115,13 +128,13 @@ class DeviceController {
     if (isSecond) {
       if (realHeart == 0) {
         secondsOff++;
-        if (secondsOff >= 20) {
+        if (secondsOff >= appSettings.timeDisconnect) {
           await saveHeartRateDB(ignoreTimer: true);
-          sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: device));
+          sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(deviceController: this));
         }
-      } else if (realHeart < 145) {
+      } else if (realHeart < userSettings.greenZone) {
         secondsGreen++;
-      } else if (realHeart < 160) {
+      } else if (realHeart < userSettings.orangeZone) {
         secondsOrange++;
       } else {
         secondsRed++;
@@ -131,9 +144,9 @@ class DeviceController {
   }
 
   Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
-    if (ignoreTimer && seconds > 180) {
+    if (ignoreTimer && seconds > appSettings.timeSavedData) {
       await _saveHeartRateDB();
-    } else if (seconds % 180 == 0 && seconds != 0) {
+    } else if (seconds % appSettings.timeSavedData == 0 && seconds != 0) {
       await _saveHeartRateDB();
     }
   }
@@ -250,7 +263,7 @@ class DeviceController {
     }
   }
 
-  Future<void> saveUser() async {
+  Future<void> getAndSaveUser() async {
     final failurOrUser = await getUserByPkUseCase(id);
 
     late UserModel? userModel;
@@ -263,12 +276,38 @@ class DeviceController {
       },
     );
 
+    final userSettingsId = userModel?.userSettingsId;
+
+    bool needUpdateSettingsId = false;
+    final failurOrSettings = await getUserSettingsByPkUseCase(userSettingsId ?? '');
+    failurOrSettings.fold((l) {}, (model) {
+      if (model == null) {
+        userSettings = UserSettingsModel(id: const Uuid().v4());
+        needUpdateSettingsId = true;
+        return;
+      }
+      userSettings = model;
+    });
+
+    if (needUpdateSettingsId) {
+      final failurOrUpdating = await insertUserSettingsByPkUseCase(userSettings);
+      failurOrUpdating.fold((l) {
+        log(l.toString());
+      }, (settings) {
+        log(settings.toString());
+      });
+    }
+
     final params = UserParams(
       id: id,
+      userDetailId: userModel?.userDetailId,
+      userSettingsId: needUpdateSettingsId ? userSettings.id : userModel?.userSettingsId,
       deviceName: device.advName,
       personName: userModel?.personName ?? name,
       isAutoConnect: userModel?.isAutoConnect,
     );
+
+    log('params: ${params.userSettingsId}');
 
     final failurOrInserted = await insertUserUseCase(params);
 

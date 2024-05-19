@@ -4,7 +4,7 @@ import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
-import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
@@ -57,8 +57,11 @@ class UserDataSourceSqlImpl extends UserDataSource {
   Future<void> insertUser(UserParams params) async {
     final userModel = UserModel(
       id: params.id,
+      userDetailId: params.userDetailId,
+      userSettingsId: params.userSettingsId,
       personName: params.personName,
       deviceName: params.deviceName,
+      isAutoConnect: params.isAutoConnect,
     );
     await _db.insert(
       _tableName,
@@ -97,14 +100,13 @@ class UserDataSourceSqlImpl extends UserDataSource {
   @override
   Future<void> clearDatabase() async {
     await _db.rawDelete('DELETE FROM $_tableName');
-
   }
 }
 
 class UserDataSourceHiveImpl extends UserDataSource {
   final HiveService hiveService;
   final box = Hive.lazyBox<UserModel>(DB_USERS_KEY);
-  bool? isMigrateHive = sl<GlobalSettingsService>().getMigratedHive();
+  bool? isMigrateHive = sl<GlobalSettingsService>().appSettings.isMigratedHive;
 
   UserDataSourceHiveImpl({
     required this.hiveService,
@@ -131,6 +133,7 @@ class UserDataSourceHiveImpl extends UserDataSource {
       userDetailId: params.userDetailId,
       personName: params.personName,
       deviceName: params.deviceName,
+      isAutoConnect: params.isAutoConnect,
     );
     await hiveService.insert(box, id: userModel.id, model: userModel);
   }

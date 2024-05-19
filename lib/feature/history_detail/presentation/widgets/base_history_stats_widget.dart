@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/utils/date_format.dart';
@@ -44,6 +45,7 @@ class BaseHistoryStatsWidget extends StatelessWidget {
         ),
         background: const SizedBox(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -79,224 +81,258 @@ class BaseHistoryStatsWidget extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.only(top: 10, right: 16, left: 16, bottom: 16),
-              height: 105,
               decoration: BoxDecoration(
                 color: appTheme.cardColor,
+                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
               ),
-              child: Row(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        AutoSizeText.rich(
-                          TextSpan(
-                            text: 'max: ',
-                            style: appTheme.textTheme.smallCaptionSemibold12,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: history.maxHeart.toString(),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 105,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              AutoSizeText.rich(
+                                TextSpan(
+                                  text: 'max: ',
+                                  style: appTheme.textTheme.smallCaptionSemibold12,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: history.maxHeart.toString(),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                    ),
+                                    TextSpan(
+                                      text: ' уд/м',
+                                      style: appTheme.textTheme.smallCaptionSemibold12
+                                          .copyWith(color: appTheme.textGrayColor),
+                                    ),
+                                  ],
+                                ),
+                                minFontSize: 10,
+                                maxLines: 1,
                               ),
-                              TextSpan(
-                                text: ' уд/м',
-                                style:
-                                    appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                              AutoSizeText.rich(
+                                TextSpan(
+                                  text: 'min: ',
+                                  style: appTheme.textTheme.smallCaptionSemibold12,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: history.minHeart.toString(),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                    ),
+                                    TextSpan(
+                                      text: ' уд/м',
+                                      style: appTheme.textTheme.smallCaptionSemibold12
+                                          .copyWith(color: appTheme.textGrayColor),
+                                    ),
+                                  ],
+                                ),
+                                minFontSize: 10,
+                                maxLines: 1,
+                              ),
+                              AutoSizeText.rich(
+                                TextSpan(
+                                  text: 'avg: ',
+                                  style: appTheme.textTheme.smallCaptionSemibold12,
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: history.avgHeart.toString(),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                    ),
+                                    TextSpan(
+                                      text: ' уд/м',
+                                      style: appTheme.textTheme.smallCaptionSemibold12
+                                          .copyWith(color: appTheme.textGrayColor),
+                                    ),
+                                  ],
+                                ),
+                                minFontSize: 10,
+                                maxLines: 1,
                               ),
                             ],
                           ),
-                          minFontSize: 10,
-                          maxLines: 1,
                         ),
-                        AutoSizeText.rich(
-                          TextSpan(
-                            text: 'min: ',
-                            style: appTheme.textTheme.smallCaptionSemibold12,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: history.minHeart.toString(),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
+                      ),
+                      SizedBox(
+                        height: 105,
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  FittedBox(
+                                    child: Icon(
+                                      Icons.favorite,
+                                      color: appTheme.errorColor,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  AutoSizeText.rich(
+                                    TextSpan(
+                                      text: getMin(history.redTimeHeart),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: ' мин',
+                                          style: appTheme.textTheme.smallCaptionSemibold12
+                                              .copyWith(color: appTheme.textGrayColor),
+                                        ),
+                                      ],
+                                    ),
+                                    minFontSize: 10,
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
-                              TextSpan(
-                                text: ' уд/м',
-                                style:
-                                    appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                              Row(
+                                children: [
+                                  FittedBox(
+                                    child: Icon(
+                                      Icons.favorite,
+                                      color: appTheme.yellowColor,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  AutoSizeText.rich(
+                                    TextSpan(
+                                      text: getMin(history.orangeTimeHeart),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: ' мин',
+                                          style: appTheme.textTheme.smallCaptionSemibold12
+                                              .copyWith(color: appTheme.textGrayColor),
+                                        ),
+                                      ],
+                                    ),
+                                    minFontSize: 10,
+                                    maxLines: 1,
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  FittedBox(
+                                    child: Icon(
+                                      Icons.favorite,
+                                      color: appTheme.greenColor,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  AutoSizeText.rich(
+                                    TextSpan(
+                                      text: getMin(history.greenTimeHeart),
+                                      style: appTheme.textTheme.smallButtonExtrabold12,
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: ' мин',
+                                          style: appTheme.textTheme.smallCaptionSemibold12
+                                              .copyWith(color: appTheme.textGrayColor),
+                                        ),
+                                      ],
+                                    ),
+                                    minFontSize: 10,
+                                    maxLines: 1,
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          minFontSize: 10,
-                          maxLines: 1,
                         ),
-                        AutoSizeText.rich(
-                          TextSpan(
-                            text: 'avg: ',
-                            style: appTheme.textTheme.smallCaptionSemibold12,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: history.avgHeart.toString(),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
+                      ),
+                      Expanded(
+                        child: SizedBox(
+                          height: 105,
+                          child: LineChart(
+                            LineChartData(
+                              gridData: FlGridData(
+                                show: false,
                               ),
-                              TextSpan(
-                                text: ' уд/м',
-                                style:
-                                    appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                              titlesData: FlTitlesData(
+                                show: true,
+                                rightTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                topTitles: AxisTitles(
+                                  sideTitles: SideTitles(showTitles: false),
+                                ),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: false,
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    getTitlesWidget: leftTitleWidgets,
+                                    showTitles: false,
+                                  ),
+                                ),
                               ),
-                            ],
+                              borderData: FlBorderData(
+                                show: false,
+                              ),
+                              minY: history.yHeart.min.toDouble() - history.yHeart.min / 2,
+                              maxY: history.yHeart.max.toDouble() + history.yHeart.max / 2,
+                              lineBarsData: [
+                                LineChartBarData(
+                                  spots: listSpot,
+                                  isCurved: true,
+                                  color: appTheme.errorColor,
+                                  barWidth: 1,
+                                  isStrokeCapRound: true,
+                                  dotData: FlDotData(
+                                    show: false,
+                                  ),
+                                  belowBarData: BarAreaData(
+                                    show: true,
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        appTheme.errorColor,
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          minFontSize: 10,
-                          maxLines: 1,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            FittedBox(
-                              child: Icon(
-                                Icons.favorite,
-                                color: appTheme.errorColor,
-                                size: 24,
-                              ),
-                            ),
-                            AutoSizeText.rich(
-                              TextSpan(
-                                text: getMin(history.redTimeHeart),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: ' мин',
-                                    style: appTheme.textTheme.smallCaptionSemibold12
-                                        .copyWith(color: appTheme.textGrayColor),
-                                  ),
-                                ],
-                              ),
-                              minFontSize: 10,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            FittedBox(
-                              child: Icon(
-                                Icons.favorite,
-                                color: appTheme.yellowColor,
-                                size: 24,
-                              ),
-                            ),
-                            AutoSizeText.rich(
-                              TextSpan(
-                                text: getMin(history.orangeTimeHeart),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: ' мин',
-                                    style: appTheme.textTheme.smallCaptionSemibold12
-                                        .copyWith(color: appTheme.textGrayColor),
-                                  ),
-                                ],
-                              ),
-                              minFontSize: 10,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            FittedBox(
-                              child: Icon(
-                                Icons.favorite,
-                                color: appTheme.greenColor,
-                                size: 24,
-                              ),
-                            ),
-                            AutoSizeText.rich(
-                              TextSpan(
-                                text: getMin(history.greenTimeHeart),
-                                style: appTheme.textTheme.smallButtonExtrabold12,
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: ' мин',
-                                    style: appTheme.textTheme.smallCaptionSemibold12
-                                        .copyWith(color: appTheme.textGrayColor),
-                                  ),
-                                ],
-                              ),
-                              minFontSize: 10,
-                              maxLines: 1,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: LineChart(
-                      LineChartData(
-                        gridData: FlGridData(
-                          show: false,
-                        ),
-                        titlesData: FlTitlesData(
-                          show: true,
-                          rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false),
-                          ),
-                          bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              showTitles: false,
-                            ),
-                          ),
-                          leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                              getTitlesWidget: leftTitleWidgets,
-                              showTitles: false,
-                            ),
-                          ),
-                        ),
-                        borderData: FlBorderData(
-                          show: false,
-                        ),
-                        minY: history.yHeart.min.toDouble() - history.yHeart.min / 2,
-                        maxY: history.yHeart.max.toDouble() + history.yHeart.max / 2,
-                        lineBarsData: [
-                          LineChartBarData(
-                            spots: listSpot,
-                            isCurved: true,
-                            color: appTheme.errorColor,
-                            barWidth: 1,
-                            isStrokeCapRound: true,
-                            dotData: FlDotData(
-                              show: false,
-                            ),
-                            belowBarData: BarAreaData(
-                              show: true,
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  appTheme.errorColor,
-                                  Colors.transparent,
-                                ],
-                              ),
+                  if (history.calories != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Assets.icons.fire.svg(height: 24, width: 24),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                              '${history.calories?.toInt()} ккал',
+                              style: appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  )
                 ],
               ),
             ),

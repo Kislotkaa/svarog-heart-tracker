@@ -76,8 +76,11 @@ class $AssetsIconsGen {
   /// File path: assets/icons/body.svg
   SvgGenImage get body => const SvgGenImage('assets/icons/body.svg');
 
+  /// File path: assets/icons/fire.svg
+  SvgGenImage get fire => const SvgGenImage('assets/icons/fire.svg');
+
   /// List of all assets
-  List<SvgGenImage> get values => [appIcon, body];
+  List<SvgGenImage> get values => [appIcon, body, fire];
 }
 
 class $AssetsImagesGen {

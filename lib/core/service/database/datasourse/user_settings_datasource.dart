@@ -6,6 +6,7 @@ import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 abstract class UserSettingsDataSource {
   Future<UserSettingsModel?> getUserSettingsByPk(String id);
   Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params);
+  Future<UserSettingsModel> insertUserSettingsByPk(UserSettingsModel params);
   Future<void> clearDatabase();
 }
 
@@ -27,6 +28,16 @@ class UserSettingsDataSourceHiveImpl extends UserSettingsDataSource {
     await hiveService.update(
       box,
       where: (element) => element.id == params.id,
+      id: params.id,
+      model: params,
+    );
+    return params;
+  }
+
+  @override
+  Future<UserSettingsModel> insertUserSettingsByPk(UserSettingsModel params) async {
+    await hiveService.insert(
+      box,
       id: params.id,
       model: params,
     );

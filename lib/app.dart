@@ -16,7 +16,8 @@ import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/conne
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
-import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/global_settings/global_settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
 import 'package:svarog_heart_tracker/feature/user_serttings/presentation/bloc/user_settings_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart' as di;
@@ -46,6 +47,7 @@ class App extends StatelessWidget {
         BlocProvider<AutoConnectBloc>(create: (context) => di.sl<AutoConnectBloc>()),
         BlocProvider<HistoryBloc>(create: (context) => di.sl<HistoryBloc>()),
         BlocProvider<UserSettingsBloc>(create: (context) => di.sl<UserSettingsBloc>()),
+        BlocProvider<GlobalSettingsBloc>(create: (context) => di.sl<GlobalSettingsBloc>()),
 
         // Cubit
         BlocProvider<ThemeCubit>(create: (context) => di.sl<ThemeCubit>()),

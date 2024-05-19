@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_flexible_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/blur_transparent_sliver_app_bar.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_bar/blur_transparent_sliver_app_bar.dart';
 
 class MainLayout extends StatelessWidget {
   const MainLayout({
@@ -34,7 +34,7 @@ class MainLayout extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             BaseBlurTransparentSliverAppBar(
-              text: title,
+              title: title,
               flexibleSpace: flexibleSpace ?? const FlexibleWidget(),
               actions: [
                 ...actions,

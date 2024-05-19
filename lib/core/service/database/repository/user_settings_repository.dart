@@ -6,6 +6,8 @@ import 'package:svarog_heart_tracker/core/service/database/datasourse/user_setti
 abstract class UserSettingsRepository {
   Future<Either<Failure, UserSettingsModel?>> getUserSettingsByPk(String id);
   Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params);
+  Future<Either<Failure, UserSettingsModel>> insertUserSettingsByPk(UserSettingsModel params);
+
   Future<Either<Failure, void>> clearDatabase();
 }
 
@@ -31,6 +33,17 @@ class UserSettingsRepositoryImpl extends UserSettingsRepository {
   Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params) async {
     try {
       final model = await userSettingsDataSource.updateUserSettingsByPk(params);
+
+      return Right(model);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserSettingsModel>> insertUserSettingsByPk(UserSettingsModel params) async {
+    try {
+      final model = await userSettingsDataSource.insertUserSettingsByPk(params);
 
       return Right(model);
     } on CacheFailure catch (exception) {

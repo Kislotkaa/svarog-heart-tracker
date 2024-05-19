@@ -4,7 +4,7 @@ import 'package:svarog_heart_tracker/core/ui_kit/base_flexible_widget.dart';
 
 class BaseBlurTransparentSliverAppBar extends StatelessWidget {
   const BaseBlurTransparentSliverAppBar({
-    required this.text,
+    required this.title,
     this.actions = const [],
     this.leadingWidget,
     this.flexibleSpace = const FlexibleWidget(),
@@ -13,7 +13,7 @@ class BaseBlurTransparentSliverAppBar extends StatelessWidget {
 
   final List<Widget> actions;
   final Widget flexibleSpace;
-  final String text;
+  final String title;
   final Widget? leadingWidget;
 
   @override
@@ -28,7 +28,7 @@ class BaseBlurTransparentSliverAppBar extends StatelessWidget {
       flexibleSpace: flexibleSpace,
       centerTitle: false,
       title: Text(
-        text,
+        title,
         style: appTheme.textTheme.bodySemibold16,
       ),
       actions: actions,

@@ -6,12 +6,14 @@ import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_global_loading_widget.dart';
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_global_loading_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_version_widget.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
-import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings_bloc.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_settings_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -55,7 +57,9 @@ class SettingsPage extends StatelessWidget {
                               rightWidget: const Icon(Icons.keyboard_arrow_right_rounded),
                             ),
                             FutureBuilder(
-                              future: sl<SqlLiteService>().dataBaseIsEmpty(),
+                              future: sl<GlobalSettingsService>().appSettings.isMigratedHive
+                                  ? sl<HiveService>().dataBaseIsEmpty()
+                                  : sl<SqlLiteService>().dataBaseIsEmpty(),
                               builder: (context, snapshot) {
                                 if (snapshot.data == false) {
                                   return BaseSettingsWidget(
@@ -88,6 +92,14 @@ class SettingsPage extends StatelessWidget {
                             Text(
                               'Дополнительные',
                               style: appTheme.textTheme.buttonExtrabold16,
+                            ),
+                            BaseSettingsWidget(
+                              onTap: () => router.push(const GlobalSettingsRoute()),
+                              leftWidget: Icon(
+                                Icons.warning_amber_rounded,
+                                color: appTheme.textGrayColor,
+                              ),
+                              text: 'Настройки',
                             ),
                             BlocBuilder<ThemeCubit, ThemeState>(
                               builder: (context, state) {

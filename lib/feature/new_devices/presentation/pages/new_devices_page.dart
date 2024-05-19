@@ -9,9 +9,9 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_app_bar_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_circular_progress_indicator_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
@@ -87,7 +87,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
                                     } else {
                                       if (isPreviouslyConnected(
                                           previuyslState.previouslyConnected, device.remoteId.str)) {
-                                        final name = getNamePreviouslyDevice(
+                                        final name = getUserModelPreviouslyDevice(
                                             previuyslState.previouslyConnected, device.remoteId.str);
                                         sl<ConnectDeviceBloc>()
                                             .add(ConnectDeviceConnectEvent(device: device, name: name));
@@ -121,7 +121,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
                                   isPreviouslyConnected: (String id) =>
                                       isPreviouslyConnected(previuyslState.previouslyConnected, id),
                                   getName: (String id) =>
-                                      getNamePreviouslyDevice(previuyslState.previouslyConnected, id),
+                                      getUserModelPreviouslyDevice(previuyslState.previouslyConnected, id),
                                 ),
                               );
                             }
@@ -173,7 +173,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
     return false;
   }
 
-  String getNamePreviouslyDevice(List<UserModel> previouslyConnected, String? id) {
+  String getUserModelPreviouslyDevice(List<UserModel> previouslyConnected, String? id) {
     if (id != null) {
       var result = previouslyConnected.firstWhereOrNull((element) => element.id == id);
       return result?.personName ?? 'Empty';

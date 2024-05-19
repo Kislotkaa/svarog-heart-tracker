@@ -88,7 +88,9 @@ class HiveService {
 
       for (var key in keys) {
         final element = await box.get(key);
-        if (element != null && where(element)) await box.put(id, model);
+        if (element != null && where(element)) {
+          await box.put(id, model);
+        }
       }
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
