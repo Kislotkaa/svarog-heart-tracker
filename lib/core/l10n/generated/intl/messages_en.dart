@@ -23,6 +23,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "error": MessageLookupByLibrary.simpleMessage("Error"),
-        "somethingWrong": MessageLookupByLibrary.simpleMessage("Some error occurred, please try again later")
+        "somethingWrong": MessageLookupByLibrary.simpleMessage(
+            "Some error occurred, please try again later")
       };
 }

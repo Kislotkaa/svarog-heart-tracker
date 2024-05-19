@@ -9,6 +9,7 @@ abstract class UserHistoryDataSource {
   Future<List<UserHistoryModel>> getUserHistoryByPk(String id);
   Future<UserHistoryModel?> getHistoryByPk(String id);
   Future<void> insertHistory(UserHistoryModel params);
+  Future<void> updateHistoryByPk(UserHistoryModel params);
   Future<void> removeHistoryByPk(String id);
   Future<void> clearDatabase();
 }
@@ -60,6 +61,9 @@ class UserHistoryDataSourceSqlImpl extends UserHistoryDataSource {
   }
 
   @override
+  Future<void> updateHistoryByPk(UserHistoryModel params) async {}
+
+  @override
   Future<void> removeHistoryByPk(String id) async {
     await _db.delete(
       _tableName,
@@ -104,6 +108,16 @@ class UserHistoryDataSourceHiveImpl extends UserHistoryDataSource {
       box,
       id: params.id,
       model: params,
+    );
+  }
+
+  @override
+  Future<void> updateHistoryByPk(UserHistoryModel params) async {
+    await hiveService.update(
+      box,
+      id: params.id,
+      model: params,
+      where: (element) => element.id == params.id,
     );
   }
 

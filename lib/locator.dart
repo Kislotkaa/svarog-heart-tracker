@@ -19,12 +19,14 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_us
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/update_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/update_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/clear_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/tflite_service.dart';
 import 'package:svarog_heart_tracker/core/utils/settings_utils.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/datasource/start_app_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/repository/start_app_repository.dart';
@@ -169,6 +171,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => GetUserDetailByPkUseCase(sl()));
   sl.registerLazySingleton(() => ClearUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => ClearUserUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserHistoryUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
@@ -206,8 +209,11 @@ Future<void> initLocator() async {
   final appBluetoothService = await AppBluetoothService().init();
   final sqlLiteService = await SqlLiteService().init();
   final hiveService = await HiveService().init();
+  final tfliteService = await TFLiteService(sl()).init();
+
   final appNotificationService = AppNotificationService()..init();
 
+  sl.registerLazySingleton(() => tfliteService);
   sl.registerLazySingleton(() => globalSettingsService);
   sl.registerLazySingleton(() => appNotificationService);
   sl.registerLazySingleton(() => sharedPreferences);

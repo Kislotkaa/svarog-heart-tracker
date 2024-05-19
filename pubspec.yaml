@@ -14,6 +14,9 @@ dependencies:
   flutter_localizations:
     sdk: flutter  
 
+  # Нейронка
+  tflite_flutter: ^0.10.4
+
   # Отрисовка графиков
   fl_chart: ^0.61.0
 
