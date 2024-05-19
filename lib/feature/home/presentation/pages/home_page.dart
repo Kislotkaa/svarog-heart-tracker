@@ -7,6 +7,7 @@ import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/local_notification_model.dart';
 import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
@@ -124,7 +125,8 @@ class _HomePageState extends State<HomePage> {
 
   void initialAutoConnectSubscribe() {
     final authoConnectBloc = sl<AutoConnectBloc>();
-    subscriptioAutoConneect = Stream.periodic(const Duration(seconds: 6)).listen((event) async {
+    final timeCheckDevice = sl<GlobalSettingsService>().appSettings.timeCheckDevice.toInt();
+    subscriptioAutoConneect = Stream.periodic(Duration(seconds: timeCheckDevice)).listen((event) async {
       authoConnectBloc.appBluetoothService.startScanDevice(duration: const Duration(seconds: 2));
       authoConnectBloc.add(AutoConnectSetScanResultEvent(authoConnectBloc.appBluetoothService.scanResult));
     });

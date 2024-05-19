@@ -57,6 +57,19 @@ class GlobalSettingsPage extends StatelessWidget {
                     ),
                   ),
                 ),
+                BaseSliderGlobalSettingsWidget(
+                  value: state.globalSettingsModel?.timeCheckDevice ??
+                      sl<GlobalSettingsService>().appSettings.timeCheckDevice,
+                  minValue: 4,
+                  maxValue: 30,
+                  title: "Раз во сколько секунд использовать Bluetooth, что бы проверить устройства поблизости?",
+                  slug: 'сек',
+                  onChanged: (value) => sl<GlobalSettingsBloc>().add(
+                    GlobalSettingsUpdateEvent(
+                      timeCheckDevice: value,
+                    ),
+                  ),
+                ),
               ],
             );
           },

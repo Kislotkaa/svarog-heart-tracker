@@ -4,22 +4,27 @@ import 'dart:convert';
 class GlobalSettingsModel {
   final double timeSavedData; // Время после которого сохраняются данные
   final double timeDisconnect; // Время после которого происходит отключение
+  final double timeCheckDevice; // Раз во сколько секунд использовать Bluetooth проверять устройства поблизости?
+
   final bool isMigratedHive;
 
   GlobalSettingsModel({
-    this.timeSavedData = 180,
-    this.timeDisconnect = 20,
+    this.timeSavedData = 180, // Минимум 10 - Максимум 600
+    this.timeDisconnect = 20, // Минимум 10 - Максимум 240
+    this.timeCheckDevice = 6, // Минимум 4 - Максимум 30
     this.isMigratedHive = false,
   });
 
   GlobalSettingsModel copyWith({
     double? timeSavedData,
     double? timeDisconnect,
+    double? timeCheckDevice,
     bool? isMigratedHive,
   }) {
     return GlobalSettingsModel(
       timeSavedData: timeSavedData ?? this.timeSavedData,
       timeDisconnect: timeDisconnect ?? this.timeDisconnect,
+      timeCheckDevice: timeCheckDevice ?? this.timeCheckDevice,
       isMigratedHive: isMigratedHive ?? this.isMigratedHive,
     );
   }
@@ -28,6 +33,7 @@ class GlobalSettingsModel {
     return <String, dynamic>{
       'timeSavedData': timeSavedData,
       'timeDisconnect': timeDisconnect,
+      'timeCheckDevice': timeCheckDevice,
       'isMigratedHive': isMigratedHive,
     };
   }
@@ -36,6 +42,7 @@ class GlobalSettingsModel {
     return GlobalSettingsModel(
       timeSavedData: map['timeSavedData'] as double,
       timeDisconnect: map['timeDisconnect'] as double,
+      timeCheckDevice: map['timeCheckDevice'] as double,
       isMigratedHive: map['isMigratedHive'] as bool,
     );
   }
@@ -46,8 +53,9 @@ class GlobalSettingsModel {
       GlobalSettingsModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() =>
-      'GlobalSettingsModel(timeSavedData: $timeSavedData, timeDisconnect: $timeDisconnect, isMigratedHive: $isMigratedHive)';
+  String toString() {
+    return 'GlobalSettingsModel(timeSavedData: $timeSavedData, timeDisconnect: $timeDisconnect, timeCheckDevice: $timeCheckDevice, isMigratedHive: $isMigratedHive)';
+  }
 
   @override
   bool operator ==(covariant GlobalSettingsModel other) {
@@ -55,9 +63,12 @@ class GlobalSettingsModel {
 
     return other.timeSavedData == timeSavedData &&
         other.timeDisconnect == timeDisconnect &&
+        other.timeCheckDevice == timeCheckDevice &&
         other.isMigratedHive == isMigratedHive;
   }
 
   @override
-  int get hashCode => timeSavedData.hashCode ^ timeDisconnect.hashCode ^ isMigratedHive.hashCode;
+  int get hashCode {
+    return timeSavedData.hashCode ^ timeDisconnect.hashCode ^ timeCheckDevice.hashCode ^ isMigratedHive.hashCode;
+  }
 }

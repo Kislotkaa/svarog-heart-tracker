@@ -56,10 +56,12 @@ class GlobalSettingsBloc extends Bloc<GlobalSettingsEvent, GlobalSettingsState> 
         try {
           final timeDisconnect = event.timeDisconnect?.round().toDouble();
           final timeSavedData = event.timeSavedData?.round().toDouble();
+          final timeCheckDevice = event.timeCheckDevice?.round().toDouble();
 
           final settings = globalSettingsService.appSettings.copyWith(
             timeDisconnect: timeDisconnect,
             timeSavedData: timeSavedData,
+            timeCheckDevice: timeCheckDevice,
           );
 
           await globalSettingsService.updateSettings(settings);

@@ -79,7 +79,7 @@ class BaseSliderGlobalSettingsWidget extends StatelessWidget {
                 min: minValue,
                 max: maxValue,
                 onChanged: (value) {
-                  HapticFeedback.selectionClick();
+                  if (this.value != value) HapticFeedback.selectionClick();
                   onChanged?.call(value);
                 },
                 activeColor: appTheme.revertBasicColor,
