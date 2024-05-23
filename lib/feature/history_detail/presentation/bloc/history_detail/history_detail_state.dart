@@ -3,8 +3,8 @@ part of 'history_detail_bloc.dart';
 class HistoryDetailState extends Equatable {
   final StateStatus status;
   final UserModel? user;
+  final HivePagination? pagination;
   final List<UserHistoryModel> listHistory;
-  final DeviceController? deviceController;
   final String? errorMessage;
   final String? errorTitle;
 
@@ -13,7 +13,7 @@ class HistoryDetailState extends Equatable {
   const HistoryDetailState._({
     this.status = StateStatus.initial,
     this.user,
-    this.deviceController,
+    this.pagination,
     this.listHistory = const [],
     this.errorMessage,
     this.errorTitle,
@@ -22,7 +22,7 @@ class HistoryDetailState extends Equatable {
   HistoryDetailState copyWith({
     StateStatus? status,
     UserModel? user,
-    DeviceController? deviceController,
+    HivePagination? pagination,
     List<UserHistoryModel>? listHistory,
     String? errorMessage,
     String? errorTitle,
@@ -30,7 +30,7 @@ class HistoryDetailState extends Equatable {
       HistoryDetailState._(
         status: status ?? this.status,
         user: user ?? this.user,
-        deviceController: deviceController ?? this.deviceController,
+        pagination: pagination ?? this.pagination,
         listHistory: listHistory ?? this.listHistory,
         errorMessage: errorMessage,
         errorTitle: errorTitle,
@@ -42,7 +42,7 @@ class HistoryDetailState extends Equatable {
   List<Object?> get props => [
         status,
         user,
-        deviceController,
+        pagination,
         listHistory,
         errorMessage,
         errorTitle,

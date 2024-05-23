@@ -5,10 +5,10 @@ import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
 
-class UpdateUserUseCase extends UseCase<UserModel?, UserParams> {
+class UpdateUserByPkUseCase extends UseCase<UserModel?, UserParams> {
   final UserRepository userRepository;
 
-  UpdateUserUseCase(this.userRepository);
+  UpdateUserByPkUseCase(this.userRepository);
 
   @override
   Future<Either<Failure, UserModel?>> call(UserParams params) async {

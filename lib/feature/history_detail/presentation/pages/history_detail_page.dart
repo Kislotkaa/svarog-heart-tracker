@@ -1,17 +1,20 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_main_layout.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/button/base_icon_button_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail/history_detail_bloc.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/widgets/base_active_stats_widget.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/widgets/base_history_stats_widget.dart';
+import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
@@ -36,10 +39,22 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HistoryDetailBloc, HistoryDetailState>(
+      buildWhen: (prev, next) => prev.status != next.status || prev.listHistory.length != prev.listHistory.hashCode,
       builder: (context, state) {
         return Stack(
           children: [
             MainLayout(
+              floatingActionButton: BaseIconButtonWidget(
+                onPressed: () {
+                  final userId = state.user?.id;
+                  if (userId != null) {
+                    router.push(UserEditDetailRoute(userId: userId)).then((value) {
+                      sl<HistoryDetailBloc>().add(const HistoryDetailGetUserEvent());
+                    });
+                  }
+                },
+                icon: Icons.edit_outlined,
+              ),
               title: state.user?.personName ?? 'Empty',
               needCloseButton: true,
               actions: [
@@ -86,40 +101,66 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                       ],
                     );
                   }
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: state.listHistory.length,
-                    itemBuilder: (context, i) {
-                      if (i == 0) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            BaseActiveStatsWidget(deviceController: state.deviceController),
-                            const SizedBox(height: 16),
-                            Text(
-                              'История активности',
-                              style: appTheme.textTheme.subheaderExtrabold18,
+                  return NotificationListener<ScrollNotification>(
+                    onNotification: (notification) => _loadMoreListener(notification, state),
+                    child: RefreshIndicator(
+                      color: appTheme.revertBasicColor,
+                      onRefresh: () async => _onRefresh(context),
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              childCount: state.listHistory.length,
+                              (BuildContext context, int i) {
+                                if (i == 0) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        BlocBuilder<HomeBloc, HomeState>(
+                                            buildWhen: (prev, next) => prev.list.hashCode != next.list.hashCode,
+                                            builder: (context, homeState) {
+                                              final deviceController = homeState.list
+                                                  .firstWhereOrNull((element) => element.id == state.user?.id);
+                                              return BaseActiveStatsWidget(deviceController: deviceController);
+                                            }),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          'История активности',
+                                          style: appTheme.textTheme.subheaderExtrabold18,
+                                        ),
+                                        const SizedBox(height: 12),
+                                        BaseHistoryStatsWidget(
+                                          history: state.listHistory[i],
+                                          onDelete: (id) => sl<HistoryDetailBloc>().add(HistoryDetailDeleteEvent(id)),
+                                          needFullProfile: state.user?.userDetailId?.isEmpty ?? true,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 12),
+                                        BaseHistoryStatsWidget(
+                                          history: state.listHistory[i],
+                                          onDelete: (id) => sl<HistoryDetailBloc>().add(HistoryDetailDeleteEvent(id)),
+                                          needFullProfile: false,
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              },
                             ),
-                            const SizedBox(height: 12),
-                            BaseHistoryStatsWidget(
-                              history: state.listHistory[i],
-                              onDelete: (id) => sl<HistoryDetailBloc>().add(HistoryDetailDeleteEvent(id)),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(height: 12),
-                            BaseHistoryStatsWidget(
-                              history: state.listHistory[i],
-                              onDelete: (id) => sl<HistoryDetailBloc>().add(HistoryDetailDeleteEvent(id)),
-                            ),
-                          ],
-                        );
-                      }
-                    },
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 },
               ),
@@ -133,5 +174,37 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
         );
       },
     );
+  }
+
+  bool _loadMoreListener(ScrollNotification notification, HistoryDetailState state) {
+    final status = state.status;
+
+    if (status == StateStatus.loading || status == StateStatus.loadMore) {
+      return true;
+    }
+
+    if (notification.metrics.extentAfter < 150) {
+      sl<HistoryDetailBloc>().add(const HistoryDetailLoadMoreEvent());
+    }
+    return true;
+  }
+
+  void _onRefresh(BuildContext context) => sl<HistoryDetailBloc>().add(const HistoryDetailRefreshEvent());
+
+  SliverList _getSlivers(List myList, BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          return buildRow(myList[index]);
+        },
+        childCount: myList.length,
+      ),
+    );
+  }
+
+  buildRow(String title) {
+    return Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)));
   }
 }

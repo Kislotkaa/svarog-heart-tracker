@@ -14,6 +14,7 @@ class MainLayout extends StatelessWidget {
     this.bottomNavigationBar,
     this.titleWidget,
     this.needCloseButton = false,
+    this.floatingActionButton,
   }) : super(key: key);
 
   final String title;
@@ -22,6 +23,8 @@ class MainLayout extends StatelessWidget {
   final Widget? titleWidget;
   final List<Widget> actions;
   final Widget? leadingWidget;
+  final Widget? floatingActionButton;
+
   final Widget body;
   final bool needCloseButton;
 
@@ -29,6 +32,7 @@ class MainLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: null,
+      floatingActionButton: floatingActionButton,
       body: NestedScrollView(
         physics: const BouncingScrollPhysics(),
         headerSliverBuilder: (context, innerBoxIsScrolled) {

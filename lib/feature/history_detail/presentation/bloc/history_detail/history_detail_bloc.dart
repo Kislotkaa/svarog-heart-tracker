@@ -1,17 +1,15 @@
 import 'package:bloc/bloc.dart';
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
-import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
-import 'package:svarog_heart_tracker/locator.dart';
 
 part 'history_detail_event.dart';
 part 'history_detail_state.dart';
@@ -20,14 +18,14 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
   /// **[String]** required
   final GetUserByPkUseCase getUserByPkUseCase;
 
-  /// **[String]** required
+  /// **[GetUserHistoryParams]** required
   final GetUserHistoryUserByPkUseCase getUserHistoryUserByPkUseCase;
 
   /// **[String]** required
   final RemoveUserHistoryByPkUseCase deleteUserHistoryByPkUseCase;
 
   /// **[UserParams]** required
-  final UpdateUserUseCase updateUserUseCase;
+  final UpdateUserByPkUseCase updateUserUseCase;
 
   HistoryDetailBloc({
     required this.updateUserUseCase,
@@ -38,12 +36,10 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
     on<HistoryDetailInitialEvent>((event, emit) async {
       emit(state.copyWith(
         status: StateStatus.loading,
-        deviceController: null,
+        pagination: HivePagination(),
         errorMessage: null,
         errorTitle: null,
       ));
-
-      final deviceController = sl<HomeBloc>().state.list.firstWhereOrNull((element) => element.id == event.userId);
 
       final failurOrUser = await getUserByPkUseCase(event.userId);
 
@@ -63,13 +59,15 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
             state.copyWith(
               status: StateStatus.success,
               user: user,
-              deviceController: deviceController,
             ),
           );
         },
       );
 
-      final failurOrHistory = await getUserHistoryUserByPkUseCase(event.userId);
+      final failurOrHistory = await getUserHistoryUserByPkUseCase(GetUserHistoryParams(
+        userId: event.userId,
+        pagination: state.pagination,
+      ));
 
       failurOrHistory.fold(
         (l) {
@@ -90,12 +88,73 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         },
       );
     });
-    on<HistoryDetailGetHistoryEvent>((event, emit) async {
-      if (state.user == null) {
+
+    on<HistoryDetailLoadMoreEvent>((event, emit) async {
+      final userId = state.user?.id;
+      HivePagination? pagination = state.pagination;
+      if (userId == null || pagination == null || state.status == StateStatus.loadMore) {
         return;
       }
 
-      final failurOrHistory = await getUserHistoryUserByPkUseCase(state.user!.id);
+      emit(state.copyWith(
+        status: StateStatus.loadMore,
+        errorMessage: null,
+        errorTitle: null,
+      ));
+
+      final failurOrHistory =
+          await getUserHistoryUserByPkUseCase(GetUserHistoryParams(userId: userId, pagination: pagination));
+
+      List<UserHistoryModel> history = [];
+      failurOrHistory.fold(
+        (l) {
+          emit(
+            state.copyWith(
+              status: StateStatus.failure,
+              errorTitle: 'Ошибка',
+              errorMessage: l.data?.message,
+            ),
+          );
+          return;
+        },
+        (historyResult) async {
+          history = historyResult;
+          for (var elementState in state.listHistory) {
+            history.removeWhere((element) => element.id == elementState.id);
+          }
+        },
+      );
+
+      emit(state.copyWith(
+        listHistory: [...state.listHistory, ...history],
+        pagination: pagination.copyWith(page: pagination.page + 1),
+      ));
+
+      await Future.delayed(const Duration(milliseconds: 300));
+
+      emit(state.copyWith(
+        status: StateStatus.success,
+      ));
+    });
+
+    on<HistoryDetailRefreshEvent>((event, emit) async {
+      if (state.user == null || state.status == StateStatus.loadMore || state.status == StateStatus.loading) {
+        return;
+      }
+      emit(state.copyWith(
+        status: StateStatus.loading,
+        listHistory: [],
+        pagination: HivePagination(),
+        errorMessage: null,
+        errorTitle: null,
+      ));
+
+      final failurOrHistory = await getUserHistoryUserByPkUseCase(GetUserHistoryParams(
+        userId: state.user!.id,
+        pagination: state.pagination,
+      ));
+
+      await Future.delayed(const Duration(milliseconds: 300));
 
       failurOrHistory.fold(
         (l) {
@@ -112,6 +171,33 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
           emit(state.copyWith(
             status: StateStatus.success,
             listHistory: history,
+          ));
+        },
+      );
+    });
+
+    on<HistoryDetailGetUserEvent>((event, emit) async {
+      if (state.user == null) {
+        return;
+      }
+
+      final failurOrHistory = await getUserByPkUseCase(state.user!.id);
+
+      failurOrHistory.fold(
+        (l) {
+          emit(
+            state.copyWith(
+              status: StateStatus.failure,
+              errorTitle: 'Ошибка',
+              errorMessage: l.data?.message,
+            ),
+          );
+          return;
+        },
+        (user) {
+          emit(state.copyWith(
+            status: StateStatus.success,
+            user: user,
           ));
         },
       );
@@ -126,6 +212,7 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         listHistory: [],
       ));
     });
+
     on<HistoryDetailDeleteEvent>((event, emit) async {
       emit(state.copyWith(
         status: StateStatus.loading,
@@ -147,13 +234,16 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
           return;
         },
         (history) {
+          List<UserHistoryModel> listHistoryResult = state.listHistory;
+          listHistoryResult.removeWhere((element) => element.id == event.id);
           emit(state.copyWith(
+            listHistory: listHistoryResult,
             status: StateStatus.success,
           ));
-          add(const HistoryDetailGetHistoryEvent());
         },
       );
     });
+
     on<HistoryDetailSwitchAutoConnectEvent>((event, emit) async {
       if (state.user == null) {
         return;
@@ -161,6 +251,8 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
 
       var model = UserParams(
         id: state.user!.id,
+        userDetailId: state.user!.userDetailId,
+        userSettingsId: state.user!.userSettingsId,
         personName: state.user!.personName,
         deviceName: state.user!.deviceName,
         isAutoConnect: !(state.user!.isAutoConnect ?? false),

@@ -6,17 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/local_notification_model.dart';
+import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
-import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
-import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_status_bluetooth_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/widgets/base_grid_people.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         context: context,
                         onTapConfirm: () async {
                           router.removeLast();
-                          sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(blueDevice: device.device));
+                          sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(deviceController: device));
                         },
                         onTapCancel: () => router.removeLast(),
                         textConfirm: 'Подтвердить',

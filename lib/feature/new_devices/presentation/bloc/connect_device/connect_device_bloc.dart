@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
+import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -26,12 +26,12 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
             errorMessage: null,
           ),
         );
+
         if (event.blueDevice != null) {
           await appBluetoothService.disconnectDevice(event.blueDevice!);
           sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.blueDevice!));
         } else if (event.deviceController != null) {
           await appBluetoothService.disconnectDevice(event.deviceController!.device);
-          event.deviceController!.onDispose();
           sl<HomeBloc>().add(HomeRemoveDeviceEvent(blueDevice: event.deviceController!.device));
         }
 
@@ -66,6 +66,8 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
           getUserByPkUseCase: sl(),
           getUserSettingsByPkUseCase: sl(),
           insertUserSettingsByPkUseCase: sl(),
+          tfLiteService: sl(),
+          getUserDetailByPkUseCase: sl(),
         );
         sl<HomeBloc>().add(HomeAddDeviceControllerEvent(deviceController: deviceController));
         emit(

@@ -4,6 +4,7 @@ import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/edit_dialog_page.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/user_edit_detail_page.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_devices_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/about_page.dart';
@@ -61,6 +62,12 @@ class AppRouter extends _$AppRouter {
         CustomRoute(
           path: '/history_detail',
           page: HistoryDetailRoute.page,
+          durationInMilliseconds: 150,
+          transitionsBuilder: TransitionsBuilders.slideLeft,
+        ),
+        CustomRoute(
+          path: '/user_edit_detail_edit',
+          page: UserEditDetailRoute.page,
           durationInMilliseconds: 150,
           transitionsBuilder: TransitionsBuilders.slideLeft,
         ),

@@ -9,7 +9,8 @@ import 'package:svarog_heart_tracker/core/utils/routing_observer.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth/auth_bloc.dart';
 import 'package:svarog_heart_tracker/feature/auth/presentation/bloc/auth_admin/auth_admin_bloc.dart';
 import 'package:svarog_heart_tracker/feature/history/presentation/bloc/history_bloc.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail/history_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_detail_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
@@ -48,6 +49,7 @@ class App extends StatelessWidget {
         BlocProvider<HistoryBloc>(create: (context) => di.sl<HistoryBloc>()),
         BlocProvider<UserSettingsBloc>(create: (context) => di.sl<UserSettingsBloc>()),
         BlocProvider<GlobalSettingsBloc>(create: (context) => di.sl<GlobalSettingsBloc>()),
+        BlocProvider<UserEditDetailBloc>(create: (context) => di.sl<UserEditDetailBloc>()),
 
         // Cubit
         BlocProvider<ThemeCubit>(create: (context) => di.sl<ThemeCubit>()),

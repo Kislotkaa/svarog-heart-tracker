@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
@@ -5,6 +6,7 @@ import 'dart:io';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
+
 import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
 import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
@@ -37,7 +39,11 @@ class HiveService {
     return this;
   }
 
-  Future<List<E>> query<E>(LazyBox<E> box, {bool Function(E element)? where}) async {
+  Future<List<E>> query<E>(
+    LazyBox<E> box, {
+    bool Function(E element)? where,
+    HivePagination? pagination,
+  }) async {
     try {
       final keys = box.keys.toList().reversed;
       List<E> listModels = [];
@@ -55,6 +61,34 @@ class HiveService {
           if (where(element)) filter.add(element);
         }
         listModels = filter;
+      }
+
+      if (listModels is List<UserHistoryModel>) {
+        final List<UserHistoryModel> listSorted = listModels.cast<UserHistoryModel>();
+        listSorted.sort((a, b) {
+          if (a.createAt == null || b.createAt == null) {
+            return 0;
+          } else {
+            return b.createAt!.compareTo(a.createAt!);
+          }
+        });
+      }
+
+      if (pagination != null) {
+        final currentPage = pagination.page;
+
+        final firstElement = currentPage == 1 ? 0 : (currentPage - 1) * pagination.limit;
+        final lastElement = currentPage * pagination.limit;
+        final lenghtList = listModels.length;
+        if (firstElement > lenghtList) {
+          return [];
+        }
+
+        if (lenghtList >= lastElement) {
+          return listModels.getRange(firstElement, lastElement).toList();
+        } else {
+          return listModels.getRange(firstElement, lenghtList).toList();
+        }
       }
 
       return listModels;
@@ -163,4 +197,31 @@ enum HiveOrderBy {
 
   /// По порядку
   DESC,
+}
+
+class HivePagination {
+  /// Количество элементов в списке
+  final int limit;
+
+  /// Страница всегда > 1
+  int page;
+
+  HivePagination({
+    this.limit = 5,
+    this.page = 1,
+  }) {
+    if (page < 1) {
+      page = 1;
+    }
+  }
+
+  HivePagination copyWith({
+    int? limit,
+    int? page,
+  }) {
+    return HivePagination(
+      limit: limit ?? this.limit,
+      page: page ?? this.page,
+    );
+  }
 }

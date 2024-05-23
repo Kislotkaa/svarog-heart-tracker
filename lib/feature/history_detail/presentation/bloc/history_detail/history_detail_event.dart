@@ -14,8 +14,16 @@ class HistoryDetailInitialEvent extends HistoryDetailEvent {
   const HistoryDetailInitialEvent(this.userId, this.deviceController);
 }
 
-class HistoryDetailGetHistoryEvent extends HistoryDetailEvent {
-  const HistoryDetailGetHistoryEvent();
+class HistoryDetailGetUserEvent extends HistoryDetailEvent {
+  const HistoryDetailGetUserEvent();
+}
+
+class HistoryDetailLoadMoreEvent extends HistoryDetailEvent {
+  const HistoryDetailLoadMoreEvent();
+}
+
+class HistoryDetailRefreshEvent extends HistoryDetailEvent {
+  const HistoryDetailRefreshEvent();
 }
 
 class HistoryDetailDeleteAllEvent extends HistoryDetailEvent {

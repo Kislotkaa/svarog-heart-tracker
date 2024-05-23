@@ -1,12 +1,14 @@
+import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 
 abstract class UserHistoryDataSource {
-  Future<List<UserHistoryModel>> getUserHistoryByPk(String id);
+  Future<List<UserHistoryModel>> getUserHistoryByPk(GetUserHistoryParams params);
   Future<UserHistoryModel?> getHistoryByPk(String id);
   Future<void> insertHistory(UserHistoryModel params);
   Future<void> updateHistoryByPk(UserHistoryModel params);
@@ -37,11 +39,11 @@ class UserHistoryDataSourceSqlImpl extends UserHistoryDataSource {
   }
 
   @override
-  Future<List<UserHistoryModel>> getUserHistoryByPk(String id) async {
+  Future<List<UserHistoryModel>> getUserHistoryByPk(GetUserHistoryParams params) async {
     final result = await _db.query(
       _tableName,
       where: '"userId" = ?',
-      whereArgs: [id],
+      whereArgs: [params.userId],
       orderBy: 'createAt DESC',
     );
     final List<UserHistoryModel> returnData = [];
@@ -92,11 +94,11 @@ class UserHistoryDataSourceHiveImpl extends UserHistoryDataSource {
   }
 
   @override
-  Future<List<UserHistoryModel>> getUserHistoryByPk(String id) async {
+  Future<List<UserHistoryModel>> getUserHistoryByPk(GetUserHistoryParams params) async {
     final result = await hiveService.query(
       box,
-      where: (element) => element.userId == id,
-      // orderBy: 'createAt DESC',
+      where: (element) => element.userId == params.userId,
+      pagination: params.pagination,
     );
 
     return result;

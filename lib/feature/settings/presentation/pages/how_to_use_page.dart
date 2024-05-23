@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_button_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_divider_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/screen_size.dart';
 

@@ -23,6 +23,7 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
+import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -103,6 +104,22 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   );
 
   final ClearUserHistoryUseCase clearUserHistoryHiveUseCase = ClearUserHistoryUseCase(
+    UserHistoryRepositoryImpl(
+      userHistoryDataSource: UserHistoryDataSourceHiveImpl(
+        hiveService: sl(),
+      ),
+    ),
+  );
+
+  final GetUsersUseCase getUsersHiveUseCase = GetUsersUseCase(
+    UserRepositoryImpl(
+      userDataSource: UserDataSourceHiveImpl(
+        hiveService: sl(),
+      ),
+    ),
+  );
+
+  final GetUserHistoryUserByPkUseCase getUserHistoryUserByPkHiveUseCase = GetUserHistoryUserByPkUseCase(
     UserHistoryRepositoryImpl(
       userHistoryDataSource: UserHistoryDataSourceHiveImpl(
         hiveService: sl(),
@@ -276,7 +293,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           }, (inserted) {});
 
           // Получаем историю этого пользователя из SQLite бд
-          final failureOrHistory = await getUserHistoryUserByPkSqlUseCase(user.id);
+          final failureOrHistory = await getUserHistoryUserByPkSqlUseCase(GetUserHistoryParams(userId: user.id));
           List<UserHistoryModel> historis = [];
           failureOrHistory.fold((l) async {
             emit(
@@ -292,7 +309,11 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
 
           // Перебираем полученную историю пользователя и добавляем её в Hive бд
           for (var elementHistory in historis) {
-            final failureOrInsertHistory = await insertUserHistoryHiveUseCase(elementHistory);
+            // Сжимаем список что бы не было перегрузки на экране историй
+            List<int> yHeart = compressArray(elementHistory.yHeart);
+            UserHistoryModel history = elementHistory.copyWith(yHeart: yHeart);
+
+            final failureOrInsertHistory = await insertUserHistoryHiveUseCase(history);
             failureOrInsertHistory.fold((l) {
               emit(
                 state.copyWith(

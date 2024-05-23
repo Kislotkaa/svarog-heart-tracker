@@ -137,6 +137,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const UnknownPage(),
       );
     },
+    UserEditDetailRoute.name: (routeData) {
+      final args = routeData.argsAs<UserEditDetailRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: UserEditDetailPage(
+          key: args.key,
+          userId: args.userId,
+        ),
+      );
+    },
     UserSettingsRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -526,6 +536,43 @@ class UnknownRoute extends PageRouteInfo<void> {
   static const String name = 'UnknownRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserEditDetailPage]
+class UserEditDetailRoute extends PageRouteInfo<UserEditDetailRouteArgs> {
+  UserEditDetailRoute({
+    Key? key,
+    required String userId,
+    List<PageRouteInfo>? children,
+  }) : super(
+          UserEditDetailRoute.name,
+          args: UserEditDetailRouteArgs(
+            key: key,
+            userId: userId,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'UserEditDetailRoute';
+
+  static const PageInfo<UserEditDetailRouteArgs> page = PageInfo<UserEditDetailRouteArgs>(name);
+}
+
+class UserEditDetailRouteArgs {
+  const UserEditDetailRouteArgs({
+    this.key,
+    required this.userId,
+  });
+
+  final Key? key;
+
+  final String userId;
+
+  @override
+  String toString() {
+    return 'UserEditDetailRouteArgs{key: $key, userId: $userId}';
+  }
 }
 
 /// generated route for

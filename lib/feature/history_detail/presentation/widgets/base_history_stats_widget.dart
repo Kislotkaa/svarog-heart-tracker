@@ -10,10 +10,12 @@ import 'package:svarog_heart_tracker/core/utils/date_format.dart';
 class BaseHistoryStatsWidget extends StatelessWidget {
   const BaseHistoryStatsWidget({
     super.key,
+    required this.needFullProfile,
     required this.history,
     required this.onDelete,
   });
 
+  final bool needFullProfile;
   final UserHistoryModel history;
   final Function(String id) onDelete;
 
@@ -315,19 +317,24 @@ class BaseHistoryStatsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (history.calories != null)
+                  if (history.calories != null || needFullProfile)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Assets.icons.fire.svg(height: 24, width: 24),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                              '${history.calories?.toInt()} ккал',
-                              style: appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Text(
+                                needFullProfile
+                                    ? 'Заполните профиль спорстмена для расчёта калорий'
+                                    : '${history.calories?.toInt()} ккал',
+                                style:
+                                    appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                              ),
                             ),
                           ),
                         ],

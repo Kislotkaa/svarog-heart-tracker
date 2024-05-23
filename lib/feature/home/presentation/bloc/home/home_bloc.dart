@@ -89,6 +89,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<HomeRemoveDeviceEvent>((event, emit) async {
       try {
+        DeviceController? deviceController =
+            state.list.firstWhereOrNull((element) => event.blueDevice.remoteId.str == element.device.remoteId.str);
+
+        if (deviceController != null) deviceController.onDispose();
+
         List<DeviceController> list = [...state.list]
           ..removeWhere((element) => event.blueDevice.remoteId.str == element.device.remoteId.str);
 
@@ -101,6 +106,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       } catch (e, s) {
         ErrorHandler.getMessage(e, s);
       }
+    });
+
+    on<HomeRefreshEvent>((event, emit) {
+      add(const HomeInitialEvent());
     });
   }
 }

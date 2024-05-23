@@ -11,7 +11,7 @@ import 'package:svarog_heart_tracker/locator.dart';
 abstract class UserDataSource {
   Future<List<UserModel>> getUsers();
   Future<UserModel?> getUserByPk(String id);
-  Future<void> insertUser(UserParams params);
+  Future<UserModel> insertUser(UserParams params);
   Future<UserModel?> updateUserByPk(UserParams params);
   Future<void> removeUserByPk(String id);
   Future<void> clearDatabase();
@@ -54,7 +54,7 @@ class UserDataSourceSqlImpl extends UserDataSource {
   }
 
   @override
-  Future<void> insertUser(UserParams params) async {
+  Future<UserModel> insertUser(UserParams params) async {
     final userModel = UserModel(
       id: params.id,
       userDetailId: params.userDetailId,
@@ -68,6 +68,7 @@ class UserDataSourceSqlImpl extends UserDataSource {
       conflictAlgorithm: ConflictAlgorithm.replace,
       userModel.toMap(),
     );
+    return userModel;
   }
 
   @override
@@ -126,7 +127,7 @@ class UserDataSourceHiveImpl extends UserDataSource {
   }
 
   @override
-  Future<void> insertUser(UserParams params) async {
+  Future<UserModel> insertUser(UserParams params) async {
     final userModel = UserModel(
       id: params.id,
       userSettingsId: params.userSettingsId,
@@ -136,6 +137,7 @@ class UserDataSourceHiveImpl extends UserDataSource {
       isAutoConnect: params.isAutoConnect,
     );
     await hiveService.insert(box, id: userModel.id, model: userModel);
+    return userModel;
   }
 
   @override

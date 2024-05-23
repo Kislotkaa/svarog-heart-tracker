@@ -8,7 +8,7 @@ abstract class UserRepository {
   Future<Either<Failure, List<UserModel>>> getUsers();
   Future<Either<Failure, UserModel?>> getUserByPk(String id);
   Future<Either<Failure, UserModel?>> updateUserByPk(UserParams params);
-  Future<Either<Failure, void>> insertUser(UserParams params);
+  Future<Either<Failure, UserModel>> insertUser(UserParams params);
   Future<Either<Failure, void>> removeUserByPk(String id);
   Future<Either<Failure, void>> clearDatabase();
 }
@@ -43,11 +43,11 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<Either<Failure, void>> insertUser(UserParams params) async {
+  Future<Either<Failure, UserModel>> insertUser(UserParams params) async {
     try {
-      await userDataSource.insertUser(params);
+      final user = await userDataSource.insertUser(params);
 
-      return const Right(null);
+      return Right(user);
     } on CacheFailure catch (exception) {
       return Left(exception);
     }

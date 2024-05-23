@@ -17,6 +17,7 @@ import 'package:svarog_heart_tracker/core/service/database/repository/user_setti
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/update_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/update_user_history_usecase.dart';
@@ -39,7 +40,7 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/history_detail/history_detail_bloc.dart';
 import 'package:svarog_heart_tracker/core/service/bluetooth/datasourse/bluetooth_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/bluetooth/repository/bluetooth_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
@@ -48,6 +49,7 @@ import 'package:svarog_heart_tracker/core/service/bluetooth/usecase/get_connecte
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_detail_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
@@ -161,7 +163,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => InsertUserUseCase(sl()));
   sl.registerLazySingleton(() => GetUserHistoryUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => RemoveUserHistoryByPkUseCase(sl()));
-  sl.registerLazySingleton(() => UpdateUserUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => ClearAllUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => RemoveUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserSettingsByPkUseCase(sl()));
@@ -172,6 +174,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => ClearUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => ClearUserUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserHistoryUseCase(sl()));
+  sl.registerLazySingleton(() => InsertUserDetailByPkUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
@@ -189,6 +192,12 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl(), removeUserByPkUseCase: sl()));
   sl.registerLazySingleton(() => UserSettingsBloc());
   sl.registerLazySingleton(() => GlobalSettingsBloc(globalSettingsService: sl()));
+  sl.registerLazySingleton(() => UserEditDetailBloc(
+        getUserByPkUseCase: sl(),
+        getUserDetailByPkUseCase: sl(),
+        updateUserByPkUseCase: sl(),
+        insertUserDetailByPkUseCase: sl(),
+      ));
 
   sl.registerLazySingleton(() => HistoryDetailBloc(
         getUserByPkUseCase: sl(),
@@ -209,7 +218,7 @@ Future<void> initLocator() async {
   final appBluetoothService = await AppBluetoothService().init();
   final sqlLiteService = await SqlLiteService().init();
   final hiveService = await HiveService().init();
-  final tfliteService = await TFLiteService(sl()).init();
+  final tfliteService = await TFLiteService().init();
 
   final appNotificationService = AppNotificationService()..init();
 

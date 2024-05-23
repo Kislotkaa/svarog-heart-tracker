@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
-import 'package:svarog_heart_tracker/core/ui_kit/base_button_widget.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_text_field_widget.dart';
 import 'package:svarog_heart_tracker/core/utils/lounch_url.dart';
 import 'package:svarog_heart_tracker/core/utils/screen_size.dart';

@@ -6,6 +6,7 @@ import 'package:svarog_heart_tracker/core/service/database/datasourse/user_detai
 abstract class UserDetailRepository {
   Future<Either<Failure, UserDetailModel?>> getUserDetailByPk(String id);
   Future<Either<Failure, UserDetailModel>> updateUserDetailByPk(UserDetailModel params);
+  Future<Either<Failure, UserDetailModel>> insertUserDetailByPk(UserDetailModel params);
   Future<Either<Failure, void>> clearDatabase();
 }
 
@@ -19,7 +20,7 @@ class UserDetailRepositoryImpl extends UserDetailRepository {
   @override
   Future<Either<Failure, UserDetailModel?>> getUserDetailByPk(String id) async {
     try {
-      final model = await userDetailDataSource.getUserSettingsByPk(id);
+      final model = await userDetailDataSource.getUserDetailByPk(id);
 
       return Right(model);
     } on CacheFailure catch (exception) {
@@ -30,7 +31,18 @@ class UserDetailRepositoryImpl extends UserDetailRepository {
   @override
   Future<Either<Failure, UserDetailModel>> updateUserDetailByPk(UserDetailModel params) async {
     try {
-      final model = await userDetailDataSource.updateUserSettingsByPk(params);
+      final model = await userDetailDataSource.updateUserDetailByPk(params);
+
+      return Right(model);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDetailModel>> insertUserDetailByPk(UserDetailModel params) async {
+    try {
+      final model = await userDetailDataSource.insertUserDetailByPk(params);
 
       return Right(model);
     } on CacheFailure catch (exception) {

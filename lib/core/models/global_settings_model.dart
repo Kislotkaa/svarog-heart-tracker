@@ -1,10 +1,16 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
+
 class GlobalSettingsModel {
   final double timeSavedData; // Время после которого сохраняются данные
   final double timeDisconnect; // Время после которого происходит отключение
   final double timeCheckDevice; // Раз во сколько секунд использовать Bluetooth проверять устройства поблизости?
+  final HivePagination pagination = HivePagination(
+    limit: 5, // В пагинации используем 5 элементов
+    page: 1, // Первая страница всегда 1
+  );
 
   final bool isMigratedHive;
 

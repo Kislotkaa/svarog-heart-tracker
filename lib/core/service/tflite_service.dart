@@ -1,40 +1,53 @@
 import 'dart:developer';
 
+import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/update_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class TFLiteService {
-  final UpdateUserHistoryUseCase updateUserHistoryUseCase;
-  static const String PATH_MODEL = 'assets/your_model.tflite';
+  static const String PATH_MODEL = 'assets/model.tflite';
   late Interpreter? interpreter;
 
-  TFLiteService(this.updateUserHistoryUseCase);
+  TFLiteService();
 
   Future<TFLiteService> init() async {
     // TODO: Пока что в коммент так как нету модели которую инициализируем
-    // try {
-    //   interpreter = await tfl.Interpreter.fromAsset(PATH_MODEL);
-    // } catch (e, s) {
-    //   ErrorHandler.getMessage(e, s);
-    // }
+    try {
+      interpreter = await tfl.Interpreter.fromAsset(PATH_MODEL);
+      log('Tflite Initial path: $PATH_MODEL');
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
     return this;
   }
 
-  Future<void> isolateCalculateCallory(UserHistoryModel params) async {
-    if (interpreter == null) return;
+  Future<UserHistoryModel?> isolateCalculateCallory(UserDetailModel detail, UserHistoryModel history) async {
+    if (interpreter == null) return null;
 
-    final calories = await runModel();
+    if (history.finishedAt == null && history.createAt == null) {
+      return null;
+    }
 
-    final model = params.copyWith(calories: calories);
-    final failurOrUpdate = await updateUserHistoryUseCase(model);
+    final int duration = history.finishedAt!.difference(history.createAt!).inMinutes;
 
-    failurOrUpdate.fold((l) => log('Calories calculate FAILUR'), (success) => log('Calories calculate success'));
+    final params = TFLiteParams(
+      age: detail.age,
+      gender: detail.gender,
+      height: detail.height,
+      weight: detail.weight,
+      duration: duration.toDouble(),
+      avgHeartRate: history.avgHeart.toDouble(),
+    );
+
+    final calories = await runModel(params);
+
+    final model = history.copyWith(calories: calories);
+    return model;
   }
 
-  Future<double?> runModel() async {
+  Future<double?> runModel(TFLiteParams params) async {
     try {
       final input = [
         [1.23, 6.54, 7.81, 3.21, 2.22]
@@ -56,4 +69,22 @@ class TFLiteService {
   double minMaxScaler(double min, double max) {
     return 0.0;
   }
+}
+
+class TFLiteParams {
+  final int gender;
+  final int age;
+  final double height;
+  final double weight;
+  final double duration; // в минутах
+  final double avgHeartRate;
+
+  TFLiteParams({
+    required this.gender,
+    required this.age,
+    required this.height,
+    required this.weight,
+    required this.duration,
+    required this.avgHeartRate,
+  });
 }

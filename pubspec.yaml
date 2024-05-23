@@ -119,6 +119,7 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/fonts/
+    - assets/model.tflite
 
 
   fonts:

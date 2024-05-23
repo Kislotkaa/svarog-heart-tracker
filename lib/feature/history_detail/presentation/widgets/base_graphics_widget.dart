@@ -24,6 +24,7 @@ class BaseGraphicsWidget extends StatelessWidget {
           for (var i = 0; i < snapshot.data!.length; i++) {
             listSpot.add(FlSpot(i.toDouble(), snapshot.data![i].toDouble()));
           }
+
           return LineChart(
             LineChartData(
               gridData: FlGridData(

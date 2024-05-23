@@ -5,17 +5,21 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
+import 'package:svarog_heart_tracker/core/service/tflite_service.dart';
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
+import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
@@ -27,18 +31,23 @@ class DeviceController {
     required this.id,
     required this.device,
     required this.name,
+    required this.tfLiteService,
     required this.insertUserUseCase,
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
     required this.getUserByPkUseCase,
     required this.getUserSettingsByPkUseCase,
     required this.insertUserSettingsByPkUseCase,
+    required this.getUserDetailByPkUseCase,
   });
 
   late UserSettingsModel userSettings;
+  late UserModel? user;
 
   final BluetoothDevice device;
+  final TFLiteService tfLiteService;
   final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
+  final GetUserDetailByPkUseCase getUserDetailByPkUseCase;
   final GetUserByPkUseCase getUserByPkUseCase;
   final GetUserHistoryByPkUseCase getHistoryByPkUseCase;
   final InsertUserHistoryUseCase insertHistoryUseCase;
@@ -81,7 +90,7 @@ class DeviceController {
   Future<void> onDispose() async {
     try {
       await _unSubscribeCharacteristics();
-      await saveHeartRateDB(ignoreTimer: true);
+      await saveHeartRateDB(ignoreTimer: true, isEnd: true);
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
@@ -143,33 +152,34 @@ class DeviceController {
     }
   }
 
-  Future<void> saveHeartRateDB({bool ignoreTimer = false}) async {
+  Future<void> saveHeartRateDB({bool ignoreTimer = false, bool isEnd = false}) async {
     if (ignoreTimer && seconds > appSettings.timeSavedData) {
-      await _saveHeartRateDB();
+      await _saveHeartRateDB(isEnd: isEnd);
     } else if (seconds % appSettings.timeSavedData == 0 && seconds != 0) {
       await _saveHeartRateDB();
     }
   }
 
-  Future<void> _saveHeartRateDB() async {
+  Future<void> _saveHeartRateDB({bool isEnd = false}) async {
     final failurOfHistory = await getHistoryByPkUseCase(idTraining);
+
+    UserHistoryModel? history;
 
     failurOfHistory.fold(
       (l) {},
-      (history) async {
+      (historyRequared) async {
         DateTime finishedAt = DateTime.now();
-        UserHistoryModel? model;
-        if (history != null) {
-          history.yHeart.addAll(listHeartRate);
+        if (historyRequared != null) {
+          historyRequared.yHeart.addAll(listHeartRate);
 
-          maxHeart = history.yHeart.max;
-          minHeart = history.yHeart.min;
-          avgHeart = history.yHeart.average.toInt();
+          maxHeart = historyRequared.yHeart.max;
+          minHeart = historyRequared.yHeart.min;
+          avgHeart = historyRequared.yHeart.average.toInt();
 
-          model = UserHistoryModel(
-            id: history.id,
-            userId: history.userId,
-            yHeart: history.yHeart,
+          history = UserHistoryModel(
+            id: historyRequared.id,
+            userId: historyRequared.userId,
+            yHeart: historyRequared.yHeart,
             avgHeart: avgHeart,
             maxHeart: maxHeart,
             minHeart: minHeart,
@@ -180,7 +190,7 @@ class DeviceController {
             finishedAt: finishedAt,
           );
         } else {
-          model = UserHistoryModel(
+          history = UserHistoryModel(
             id: idTraining,
             userId: id,
             yHeart: listHeartRate,
@@ -194,11 +204,35 @@ class DeviceController {
             finishedAt: finishedAt,
           );
         }
-        final failurOrInserted = await insertHistoryUseCase(model);
-        failurOrInserted.fold((l) {}, (r) {});
-        listHeartRate.clear();
       },
     );
+
+    if (history != null) {
+      List<int> yHeart = history!.yHeart;
+
+      if (isEnd) {
+        /// Сжимаем данные что бы оптимизировать список
+        yHeart = compressArray(yHeart);
+
+        /// Сжимаем данные что бы оптимизировать список
+        if (user != null) {
+          final failurOrDetail = await getUserDetailByPkUseCase(user!.id);
+          UserDetailModel? detail;
+          failurOrDetail.fold((l) {}, (detailRequared) {
+            if (detailRequared != null) {
+              detail = detailRequared;
+            }
+          });
+          if (detail != null) {
+            await tfLiteService.isolateCalculateCallory(detail!, history!);
+          }
+        }
+      }
+
+      final failurOrInserted = await insertHistoryUseCase(history!.copyWith(yHeart: yHeart));
+      failurOrInserted.fold((l) {}, (r) {});
+      listHeartRate.clear();
+    }
   }
 
   Future<List<int>?> getHistory() async {
@@ -214,7 +248,6 @@ class DeviceController {
   }
 
   /// Вспомогательыне методы
-
   int getHeartRateAdaptive(List<int?>? value) {
     if (value != null) {
       return value[1] ?? 0;
@@ -291,11 +324,7 @@ class DeviceController {
 
     if (needUpdateSettingsId) {
       final failurOrUpdating = await insertUserSettingsByPkUseCase(userSettings);
-      failurOrUpdating.fold((l) {
-        log(l.toString());
-      }, (settings) {
-        log(settings.toString());
-      });
+      failurOrUpdating.fold((l) {}, (settings) {});
     }
 
     final params = UserParams(
@@ -307,18 +336,10 @@ class DeviceController {
       isAutoConnect: userModel?.isAutoConnect,
     );
 
-    log('params: ${params.userSettingsId}');
-
-    final failurOrInserted = await insertUserUseCase(params);
-
-    failurOrInserted.fold(
-      (l) {
-        log(l.toString());
-      },
-      (success) {
-        log('success');
-      },
-    );
+    final failurOrUserReq = await insertUserUseCase(params);
+    failurOrUserReq.fold((l) {}, (userRequared) {
+      user = userRequared;
+    });
   }
 
   Future<void> _subscribeCharacteristics(
