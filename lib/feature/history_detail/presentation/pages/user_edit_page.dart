@@ -68,6 +68,13 @@ class _UserEditPageState extends State<UserEditPage> {
                     return ListView(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                       children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Text(
+                            'Дополнительные',
+                            style: appTheme.textTheme.buttonExtrabold16,
+                          ),
+                        ),
                         Text(
                           "Пол * ",
                           maxLines: 1,
@@ -154,6 +161,13 @@ class _UserEditPageState extends State<UserEditPage> {
                             ),
                           ],
                         ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(bottom: 16, top: 32),
+                        //   child: Text(
+                        //     'Настроки спортсмена',
+                        //     style: appTheme.textTheme.buttonExtrabold16,
+                        //   ),
+                        // ),
                       ],
                     );
                   },
