@@ -15,19 +15,24 @@ import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_detail_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_settings_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_all_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/clear_all_user_detail.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/update_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/update_user_history_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/clear_all_user_settings.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/clear_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/tflite_service.dart';
+import 'package:svarog_heart_tracker/core/service/tflite/detasource/user_settings_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/tflite/repository/user_settings_repository.dart';
+import 'package:svarog_heart_tracker/core/service/tflite/tflite_service.dart';
+import 'package:svarog_heart_tracker/core/service/tflite/usecase/get_tflite_callory_usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/settings_utils.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/datasource/start_app_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/repository/start_app_repository.dart';
@@ -49,7 +54,7 @@ import 'package:svarog_heart_tracker/core/service/bluetooth/usecase/get_connecte
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/auto_connect/auto_connect_bloc.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
@@ -61,7 +66,6 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/clear_databas
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/global_settings/global_settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/settings/settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/bloc/splash_bloc.dart';
-import 'package:svarog_heart_tracker/feature/user_serttings/presentation/bloc/user_settings_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -72,83 +76,52 @@ Future<void> initLocator() async {
   await registerHiveOrSqlModules(globalSettingsService);
 
   // --- Cubit --- \\
-  sl.registerLazySingleton(
-    () => ThemeCubit(themeRepository: sl()),
-  );
-  sl.registerLazySingleton(
-    () => IntlCubit(intlRepository: sl()),
-  );
+  sl.registerLazySingleton(() => ThemeCubit(themeRepository: sl()));
+  sl.registerLazySingleton(() => IntlCubit(intlRepository: sl()));
   // --- DataSource --- \\
   sl.registerLazySingleton<StartAppDataSource>(
-    () => StartAppDataSourceImpl(
-      sharedPreferences: sl(),
-    ),
+    () => StartAppDataSourceImpl(sharedPreferences: sl()),
   );
   sl.registerLazySingleton<UserSettingsDataSource>(
-    () => UserSettingsDataSourceHiveImpl(
-      hiveService: sl(),
-    ),
+    () => UserSettingsDataSourceHiveImpl(hiveService: sl()),
   );
-
   sl.registerLazySingleton<UserDetailDataSource>(
-    () => UserDetailDataSourceHiveImpl(
-      hiveService: sl(),
-    ),
+    () => UserDetailDataSourceHiveImpl(hiveService: sl()),
   );
-
+  sl.registerLazySingleton<TFLiteDataSource>(
+    () => TFLiteDataSourceImpl(tfLiteService: sl()),
+  );
   sl.registerLazySingleton<BluetoothDataSource>(
-    () => BluetoothDataSourceImpl(
-      bluetoothService: sl(),
-    ),
+    () => BluetoothDataSourceImpl(bluetoothService: sl()),
   );
 
   // --- Repositories --- \\
   sl.registerLazySingleton<ThemeRepository>(
-    () => ThemeRepositoryImpl(
-      sharedPreferences: sl(),
-    ),
+    () => ThemeRepositoryImpl(sharedPreferences: sl()),
   );
-
   sl.registerLazySingleton<IntlRepository>(
-    () => IntlRepositoryImpl(
-      sharedPreferences: sl(),
-    ),
+    () => IntlRepositoryImpl(sharedPreferences: sl()),
   );
-
   sl.registerLazySingleton<StartAppRepository>(
-    () => StartAppRepositoryImpl(
-      startAppDataSource: sl(),
-    ),
+    () => StartAppRepositoryImpl(startAppDataSource: sl()),
   );
-
   sl.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(
-      userDataSource: sl(),
-    ),
+    () => UserRepositoryImpl(userDataSource: sl()),
   );
-
   sl.registerLazySingleton<UserHistoryRepository>(
-    () => UserHistoryRepositoryImpl(
-      userHistoryDataSource: sl(),
-    ),
+    () => UserHistoryRepositoryImpl(userHistoryDataSource: sl()),
   );
-
   sl.registerLazySingleton<UserSettingsRepository>(
-    () => UserSettingsRepositoryImpl(
-      userSettingsDataSource: sl(),
-    ),
+    () => UserSettingsRepositoryImpl(userSettingsDataSource: sl()),
   );
-
   sl.registerLazySingleton<UserDetailRepository>(
-    () => UserDetailRepositoryImpl(
-      userDetailDataSource: sl(),
-    ),
+    () => UserDetailRepositoryImpl(userDetailDataSource: sl()),
   );
-
   sl.registerLazySingleton<BluetoothRepository>(
-    () => BluetoothRepositoryImpl(
-      bluetoothDataSource: sl(),
-    ),
+    () => BluetoothRepositoryImpl(bluetoothDataSource: sl()),
+  );
+  sl.registerLazySingleton<TFLiteRepository>(
+    () => TFLiteRepositoryImpl(tfLiteDataSource: sl()),
   );
 
   // --- UseCase --- \\
@@ -172,9 +145,12 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => UpdateUserDetailByPkUseCase(sl()));
   sl.registerLazySingleton(() => GetUserDetailByPkUseCase(sl()));
   sl.registerLazySingleton(() => ClearUserHistoryUseCase(sl()));
-  sl.registerLazySingleton(() => ClearUserUseCase(sl()));
+  sl.registerLazySingleton(() => ClearAllUsersUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => InsertUserDetailByPkUseCase(sl()));
+  sl.registerLazySingleton(() => ClearAllUserDetailUseCase(sl()));
+  sl.registerLazySingleton(() => ClearAllUserSettingsUseCase(sl()));
+  sl.registerLazySingleton(() => GetTFLiteCalloryUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
@@ -190,13 +166,14 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
   sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl(), removeUserByPkUseCase: sl()));
-  sl.registerLazySingleton(() => UserSettingsBloc());
   sl.registerLazySingleton(() => GlobalSettingsBloc(globalSettingsService: sl()));
-  sl.registerLazySingleton(() => UserEditDetailBloc(
+  sl.registerLazySingleton(() => UserEditBloc(
         getUserByPkUseCase: sl(),
         getUserDetailByPkUseCase: sl(),
         updateUserByPkUseCase: sl(),
         insertUserDetailByPkUseCase: sl(),
+        getUserSettingsByPkUseCase: sl(),
+        insertUserSettingsByPkUseCase: sl(),
       ));
 
   sl.registerLazySingleton(() => HistoryDetailBloc(
@@ -204,13 +181,19 @@ Future<void> initLocator() async {
         getUserHistoryUserByPkUseCase: sl(),
         deleteUserHistoryByPkUseCase: sl(),
         updateUserUseCase: sl(),
+        getUserDetailByPkUseCase: sl(),
+        getTFLiteCalloryUseCase: sl(),
+        insertUserHistoryUseCase: sl(),
       ));
 
   sl.registerLazySingleton(() => SettingsBloc(
         clearCacheStartAppUseCase: sl(),
         setCacheStartAppUseCase: sl(),
         getCacheStartAppUseCase: sl(),
-        clearAllDatabaseUseCase: sl(),
+        clearAllUserHistoryUseCase: sl(),
+        clearAllUsersUseCase: sl(),
+        clearAllUserDetailByPkUseCase: sl(),
+        clearAllUserSettingsUseCase: sl(),
       ));
 
   // --- Other --- \\

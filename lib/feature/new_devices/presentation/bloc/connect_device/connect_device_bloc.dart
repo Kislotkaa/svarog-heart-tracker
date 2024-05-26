@@ -66,8 +66,6 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
           getUserByPkUseCase: sl(),
           getUserSettingsByPkUseCase: sl(),
           insertUserSettingsByPkUseCase: sl(),
-          tfLiteService: sl(),
-          getUserDetailByPkUseCase: sl(),
         );
         sl<HomeBloc>().add(HomeAddDeviceControllerEvent(deviceController: deviceController));
         emit(

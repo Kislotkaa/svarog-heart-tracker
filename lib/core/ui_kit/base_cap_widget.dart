@@ -23,7 +23,11 @@ class BaseCapWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.23),
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).size.height * 0.23,
+          right: 16,
+          left: 16,
+        ),
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,

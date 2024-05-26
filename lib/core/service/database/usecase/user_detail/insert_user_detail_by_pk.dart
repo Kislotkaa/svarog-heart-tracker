@@ -15,3 +15,17 @@ class InsertUserDetailByPkUseCase extends UseCase<UserDetailModel, UserDetailMod
     return response;
   }
 }
+
+class UserDetailParams {
+  UserDetailParams({
+    required this.gender,
+    required this.age,
+    required this.height,
+    required this.weight,
+  });
+
+  final int gender;
+  final int? age;
+  final double? height;
+  final double? weight;
+}

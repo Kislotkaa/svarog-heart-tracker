@@ -4,23 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:uuid/uuid.dart';
 
-part 'user_edit_detail_event.dart';
-part 'user_edit_detail_state.dart';
+part 'user_edit_event.dart';
+part 'user_edit_state.dart';
 
-class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> {
+class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
   /// **[String]** required
   final GetUserByPkUseCase getUserByPkUseCase;
 
   /// **[String]** required
   final GetUserDetailByPkUseCase getUserDetailByPkUseCase;
+
+  /// **[String]** required
+  final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
 
   /// **[UserParams]** required
   final UpdateUserByPkUseCase updateUserByPkUseCase;
@@ -28,13 +34,18 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
   /// **[UserDetailModel]** required
   final InsertUserDetailByPkUseCase insertUserDetailByPkUseCase;
 
-  UserEditDetailBloc({
+  /// **[UserDetailModel]** required
+  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
+
+  UserEditBloc({
     required this.getUserByPkUseCase,
     required this.getUserDetailByPkUseCase,
+    required this.getUserSettingsByPkUseCase,
     required this.updateUserByPkUseCase,
     required this.insertUserDetailByPkUseCase,
-  }) : super(const UserEditDetailState.initial()) {
-    on<UserEditDetailInitialEvent>((event, emit) async {
+    required this.insertUserSettingsByPkUseCase,
+  }) : super(const UserEditState.initial()) {
+    on<UserEditInitialEvent>((event, emit) async {
       emit(state.copyWith(
         status: StateStatus.loading,
         errorMessage: null,
@@ -98,9 +109,32 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
           );
         },
       );
+
+      final failurOrSettings = await getUserSettingsByPkUseCase(user?.userSettingsId ?? '');
+
+      failurOrSettings.fold(
+        (l) {
+          emit(
+            state.copyWith(
+              status: StateStatus.failure,
+              errorTitle: 'Ошибка',
+              errorMessage: l.data?.message,
+            ),
+          );
+          return;
+        },
+        (settingsResult) {
+          emit(
+            state.copyWith(
+              status: StateStatus.success,
+              settings: settingsResult,
+            ),
+          );
+        },
+      );
     });
 
-    on<UserEditDetailSetGenderEvent>((event, emit) {
+    on<UserEditSetGenderEvent>((event, emit) {
       emit(
         state.copyWith(
           status: StateStatus.success,
@@ -111,7 +145,7 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
       );
     });
 
-    on<UserEditDetailSaveEvent>((event, emit) async {
+    on<UserEditSaveEvent>((event, emit) async {
       final UserModel? user = state.user;
       if (user == null) return;
 
@@ -155,7 +189,7 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
       }
 
       final userDetailModel = UserDetailModel(
-        id: const Uuid().v4(),
+        id: state.detail?.id ?? const Uuid().v4(),
         gender: event.detailModel.gender,
         age: event.detailModel.age!,
         height: event.detailModel.height!,
@@ -172,7 +206,6 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
             errorMessage: l.data?.message,
           ),
         );
-        return;
       }, (detailResult) {
         emit(
           state.copyWith(
@@ -202,15 +235,16 @@ class UserEditDetailBloc extends Bloc<UserEditDetailEvent, UserEditDetailState> 
           ),
         );
         return;
-      }, (user) {
+      }, (userReturned) {
         emit(
           state.copyWith(
             status: StateStatus.success,
-            user: user,
+            user: userReturned,
           ),
         );
-        router.removeLast();
       });
+
+      router.removeLast();
     });
   }
 }

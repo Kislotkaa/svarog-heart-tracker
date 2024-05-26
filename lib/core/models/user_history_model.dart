@@ -70,7 +70,7 @@ class UserHistoryModel {
       redTimeHeart: redTimeHeart ?? this.redTimeHeart,
       orangeTimeHeart: orangeTimeHeart ?? this.orangeTimeHeart,
       greenTimeHeart: greenTimeHeart ?? this.greenTimeHeart,
-      calories: calories,
+      calories: calories ?? this.calories,
       createAt: createAt ?? this.createAt,
       finishedAt: finishedAt ?? this.finishedAt,
     );

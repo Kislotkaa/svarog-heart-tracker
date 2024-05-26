@@ -88,17 +88,3 @@ class UserDetailModel {
     return id.hashCode ^ gender.hashCode ^ age.hashCode ^ height.hashCode ^ weight.hashCode;
   }
 }
-
-class UserDetailParams {
-  UserDetailParams({
-    required this.gender,
-    required this.age,
-    required this.height,
-    required this.weight,
-  });
-
-  final int gender;
-  final int? age;
-  final double? height;
-  final double? weight;
-}

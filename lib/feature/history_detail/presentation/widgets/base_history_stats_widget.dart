@@ -305,7 +305,7 @@ class BaseHistoryStatsWidget extends StatelessWidget {
                                       end: Alignment.bottomCenter,
                                       colors: [
                                         appTheme.errorColor,
-                                        Colors.transparent,
+                                        appTheme.cardColor,
                                       ],
                                     ),
                                   ),
@@ -317,14 +317,18 @@ class BaseHistoryStatsWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (history.calories != null || needFullProfile)
-                    Padding(
+                  Builder(builder: (context) {
+                    if (history.calories == null && needFullProfile == false) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Assets.icons.fire.svg(height: 24, width: 24),
+                          Assets.icons.fire.svg(height: 20, width: 20),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 8),
@@ -332,14 +336,14 @@ class BaseHistoryStatsWidget extends StatelessWidget {
                                 needFullProfile
                                     ? 'Заполните профиль спорстмена для расчёта калорий'
                                     : '${history.calories?.toInt()} ккал',
-                                style:
-                                    appTheme.textTheme.smallCaptionSemibold12.copyWith(color: appTheme.textGrayColor),
+                                style: appTheme.textTheme.captionSemibold14.copyWith(color: appTheme.textGrayColor),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
+                    );
+                  }),
                 ],
               ),
             ),

@@ -137,20 +137,14 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const UnknownPage(),
       );
     },
-    UserEditDetailRoute.name: (routeData) {
-      final args = routeData.argsAs<UserEditDetailRouteArgs>();
+    UserEditRoute.name: (routeData) {
+      final args = routeData.argsAs<UserEditRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: UserEditDetailPage(
+        child: UserEditPage(
           key: args.key,
           userId: args.userId,
         ),
-      );
-    },
-    UserSettingsRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const UserSettingsPage(),
       );
     },
   };
@@ -539,28 +533,28 @@ class UnknownRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [UserEditDetailPage]
-class UserEditDetailRoute extends PageRouteInfo<UserEditDetailRouteArgs> {
-  UserEditDetailRoute({
+/// [UserEditPage]
+class UserEditRoute extends PageRouteInfo<UserEditRouteArgs> {
+  UserEditRoute({
     Key? key,
     required String userId,
     List<PageRouteInfo>? children,
   }) : super(
-          UserEditDetailRoute.name,
-          args: UserEditDetailRouteArgs(
+          UserEditRoute.name,
+          args: UserEditRouteArgs(
             key: key,
             userId: userId,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'UserEditDetailRoute';
+  static const String name = 'UserEditRoute';
 
-  static const PageInfo<UserEditDetailRouteArgs> page = PageInfo<UserEditDetailRouteArgs>(name);
+  static const PageInfo<UserEditRouteArgs> page = PageInfo<UserEditRouteArgs>(name);
 }
 
-class UserEditDetailRouteArgs {
-  const UserEditDetailRouteArgs({
+class UserEditRouteArgs {
+  const UserEditRouteArgs({
     this.key,
     required this.userId,
   });
@@ -571,20 +565,6 @@ class UserEditDetailRouteArgs {
 
   @override
   String toString() {
-    return 'UserEditDetailRouteArgs{key: $key, userId: $userId}';
+    return 'UserEditRouteArgs{key: $key, userId: $userId}';
   }
-}
-
-/// generated route for
-/// [UserSettingsPage]
-class UserSettingsRoute extends PageRouteInfo<void> {
-  const UserSettingsRoute({List<PageRouteInfo>? children})
-      : super(
-          UserSettingsRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'UserSettingsRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }

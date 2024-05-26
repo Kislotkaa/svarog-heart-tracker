@@ -48,7 +48,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                 onPressed: () {
                   final userId = state.user?.id;
                   if (userId != null) {
-                    router.push(UserEditDetailRoute(userId: userId)).then((value) {
+                    router.push(UserEditRoute(userId: userId)).then((value) {
                       sl<HistoryDetailBloc>().add(const HistoryDetailGetUserEvent());
                     });
                   }
@@ -102,7 +102,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
                     );
                   }
                   return NotificationListener<ScrollNotification>(
-                    onNotification: (notification) => _loadMoreListener(notification, state),
+                    onNotification: (notification) => _loadMoreListener(notification),
                     child: RefreshIndicator(
                       color: appTheme.revertBasicColor,
                       onRefresh: () async => _onRefresh(context),
@@ -176,13 +176,7 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
     );
   }
 
-  bool _loadMoreListener(ScrollNotification notification, HistoryDetailState state) {
-    final status = state.status;
-
-    if (status == StateStatus.loading || status == StateStatus.loadMore) {
-      return true;
-    }
-
+  bool _loadMoreListener(ScrollNotification notification) {
     if (notification.metrics.extentAfter < 150) {
       sl<HistoryDetailBloc>().add(const HistoryDetailLoadMoreEvent());
     }
@@ -190,21 +184,4 @@ class _HistoryDetailPageState extends State<HistoryDetailPage> {
   }
 
   void _onRefresh(BuildContext context) => sl<HistoryDetailBloc>().add(const HistoryDetailRefreshEvent());
-
-  SliverList _getSlivers(List myList, BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return buildRow(myList[index]);
-        },
-        childCount: myList.length,
-      ),
-    );
-  }
-
-  buildRow(String title) {
-    return Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0)));
-  }
 }

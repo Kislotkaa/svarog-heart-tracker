@@ -4,7 +4,7 @@ import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/edit_dialog_page.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/user_edit_detail_page.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/user_edit_page.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_devices_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/about_page.dart';
@@ -18,7 +18,6 @@ import 'package:svarog_heart_tracker/feature/settings/presentation/pages/how_to_
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/settings_page.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/pages/splash_page.dart';
 import 'package:svarog_heart_tracker/feature/unknown/pages/unknown_page.dart';
-import 'package:svarog_heart_tracker/feature/user_serttings/presentation/pages/user_settings_page.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 part 'app_router.gr.dart';
@@ -66,8 +65,8 @@ class AppRouter extends _$AppRouter {
           transitionsBuilder: TransitionsBuilders.slideLeft,
         ),
         CustomRoute(
-          path: '/user_edit_detail_edit',
-          page: UserEditDetailRoute.page,
+          path: '/user_detail_edit',
+          page: UserEditRoute.page,
           durationInMilliseconds: 150,
           transitionsBuilder: TransitionsBuilders.slideLeft,
         ),

@@ -5,19 +5,16 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
-import 'package:svarog_heart_tracker/core/service/tflite_service.dart';
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
 import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
@@ -31,29 +28,28 @@ class DeviceController {
     required this.id,
     required this.device,
     required this.name,
-    required this.tfLiteService,
     required this.insertUserUseCase,
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
     required this.getUserByPkUseCase,
     required this.getUserSettingsByPkUseCase,
     required this.insertUserSettingsByPkUseCase,
-    required this.getUserDetailByPkUseCase,
   });
 
-  late UserSettingsModel userSettings;
-  late UserModel? user;
-
-  final BluetoothDevice device;
-  final TFLiteService tfLiteService;
+  /// Для получения и обновления настроек пользователя
   final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
-  final GetUserDetailByPkUseCase getUserDetailByPkUseCase;
+  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
+  late UserSettingsModel userSettings;
+
+  /// Для обновления настроек пользователя
   final GetUserByPkUseCase getUserByPkUseCase;
+  final InsertUserUseCase insertUserUseCase;
+
+  /// Для работы с историями
   final GetUserHistoryByPkUseCase getHistoryByPkUseCase;
   final InsertUserHistoryUseCase insertHistoryUseCase;
-  final InsertUserUseCase insertUserUseCase;
-  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
 
+  final BluetoothDevice device;
   final String name;
   final String id;
   final String idTraining = const Uuid().v4();
@@ -82,38 +78,7 @@ class DeviceController {
   final globalSettingsService = sl<GlobalSettingsService>();
   GlobalSettingsModel get appSettings => globalSettingsService.appSettings;
 
-  Future<void> onInit() async {
-    await getAndSaveUser();
-    await getServiceDevice();
-  }
-
-  Future<void> onDispose() async {
-    try {
-      await _unSubscribeCharacteristics();
-      await saveHeartRateDB(ignoreTimer: true, isEnd: true);
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    }
-  }
-
-  /// Отвечает за чтение характеристики датчика
-
-  Future<void> getServiceDevice() async {
-    try {
-      services = await device.discoverServices();
-
-      _getConsoleService(kDebugMode); // показать все доступные сервисы
-
-      final BluetoothService? service = _getService(ble_service_tracker);
-      final BluetoothCharacteristic? characteristic = _getCharacteristic(ble_character_heart_rate, service);
-      await _subscribeCharacteristics(characteristic);
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    }
-  }
-
   /// Методы обработки и сохранения данных
-  ///
   void setHeartDifference() {
     if (listHeartRate.length < 6) {
       return;
@@ -124,7 +89,7 @@ class DeviceController {
   }
 
   void setHeartReal(List<int> value) {
-    realHeart = getHeartRateAdaptive(value);
+    realHeart = value[1];
   }
 
   void saveHeartList() {
@@ -213,20 +178,6 @@ class DeviceController {
       if (isEnd) {
         /// Сжимаем данные что бы оптимизировать список
         yHeart = compressArray(yHeart);
-
-        /// Сжимаем данные что бы оптимизировать список
-        if (user != null) {
-          final failurOrDetail = await getUserDetailByPkUseCase(user!.id);
-          UserDetailModel? detail;
-          failurOrDetail.fold((l) {}, (detailRequared) {
-            if (detailRequared != null) {
-              detail = detailRequared;
-            }
-          });
-          if (detail != null) {
-            await tfLiteService.isolateCalculateCallory(detail!, history!);
-          }
-        }
       }
 
       final failurOrInserted = await insertHistoryUseCase(history!.copyWith(yHeart: yHeart));
@@ -235,6 +186,7 @@ class DeviceController {
     }
   }
 
+  /// Метод нужен что бы получить историю на экране главной активности
   Future<List<int>?> getHistory() async {
     final failurOfHistory = await getHistoryByPkUseCase(idTraining);
     return failurOfHistory.fold(
@@ -245,38 +197,6 @@ class DeviceController {
         return history?.yHeart;
       },
     );
-  }
-
-  /// Вспомогательыне методы
-  int getHeartRateAdaptive(List<int?>? value) {
-    if (value != null) {
-      return value[1] ?? 0;
-    }
-    return 0;
-  }
-
-  BluetoothService? _getService(String serviceId) {
-    try {
-      return services.firstWhereOrNull((element) => element.uuid.str128 == serviceId);
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    }
-    return null;
-  }
-
-  BluetoothCharacteristic? _getCharacteristic(
-    String characteristicId,
-    BluetoothService? serviceTracker,
-  ) {
-    try {
-      if (serviceTracker != null) {
-        return serviceTracker.characteristics.firstWhereOrNull((element) => element.uuid.str128 == characteristicId);
-      }
-      return null;
-    } catch (e, s) {
-      ErrorHandler.getMessage(e, s);
-    }
-    return null;
   }
 
   Future<void> _getConsoleService(bool isActive) async {
@@ -294,52 +214,6 @@ class DeviceController {
     } catch (e, s) {
       ErrorHandler.getMessage(e, s);
     }
-  }
-
-  Future<void> getAndSaveUser() async {
-    final failurOrUser = await getUserByPkUseCase(id);
-
-    late UserModel? userModel;
-    failurOrUser.fold(
-      (l) {
-        userModel = null;
-      },
-      (user) {
-        userModel = user;
-      },
-    );
-
-    final userSettingsId = userModel?.userSettingsId;
-
-    bool needUpdateSettingsId = false;
-    final failurOrSettings = await getUserSettingsByPkUseCase(userSettingsId ?? '');
-    failurOrSettings.fold((l) {}, (model) {
-      if (model == null) {
-        userSettings = UserSettingsModel(id: const Uuid().v4());
-        needUpdateSettingsId = true;
-        return;
-      }
-      userSettings = model;
-    });
-
-    if (needUpdateSettingsId) {
-      final failurOrUpdating = await insertUserSettingsByPkUseCase(userSettings);
-      failurOrUpdating.fold((l) {}, (settings) {});
-    }
-
-    final params = UserParams(
-      id: id,
-      userDetailId: userModel?.userDetailId,
-      userSettingsId: needUpdateSettingsId ? userSettings.id : userModel?.userSettingsId,
-      deviceName: device.advName,
-      personName: userModel?.personName ?? name,
-      isAutoConnect: userModel?.isAutoConnect,
-    );
-
-    final failurOrUserReq = await insertUserUseCase(params);
-    failurOrUserReq.fold((l) {}, (userRequared) {
-      user = userRequared;
-    });
   }
 
   Future<void> _subscribeCharacteristics(
@@ -369,7 +243,82 @@ class DeviceController {
     }
   }
 
-  Future<void> _unSubscribeCharacteristics() async {
-    await streamSubscription.cancel();
+  Future<void> getAndSaveUser() async {
+    /// Получаем модель пользователя подключения
+    final failurOrUser = await getUserByPkUseCase(id);
+    late UserModel? userModel;
+    failurOrUser.fold(
+      (l) {
+        userModel = null;
+      },
+      (user) {
+        userModel = user;
+      },
+    );
+
+    final userSettingsId = userModel?.userSettingsId;
+
+    /// Получаем настройки пользователя
+    bool needUpdateSettingsId = false;
+    final failurOrSettings = await getUserSettingsByPkUseCase(userSettingsId ?? '');
+    failurOrSettings.fold((l) {}, (model) {
+      if (model == null) {
+        userSettings = UserSettingsModel(id: const Uuid().v4());
+        needUpdateSettingsId = true;
+        return;
+      }
+      userSettings = model;
+    });
+
+    if (needUpdateSettingsId) {
+      /// Если настроек нет то создадим их
+      final failurOrUpdating = await insertUserSettingsByPkUseCase(userSettings);
+      failurOrUpdating.fold((l) {}, (settings) {});
+
+      /// сразу обнови settingsId у пользователя
+      final failurOrUserReq = await insertUserUseCase(UserParams(
+        id: id,
+        userDetailId: userModel?.userDetailId,
+        userSettingsId: needUpdateSettingsId ? userSettings.id : userModel?.userSettingsId,
+        deviceName: device.advName,
+        personName: userModel?.personName ?? name,
+        isAutoConnect: userModel?.isAutoConnect,
+      ));
+      failurOrUserReq.fold((l) {}, (userRequared) {});
+    }
+  }
+
+  Future<void> getServiceDevice() async {
+    try {
+      services = await device.discoverServices();
+
+      _getConsoleService(kDebugMode); // показать все доступные сервисы
+
+      final BluetoothService? service = services.firstWhereOrNull(
+        (element) => element.uuid.str128 == ble_service_tracker,
+      );
+
+      final BluetoothCharacteristic? characteristic = service?.characteristics.firstWhereOrNull(
+        (element) => element.uuid.str128 == ble_character_heart_rate,
+      );
+
+      await _subscribeCharacteristics(characteristic);
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
+  }
+
+  Future<void> onInit() async {
+    await getAndSaveUser();
+    await getServiceDevice();
+  }
+
+  Future<void> onDispose() async {
+    try {
+      await streamSubscription.cancel();
+      await saveHeartRateDB(ignoreTimer: true, isEnd: true);
+    } catch (e, s) {
+      ErrorHandler.getMessage(e, s);
+    }
   }
 }

@@ -10,16 +10,17 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_history_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_settings_datasource.dart';
+import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_settings_repository.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_user_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_all_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
@@ -51,7 +52,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     ),
   );
 
-  final ClearUserUseCase clearUserSqlUseCase = ClearUserUseCase(
+  final ClearAllUsersUseCase clearUserSqlUseCase = ClearAllUsersUseCase(
     UserRepositoryImpl(
       userDataSource: UserDataSourceSqlImpl(
         sqlLiteService: sl(),
@@ -87,7 +88,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   );
 
   /// **[UserSettingsModel]** required
-  final UpdateUserSettingsByPkUseCase updateUserSettingsByPkUseCase = UpdateUserSettingsByPkUseCase(
+  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase = InsertUserSettingsByPkUseCase(
     UserSettingsRepositoryImpl(
       userSettingsDataSource: UserSettingsDataSourceHiveImpl(
         hiveService: sl(),
@@ -95,7 +96,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     ),
   );
 
-  final ClearUserUseCase clearUserHiveUseCase = ClearUserUseCase(
+  final ClearAllUsersUseCase clearUserHiveUseCase = ClearAllUsersUseCase(
     UserRepositoryImpl(
       userDataSource: UserDataSourceHiveImpl(
         hiveService: sl(),
@@ -147,7 +148,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         ),
       );
 
-      ///TODO: Тестовые данные для проверки работы миграции!!!
+      /// TODO: Тестовые данные для проверки работы миграции!!!
       // if (kDebugMode) {
       //   await globalSettingsService.setMigratedHive(false);
 
@@ -216,15 +217,18 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       //     }
       //     print('@@@');
       //   }
-
       //   log('--------------------------------------');
       // }
 
       /// Миграция на Hive под загрузку splash screen
+      /// ------------------------------------------------------------------------------------------
+      /// ВАЖНО НЕ УБИРАТЬ
       final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
+      final hiveIsEmpty = await sl<HiveService>().dataBaseIsEmpty();
+
       late List<UserModel> users = [];
 
-      if (isMigrateHive == false) {
+      if (isMigrateHive == false && hiveIsEmpty) {
         emit(
           state.copyWith(
             process: 'Идёт оптимизация данных...',
@@ -232,9 +236,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
             errorMessage: null,
           ),
         );
-
-        await clearUserHiveUseCase(NoParams());
-        await clearUserHistoryHiveUseCase(NoParams());
 
         /// Получаем всех пользователей из SQLite бд
         final failureOrUsers = await getUsersSqlUseCase(NoParams());
@@ -257,7 +258,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           /// Добавляем настройки в Hive бд если их нет
           if (user.userSettingsId == null) {
             final settingsId = const Uuid().v4();
-            final failureOrSettings = await updateUserSettingsByPkUseCase(UserSettingsModel(id: settingsId));
+            final failureOrSettings = await insertUserSettingsByPkUseCase(UserSettingsModel(id: settingsId));
             failureOrSettings.fold((l) {
               emit(
                 state.copyWith(
@@ -343,6 +344,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           ),
         );
       }
+
+      /// ------------------------------------------------------------------------------------------
 
       await Future.delayed(const Duration(seconds: 1));
 

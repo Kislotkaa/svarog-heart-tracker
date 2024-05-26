@@ -142,7 +142,7 @@ class AppThemeData {
     unselectedWidgetColor: AppLightColors.text,
     iconTheme: const IconThemeData(color: AppLightColors.text),
     shadowColor: AppLightColors.shadow,
-    scaffoldBackgroundColor: AppStaticColors.white,
+    scaffoldBackgroundColor: AppLightColors.gray,
     hintColor: AppStaticColors.textGray,
     disabledColor: AppStaticColors.textGray,
     inputDecorationTheme: const InputDecorationTheme(

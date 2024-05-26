@@ -1,4 +1,8 @@
-List<int> compressArray(List<int> inputArray, {int targetSize = 100}) {
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
+import 'package:svarog_heart_tracker/locator.dart';
+
+List<int> compressArray(List<int> inputArray) {
+  final targetSize = sl<GlobalSettingsService>().appSettings.copressSized;
   if (inputArray.length <= targetSize) {
     return inputArray;
   }

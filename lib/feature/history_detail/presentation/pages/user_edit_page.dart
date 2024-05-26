@@ -4,33 +4,33 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
-import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_text_field_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/toggle/base_toggle_widget.dart';
-import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_detail_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 @RoutePage()
-class UserEditDetailPage extends StatefulWidget {
+class UserEditPage extends StatefulWidget {
   final String userId;
-  const UserEditDetailPage({Key? key, required this.userId}) : super(key: key);
+  const UserEditPage({Key? key, required this.userId}) : super(key: key);
 
   @override
-  State<UserEditDetailPage> createState() => _UserEditDetailPageState();
+  State<UserEditPage> createState() => _UserEditPageState();
 }
 
-class _UserEditDetailPageState extends State<UserEditDetailPage> {
+class _UserEditPageState extends State<UserEditPage> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
   @override
   void initState() {
-    sl<UserEditDetailBloc>().add(UserEditDetailInitialEvent(
+    sl<UserEditBloc>().add(UserEditInitialEvent(
       widget.userId,
       ageController: ageController,
       heightController: heightController,
@@ -41,7 +41,7 @@ class _UserEditDetailPageState extends State<UserEditDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<UserEditDetailBloc, UserEditDetailState>(
+    return BlocConsumer<UserEditBloc, UserEditState>(
       listenWhen: (prev, next) => prev.status != next.status,
       listener: (context, state) {
         if (state.errorTitle != null) {
@@ -55,6 +55,7 @@ class _UserEditDetailPageState extends State<UserEditDetailPage> {
       },
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: appTheme.basicColor,
           appBar: BaseAppBarWidget(
             title: 'Редактирование ${state.user?.personName}(а)',
             needClose: true,
@@ -76,8 +77,8 @@ class _UserEditDetailPageState extends State<UserEditDetailPage> {
                           height: 50,
                           isActive: state.genderFlag,
                           slidersCallBack: [
-                            (value) => sl<UserEditDetailBloc>().add(const UserEditDetailSetGenderEvent(0)),
-                            (value) => sl<UserEditDetailBloc>().add(const UserEditDetailSetGenderEvent(1)),
+                            (value) => sl<UserEditBloc>().add(const UserEditSetGenderEvent(0)),
+                            (value) => sl<UserEditBloc>().add(const UserEditSetGenderEvent(1)),
                           ],
                           sliders: const [
                             'Женский',
@@ -160,9 +161,9 @@ class _UserEditDetailPageState extends State<UserEditDetailPage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: BaseButtonWidget(
-                    onPressed: () => sl<UserEditDetailBloc>().add(
-                      UserEditDetailSaveEvent(
-                        UserDetailParams(
+                    onPressed: () => sl<UserEditBloc>().add(
+                      UserEditSaveEvent(
+                        detailModel: UserDetailParams(
                           gender: state.genderFlag,
                           age: int.tryParse(ageController.text),
                           height: double.tryParse(heightController.text),

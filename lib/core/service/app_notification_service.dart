@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/local_notification_model.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 FlutterLocalNotificationsPlugin? localNotification;
+
+AndroidNotificationChannel get androidNotificationChannel => const AndroidNotificationChannel(
+      'high_importance_channel',
+      'High Importance Notifications',
+      importance: Importance.max,
+    );
 
 class AppNotificationService {
   late bool _isAccessAllowed = false;
@@ -21,9 +26,21 @@ class AppNotificationService {
 
       localNotification = FlutterLocalNotificationsPlugin();
 
+      await localNotification
+          ?.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          ?.createNotificationChannel(androidNotificationChannel);
+
+      await localNotification
+          ?.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+
       await localNotification?.initialize(
         const InitializationSettings(
-          android: AndroidInitializationSettings('launcher_notification'),
+          android: AndroidInitializationSettings('@drawable/ic_notification'),
           iOS: DarwinInitializationSettings(
             requestSoundPermission: false,
             requestBadgePermission: false,

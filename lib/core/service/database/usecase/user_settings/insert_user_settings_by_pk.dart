@@ -15,3 +15,13 @@ class InsertUserSettingsByPkUseCase extends UseCase<UserSettingsModel?, UserSett
     return response;
   }
 }
+
+class UserSettingsParams {
+  UserSettingsParams({
+    this.greenZone = 145, // Порог зелёной зоны
+    this.orangeZone = 160, // Порог красной зоны
+  });
+
+  final int greenZone;
+  final int orangeZone;
+}

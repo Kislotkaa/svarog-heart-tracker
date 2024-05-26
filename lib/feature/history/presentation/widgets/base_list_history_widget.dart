@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
+import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
 import 'package:svarog_heart_tracker/feature/history/presentation/widgets/base_history_user.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
@@ -52,6 +53,17 @@ class BaseListHistory extends StatelessWidget {
       child: BlocBuilder<ConnectedDeviceBloc, ConnectedDeviceState>(
           buildWhen: (prev, next) => prev.connectedDevices.length != next.connectedDevices.length,
           builder: (context, state) {
+            if (userActive.isEmpty && userUnActive.isEmpty) {
+              return const Column(
+                children: [
+                  BaseCapWidget(
+                    icon: Icons.hide_source_rounded,
+                    title: 'Историю подключений пуста',
+                    caption: 'Создайте новое подключение и вернитесь на этот экран',
+                  ),
+                ],
+              );
+            }
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [

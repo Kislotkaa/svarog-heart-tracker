@@ -206,9 +206,12 @@ class HivePagination {
   /// Страница всегда > 1
   int page;
 
+  bool isEnd;
+
   HivePagination({
     this.limit = 5,
     this.page = 1,
+    this.isEnd = false,
   }) {
     if (page < 1) {
       page = 1;
@@ -218,10 +221,12 @@ class HivePagination {
   HivePagination copyWith({
     int? limit,
     int? page,
+    bool? isEnd,
   }) {
     return HivePagination(
       limit: limit ?? this.limit,
       page: page ?? this.page,
+      isEnd: isEnd ?? this.isEnd,
     );
   }
 }

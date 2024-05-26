@@ -21,7 +21,7 @@ class BaseAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       elevation: 0.0,
       leadingWidth: 0,
-      backgroundColor: Colors.transparent,
+      backgroundColor: appTheme.basicColor,
       leading: const SizedBox(),
       centerTitle: false,
       title: Row(

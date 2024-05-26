@@ -126,7 +126,7 @@ class BaseTextFieldWidget extends StatelessWidget {
               bottom: 12,
             ),
             filled: true,
-            fillColor: backgroundColor ?? appTheme.cardColor,
+            fillColor: backgroundColor ?? appTheme.grayColor,
             hintText: hintText,
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,

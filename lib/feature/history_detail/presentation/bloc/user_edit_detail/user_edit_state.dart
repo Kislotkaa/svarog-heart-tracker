@@ -1,42 +1,46 @@
-part of 'user_edit_detail_bloc.dart';
+part of 'user_edit_bloc.dart';
 
-class UserEditDetailState extends Equatable {
+class UserEditState extends Equatable {
   final StateStatus status;
   final int genderFlag;
   final UserModel? user;
   final UserDetailModel? detail;
+  final UserSettingsModel? settings;
   final String? errorMessage;
   final String? errorTitle;
 
-  const UserEditDetailState.initial() : this._();
+  const UserEditState.initial() : this._();
 
-  const UserEditDetailState._({
+  const UserEditState._({
     this.status = StateStatus.initial,
     this.user,
     this.genderFlag = 1,
     this.detail,
+    this.settings,
     this.errorMessage,
     this.errorTitle,
   });
 
-  UserEditDetailState copyWith({
+  UserEditState copyWith({
     StateStatus? status,
     UserModel? user,
     int? genderFlag,
     UserDetailModel? detail,
+    UserSettingsModel? settings,
     String? errorMessage,
     String? errorTitle,
   }) =>
-      UserEditDetailState._(
+      UserEditState._(
         status: status ?? this.status,
         user: user ?? this.user,
         genderFlag: genderFlag ?? this.genderFlag,
         detail: detail ?? this.detail,
+        settings: settings ?? this.settings,
         errorMessage: errorMessage,
         errorTitle: errorTitle,
       );
 
-  UserEditDetailState setToDefault() => const UserEditDetailState.initial();
+  UserEditState setToDefault() => const UserEditState.initial();
 
   @override
   List<Object?> get props => [
@@ -44,6 +48,7 @@ class UserEditDetailState extends Equatable {
         user,
         genderFlag,
         detail,
+        settings,
         errorMessage,
         errorTitle,
       ];
