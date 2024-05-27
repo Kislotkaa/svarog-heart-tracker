@@ -22,10 +22,6 @@ class HistoryDetailLoadMoreEvent extends HistoryDetailEvent {
   const HistoryDetailLoadMoreEvent();
 }
 
-class HistoryDetailCalculateCalloryEvent extends HistoryDetailEvent {
-  const HistoryDetailCalculateCalloryEvent();
-}
-
 class HistoryDetailRefreshEvent extends HistoryDetailEvent {
   const HistoryDetailRefreshEvent();
 }

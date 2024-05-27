@@ -13,6 +13,8 @@ abstract class UserHistoryDataSource {
   Future<void> insertHistory(UserHistoryModel params);
   Future<void> updateHistoryByPk(UserHistoryModel params);
   Future<void> removeHistoryByPk(String id);
+  Future<void> removeHistoryUserByPk(String userId);
+
   Future<void> clearDatabase();
 }
 
@@ -78,6 +80,15 @@ class UserHistoryDataSourceSqlImpl extends UserHistoryDataSource {
   Future<void> clearDatabase() async {
     await _db.rawDelete('DELETE FROM $_tableName');
   }
+
+  @override
+  Future<void> removeHistoryUserByPk(String userId) async {
+    await _db.delete(
+      _tableName,
+      where: '"userId" = ?',
+      whereArgs: [userId],
+    );
+  }
 }
 
 class UserHistoryDataSourceHiveImpl extends UserHistoryDataSource {
@@ -131,5 +142,10 @@ class UserHistoryDataSourceHiveImpl extends UserHistoryDataSource {
   @override
   Future<void> clearDatabase() async {
     await hiveService.clearDataBase(box);
+  }
+
+  @override
+  Future<void> removeHistoryUserByPk(String userId) async {
+    await hiveService.delete(box, where: (element) => element.userId == userId);
   }
 }

@@ -8,6 +8,7 @@ abstract class UserDetailRepository {
   Future<Either<Failure, UserDetailModel>> updateUserDetailByPk(UserDetailModel params);
   Future<Either<Failure, UserDetailModel>> insertUserDetailByPk(UserDetailModel params);
   Future<Either<Failure, void>> clearDatabase();
+  Future<Either<Failure, void>> removeDetailByPk(String id);
 }
 
 class UserDetailRepositoryImpl extends UserDetailRepository {
@@ -54,6 +55,17 @@ class UserDetailRepositoryImpl extends UserDetailRepository {
   Future<Either<Failure, void>> clearDatabase() async {
     try {
       await userDetailDataSource.clearDatabase();
+
+      return const Right(null);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> removeDetailByPk(String id) async {
+    try {
+      await userDetailDataSource.removeDetailByPk(id);
 
       return const Right(null);
     } on CacheFailure catch (exception) {

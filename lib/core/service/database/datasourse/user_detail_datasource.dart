@@ -7,7 +7,7 @@ abstract class UserDetailDataSource {
   Future<UserDetailModel?> getUserDetailByPk(String id);
   Future<UserDetailModel> updateUserDetailByPk(UserDetailModel params);
   Future<UserDetailModel> insertUserDetailByPk(UserDetailModel params);
-
+  Future<void> removeDetailByPk(String id);
   Future<void> clearDatabase();
 }
 
@@ -48,5 +48,10 @@ class UserDetailDataSourceHiveImpl extends UserDetailDataSource {
   @override
   Future<void> clearDatabase() async {
     await hiveService.clearDataBase(box);
+  }
+
+  @override
+  Future<void> removeDetailByPk(String id) async {
+    await hiveService.delete(box, where: (element) => element.id == id);
   }
 }

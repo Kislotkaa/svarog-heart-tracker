@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
@@ -13,6 +12,7 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/g
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_by_pk_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/tflite/usecase/get_tflite_callory_usecase.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/feature/home/presentation/bloc/home/home_bloc.dart';
@@ -35,6 +35,9 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
   /// **[String]** required
   final RemoveUserHistoryByPkUseCase deleteUserHistoryByPkUseCase;
 
+  /// **[String]** required
+  final RemoveUserHistoryUserByPkUseCase removeUserHistoryUserByPkUseCase;
+
   /// **[UserParams]** required
   final UpdateUserByPkUseCase updateUserUseCase;
 
@@ -51,6 +54,7 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
     required this.insertUserHistoryUseCase,
     required this.getUserHistoryUserByPkUseCase,
     required this.deleteUserHistoryByPkUseCase,
+    required this.removeUserHistoryUserByPkUseCase,
     required this.getTFLiteCalloryUseCase,
   }) : super(const HistoryDetailState.initial()) {
     on<HistoryDetailInitialEvent>((event, emit) async {
@@ -115,7 +119,13 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         (historyReturned) => listHistory = historyReturned,
       );
 
-      log(listHistory.length.toString());
+      /// Если у пользователя не заполнена детальная инфа
+      /// Если история сейчас активна то не считаем
+      final isActiveUser =
+          sl<HomeBloc>().state.list.firstWhereOrNull((element) => element.id == state.user?.id) == null;
+      if (detail != null && isActiveUser) {
+        listHistory = await _calculateCallory(state, detail!, listHistory) ?? listHistory;
+      }
 
       emit(state.copyWith(
         status: StateStatus.success,
@@ -123,8 +133,6 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         user: user,
         detail: detail,
       ));
-
-      add(const HistoryDetailCalculateCalloryEvent());
     });
 
     on<HistoryDetailLoadMoreEvent>((event, emit) async {
@@ -135,8 +143,13 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         return;
       }
 
+      pagination = pagination.copyWith(
+        page: pagination.page + 1,
+      );
+
       emit(state.copyWith(
         status: StateStatus.loadMore,
+        pagination: pagination,
         errorMessage: null,
         errorTitle: null,
       ));
@@ -158,108 +171,31 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         },
         (historyResult) {
           for (var elementState in state.listHistory) {
-            listHistory.removeWhere((element) => element.id == elementState.id);
+            historyResult.removeWhere((element) => element.id == elementState.id);
           }
           listHistory = historyResult;
         },
       );
 
+      /// Если у пользователя не заполнена детальная инфа
+      /// Если история сейчас активна то не считаем
+      final isNotActiveUser =
+          sl<HomeBloc>().state.list.firstWhereOrNull((element) => element.id == state.user?.id) == null;
+      if (state.detail != null && isNotActiveUser) {
+        listHistory = await _calculateCallory(state, state.detail!, listHistory) ?? listHistory;
+      }
+
       emit(state.copyWith(
         listHistory: [...state.listHistory, ...listHistory],
         pagination: pagination.copyWith(
-          page: pagination.page + 1,
           isEnd: listHistory.isEmpty,
         ),
       ));
 
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      add(const HistoryDetailCalculateCalloryEvent());
+      await Future.delayed(const Duration(milliseconds: 300));
 
       emit(state.copyWith(
         status: StateStatus.success,
-      ));
-    });
-
-    on<HistoryDetailCalculateCalloryEvent>((event, emit) async {
-      final detail = state.detail;
-      final listHistory = state.listHistory;
-
-      /// Если у пользователя не заполнена детальная инфа
-      if (detail == null) {
-        return;
-      }
-
-      /// Если история сейчас активно то не считаем
-      final activeDevices = sl<HomeBloc>().state.list;
-      for (var activedevice in activeDevices) {
-        if (activedevice.id == state.user?.id) {
-          return;
-        }
-      }
-
-      emit(state.copyWith(
-        status: StateStatus.loadMore,
-        listHistory: listHistory,
-      ));
-
-      /// Предсказываем калории
-      for (var history in listHistory) {
-        /// Считаем только те каллории которых нет
-        if (history.calories == null) {
-          final filurOrHistoryModel = await getTFLiteCalloryUseCase(TFLiteParams(
-            detail: detail,
-            history: history,
-          ));
-          UserHistoryModel? elementHistory;
-          filurOrHistoryModel.fold((l) {
-            emit(
-              state.copyWith(
-                status: StateStatus.failure,
-                errorTitle: 'Ошибка',
-                errorMessage: l.data?.message,
-              ),
-            );
-            return;
-          }, (historyWithCallory) {
-            if (historyWithCallory == null) return;
-
-            for (var i = 0; i < listHistory.length; i++) {
-              if (listHistory[i].id == historyWithCallory.id) {
-                listHistory[i] = listHistory[i].copyWith(calories: historyWithCallory.calories);
-                elementHistory = listHistory[i];
-              }
-            }
-          });
-
-          filurOrHistoryModel.fold((l) {
-            emit(
-              state.copyWith(
-                status: StateStatus.failure,
-                errorTitle: 'Ошибка',
-                errorMessage: l.data?.message,
-              ),
-            );
-            return;
-          }, (historyWithCallory) {
-            if (historyWithCallory == null) return;
-
-            for (var i = 0; i < listHistory.length; i++) {
-              if (listHistory[i].id == historyWithCallory.id) {
-                listHistory[i] = listHistory[i].copyWith(calories: historyWithCallory.calories);
-                elementHistory = listHistory[i];
-              }
-            }
-          });
-
-          if (elementHistory != null) {
-            await insertUserHistoryUseCase(elementHistory!);
-          }
-        }
-      }
-      emit(state.copyWith(
-        status: StateStatus.success,
-        listHistory: listHistory,
       ));
     });
 
@@ -332,13 +268,22 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
     });
 
     on<HistoryDetailDeleteAllEvent>((event, emit) async {
-      for (var element in state.listHistory) {
-        await deleteUserHistoryByPkUseCase(element.id);
-      }
       emit(state.copyWith(
-        status: StateStatus.success,
-        listHistory: [],
+        status: StateStatus.loading,
       ));
+      final failurOrDeleted = await removeUserHistoryUserByPkUseCase(state.user?.id ?? '');
+      failurOrDeleted.fold((l) {
+        emit(state.copyWith(
+          status: StateStatus.failure,
+          errorTitle: 'Ошибка',
+          errorMessage: l.data?.message,
+        ));
+      }, (r) {
+        emit(state.copyWith(
+          status: StateStatus.success,
+          listHistory: [],
+        ));
+      });
     });
 
     on<HistoryDetailDeleteEvent>((event, emit) async {
@@ -405,5 +350,57 @@ class HistoryDetailBloc extends Bloc<HistoryDetailEvent, HistoryDetailState> {
         );
       });
     });
+  }
+
+  Future<List<UserHistoryModel>?> _calculateCallory(
+    HistoryDetailState state,
+    UserDetailModel userDetail,
+    List<UserHistoryModel> list,
+  ) async {
+    final detail = userDetail;
+    final listHistory = list;
+
+    /// Предсказываем калории
+    for (var history in listHistory) {
+      /// Считаем только те каллории которых нет
+      if (history.calories == null) {
+        final filurOrHistoryModel = await getTFLiteCalloryUseCase(TFLiteParams(
+          detail: detail,
+          history: history,
+        ));
+        UserHistoryModel? elementHistory;
+        filurOrHistoryModel.fold((l) {
+          return;
+        }, (historyWithCallory) {
+          if (historyWithCallory == null) return;
+
+          for (var i = 0; i < listHistory.length; i++) {
+            if (listHistory[i].id == historyWithCallory.id) {
+              listHistory[i] = listHistory[i].copyWith(calories: historyWithCallory.calories);
+              elementHistory = listHistory[i];
+            }
+          }
+        });
+
+        filurOrHistoryModel.fold((l) {
+          return;
+        }, (historyWithCallory) {
+          if (historyWithCallory == null) return;
+
+          for (var i = 0; i < listHistory.length; i++) {
+            if (listHistory[i].id == historyWithCallory.id) {
+              listHistory[i] = listHistory[i].copyWith(calories: historyWithCallory.calories);
+              elementHistory = listHistory[i];
+            }
+          }
+        });
+
+        if (elementHistory != null) {
+          await insertUserHistoryUseCase(elementHistory!);
+        }
+      }
+    }
+
+    return listHistory;
   }
 }

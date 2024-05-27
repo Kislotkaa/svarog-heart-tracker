@@ -7,6 +7,8 @@ abstract class UserSettingsDataSource {
   Future<UserSettingsModel?> getUserSettingsByPk(String id);
   Future<UserSettingsModel> updateUserSettingsByPk(UserSettingsModel params);
   Future<UserSettingsModel> insertUserSettingsByPk(UserSettingsModel params);
+  Future<void> removeSettingsByPk(String id);
+
   Future<void> clearDatabase();
 }
 
@@ -47,5 +49,10 @@ class UserSettingsDataSourceHiveImpl extends UserSettingsDataSource {
   @override
   Future<void> clearDatabase() async {
     await hiveService.clearDataBase(box);
+  }
+
+  @override
+  Future<void> removeSettingsByPk(String id) async {
+    await hiveService.delete(box, where: (element) => element.id == id);
   }
 }

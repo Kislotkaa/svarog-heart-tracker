@@ -72,7 +72,7 @@ class BaseGraphicsWidget extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         appTheme.errorColor,
-                        Colors.transparent,
+                        appTheme.cardColor,
                       ],
                     ),
                   ),

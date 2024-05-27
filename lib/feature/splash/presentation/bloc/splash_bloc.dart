@@ -10,7 +10,6 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_history_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_settings_datasource.dart';
-import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_settings_repository.dart';
@@ -91,22 +90,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase = InsertUserSettingsByPkUseCase(
     UserSettingsRepositoryImpl(
       userSettingsDataSource: UserSettingsDataSourceHiveImpl(
-        hiveService: sl(),
-      ),
-    ),
-  );
-
-  final ClearAllUsersUseCase clearUserHiveUseCase = ClearAllUsersUseCase(
-    UserRepositoryImpl(
-      userDataSource: UserDataSourceHiveImpl(
-        hiveService: sl(),
-      ),
-    ),
-  );
-
-  final ClearUserHistoryUseCase clearUserHistoryHiveUseCase = ClearUserHistoryUseCase(
-    UserHistoryRepositoryImpl(
-      userHistoryDataSource: UserHistoryDataSourceHiveImpl(
         hiveService: sl(),
       ),
     ),
@@ -224,11 +207,10 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       /// ------------------------------------------------------------------------------------------
       /// ВАЖНО НЕ УБИРАТЬ
       final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
-      final hiveIsEmpty = await sl<HiveService>().dataBaseIsEmpty();
 
       late List<UserModel> users = [];
 
-      if (isMigrateHive == false && hiveIsEmpty) {
+      if (isMigrateHive == false) {
         emit(
           state.copyWith(
             process: 'Идёт оптимизация данных...',
@@ -332,9 +314,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         await clearUserSqlUseCase(NoParams());
         await clearUserHistorySqlUseCase(NoParams());
         await globalSettingsService.setMigratedHive(true);
-        await registerHiveOrSqlModules(globalSettingsService);
-
         await Future.delayed(const Duration(seconds: 1));
+        await registerHiveOrSqlModules(true);
 
         emit(
           state.copyWith(

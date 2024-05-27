@@ -19,12 +19,15 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_al
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/clear_all_user_detail.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/update_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/remove_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/update_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/clear_all_user_settings.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/update_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/clear_cache_start_app_usecase.dart';
@@ -73,7 +76,7 @@ Future<void> initLocator() async {
   // Global Settings
   final sharedPreferences = await SharedPreferences.getInstance();
   final globalSettingsService = GlobalSettingsService(sharedPreferences: sharedPreferences).init();
-  await registerHiveOrSqlModules(globalSettingsService);
+  await registerHiveOrSqlModules(globalSettingsService.appSettings.isMigratedHive);
 
   // --- Cubit --- \\
   sl.registerLazySingleton(() => ThemeCubit(themeRepository: sl()));
@@ -139,6 +142,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => UpdateUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => ClearAllUserHistoryUseCase(sl()));
   sl.registerLazySingleton(() => RemoveUserByPkUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveUserHistoryUserByPkUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserSettingsByPkUseCase(sl()));
   sl.registerLazySingleton(() => InsertUserSettingsByPkUseCase(sl()));
   sl.registerLazySingleton(() => GetUserSettingsByPkUseCase(sl()));
@@ -151,6 +155,8 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => ClearAllUserDetailUseCase(sl()));
   sl.registerLazySingleton(() => ClearAllUserSettingsUseCase(sl()));
   sl.registerLazySingleton(() => GetTFLiteCalloryUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveUserSettingsByPkUseCase(sl()));
+  sl.registerLazySingleton(() => RemoveUserDetailByPkUseCase(sl()));
 
   // --- Bloc --- \\
   sl.registerLazySingleton(() => AuthAdminBloc(setCacheStartAppUserCase: sl()));
@@ -165,7 +171,13 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => PreviouslyConnectedBloc(appBluetoothService: sl(), getUsersUserCase: sl()));
   sl.registerLazySingleton(() => ScanDeviceBloc(appBluetoothService: sl()));
   sl.registerLazySingleton(() => AutoConnectBloc(appBluetoothService: sl(), getUsersUseCase: sl()));
-  sl.registerLazySingleton(() => HistoryBloc(getUsersUseCase: sl(), removeUserByPkUseCase: sl()));
+  sl.registerLazySingleton(() => HistoryBloc(
+        getUsersUseCase: sl(),
+        removeUserByPkUseCase: sl(),
+        removeUserDetailByPkUseCase: sl(),
+        removeUserSettingsByPkUseCase: sl(),
+        getUserByPkUseCase: sl(),
+      ));
   sl.registerLazySingleton(() => GlobalSettingsBloc(globalSettingsService: sl()));
   sl.registerLazySingleton(() => UserEditBloc(
         getUserByPkUseCase: sl(),
@@ -179,11 +191,12 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => HistoryDetailBloc(
         getUserByPkUseCase: sl(),
         getUserHistoryUserByPkUseCase: sl(),
-        deleteUserHistoryByPkUseCase: sl(),
+        removeUserHistoryUserByPkUseCase: sl(),
         updateUserUseCase: sl(),
         getUserDetailByPkUseCase: sl(),
         getTFLiteCalloryUseCase: sl(),
         insertUserHistoryUseCase: sl(),
+        deleteUserHistoryByPkUseCase: sl(),
       ));
 
   sl.registerLazySingleton(() => SettingsBloc(
@@ -216,9 +229,7 @@ Future<void> initLocator() async {
   sl.registerLazySingleton(() => AppRouter());
 }
 
-Future<void> registerHiveOrSqlModules(GlobalSettingsService globalSettingsService) async {
-  final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
-
+Future<void> registerHiveOrSqlModules(bool isMigrateHive) async {
   if (sl.isRegistered<UserDataSource>()) {
     await sl.unregister<UserDataSource>();
   }

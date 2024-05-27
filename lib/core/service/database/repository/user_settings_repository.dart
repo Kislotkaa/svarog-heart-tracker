@@ -7,7 +7,7 @@ abstract class UserSettingsRepository {
   Future<Either<Failure, UserSettingsModel?>> getUserSettingsByPk(String id);
   Future<Either<Failure, UserSettingsModel>> updateUserSettingsByPk(UserSettingsModel params);
   Future<Either<Failure, UserSettingsModel>> insertUserSettingsByPk(UserSettingsModel params);
-
+  Future<Either<Failure, void>> removeSettingsByPk(String id);
   Future<Either<Failure, void>> clearDatabase();
 }
 
@@ -55,6 +55,17 @@ class UserSettingsRepositoryImpl extends UserSettingsRepository {
   Future<Either<Failure, void>> clearDatabase() async {
     try {
       await userSettingsDataSource.clearDatabase();
+
+      return const Right(null);
+    } on CacheFailure catch (exception) {
+      return Left(exception);
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> removeSettingsByPk(String id) async {
+    try {
+      await userSettingsDataSource.removeSettingsByPk(id);
 
       return const Right(null);
     } on CacheFailure catch (exception) {
