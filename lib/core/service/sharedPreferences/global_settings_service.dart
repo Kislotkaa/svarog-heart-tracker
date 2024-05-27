@@ -18,12 +18,12 @@ class GlobalSettingsService {
 
   Future<void> updateSettings(GlobalSettingsModel model) async {
     appSettings = model;
-    await sharedPreferences.setString(SPrefsKeys.GLOBAL_SETTINGS, model.toJson());
+    await sharedPreferences.setString(SPrefsKeys.GLOBAL_SETTINGS, appSettings.toJson());
   }
 
   Future<void> setMigratedHive(bool flag) async {
-    final settings = appSettings.copyWith(isMigratedHive: flag);
-    await sharedPreferences.setString(SPrefsKeys.GLOBAL_SETTINGS, settings.toJson());
+    appSettings = appSettings.copyWith(isMigratedHive: flag);
+    await sharedPreferences.setString(SPrefsKeys.GLOBAL_SETTINGS, appSettings.toJson());
   }
 
   Future<GlobalSettingsModel> setToDefault() async {
