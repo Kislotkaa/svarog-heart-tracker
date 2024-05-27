@@ -32,7 +32,7 @@ class AppBluetoothService {
   }
 
   Future<void> connectToDevice(BluetoothDevice blueDevice) async {
-    await blueDevice.connect(autoConnect: false);
+    await blueDevice.connect(autoConnect: true);
   }
 
   Future<void> disconnectDevice(BluetoothDevice blueDevice) async {
