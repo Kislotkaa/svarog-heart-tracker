@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
+import 'package:svarog_heart_tracker/locator.dart';
 
 class AppBluetoothService {
   Stream<List<ScanResult>> get scanResulStream => FlutterBluePlus.scanResults;
@@ -32,7 +34,10 @@ class AppBluetoothService {
   }
 
   Future<void> connectToDevice(BluetoothDevice blueDevice) async {
-    await blueDevice.connect(autoConnect: true);
+    await blueDevice.connect(
+      autoConnect: false,
+      timeout: Duration(seconds: sl<GlobalSettingsService>().appSettings.timeDisconnect.toInt()),
+    );
   }
 
   Future<void> disconnectDevice(BluetoothDevice blueDevice) async {
