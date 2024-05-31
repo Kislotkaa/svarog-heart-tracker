@@ -1,6 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/utils/date_format.dart';
 import 'package:svarog_heart_tracker/core/utils/screen_size.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/widgets/base_active_stats_heart_time_widget.dart';

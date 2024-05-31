@@ -1,11 +1,11 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:svarog_heart_tracker/core/cubit/intl_cubit/intl_cubit.dart';
-import 'package:svarog_heart_tracker/core/cubit/intl_cubit/repository/intl_repository.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/repository/theme_repository.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/intl/intl_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/intl/repository/intl_repository.dart';
+import 'package:svarog_heart_tracker/core/service/theme/repository/theme_repository.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
-import 'package:svarog_heart_tracker/core/service/app_notification_service.dart';
+import 'package:svarog_heart_tracker/core/service/notification/app_notification_service.dart';
 import 'package:svarog_heart_tracker/core/service/bluetooth/app_bluetooth_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_detail_datasource.dart';

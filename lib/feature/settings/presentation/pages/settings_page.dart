@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/hive_service.dart';
 import 'package:svarog_heart_tracker/core/service/database/sqllite_service.dart';

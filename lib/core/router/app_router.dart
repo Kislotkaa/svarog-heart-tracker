@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/edit_dialog_page.dart';

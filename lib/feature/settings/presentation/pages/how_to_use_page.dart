@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_divider_widget.dart';

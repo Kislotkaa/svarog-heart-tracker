@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/repository/theme_repository.dart';
+import 'package:svarog_heart_tracker/core/service/theme/repository/theme_repository.dart';
 import 'package:svarog_heart_tracker/core/theme/app_theme.dart';
 import 'package:svarog_heart_tracker/core/theme/app_theme_data.dart';
 import 'package:svarog_heart_tracker/core/theme/models/app_theme_model.dart';

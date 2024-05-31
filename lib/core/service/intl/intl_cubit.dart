@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/constant/constants.dart';
-import 'package:svarog_heart_tracker/core/cubit/intl_cubit/repository/intl_repository.dart';
+import 'package:svarog_heart_tracker/core/service/intl/repository/intl_repository.dart';
 
 part 'intl_state.dart';
 

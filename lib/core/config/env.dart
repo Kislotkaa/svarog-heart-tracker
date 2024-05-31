@@ -1,5 +1,5 @@
 import 'package:svarog_heart_tracker/core/constant/constants.dart';
-import 'package:svarog_heart_tracker/core/cubit/intl_cubit/models/language_model.dart';
+import 'package:svarog_heart_tracker/core/service/intl/models/language_model.dart';
 
 class EnvironmentConfig {
   static const APP_PASSWORD = String.fromEnvironment('APP_PASSWORD');

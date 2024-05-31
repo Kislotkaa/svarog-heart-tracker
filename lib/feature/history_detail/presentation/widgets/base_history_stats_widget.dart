@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/common/assets.gen.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/utils/date_format.dart';
 

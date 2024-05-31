@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:svarog_heart_tracker/core/config/env.dart';
-import 'package:svarog_heart_tracker/core/cubit/theme_cubit/theme_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_text_field_widget.dart';

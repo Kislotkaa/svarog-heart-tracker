@@ -1,6 +1,6 @@
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
-import 'package:svarog_heart_tracker/core/cubit/intl_cubit/intl_cubit.dart';
+import 'package:svarog_heart_tracker/core/service/intl/intl_cubit.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 String _dateFormatMonth(DateTime date) {
