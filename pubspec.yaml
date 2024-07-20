@@ -106,8 +106,8 @@ dev_dependencies:
   #  flutter_gen_runner - используется для генерации классов ассетов
   flutter_gen_runner: ^5.3.0
 
-  # TODO стоит добавить эти метрики, чтобы убрать не используемые файлы и п
-  dart_code_metrics: ^5.7.2
+  # TODO стоит добавить эти метрики, чтобы убрать не используемые файлы
+  # dart_code_metrics: ^5.7.2
 
   flutter_lints: ^2.0.0
 
