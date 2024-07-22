@@ -50,7 +50,7 @@ android {
     defaultConfig {
         
         applicationId "com.notanapps.svarog_heart_tracker"
-        minSdkVersion 21 // flutter.minSdkVersion
+        minSdkVersion 26 // flutter.minSdkVersion
         targetSdkVersion 34 // flutter.targetSdkVersion
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
