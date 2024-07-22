@@ -18,7 +18,7 @@ dependencies:
   tflite_flutter: ^0.10.4
 
   # Отрисовка графиков
-  fl_chart: ^0.61.0
+  fl_chart: ^0.68.0
 
   # Для геренации id
   uuid: ^3.0.7
