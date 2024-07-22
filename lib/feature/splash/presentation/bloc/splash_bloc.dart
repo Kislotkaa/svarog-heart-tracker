@@ -24,6 +24,7 @@ import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_setti
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
+import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -211,59 +212,18 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       late List<UserModel> users = [];
 
       if (isMigrateHive == false) {
-        emit(
-          state.copyWith(
-            process: 'Идёт оптимизация данных...',
-            errorTitle: null,
-            errorMessage: null,
-          ),
-        );
-
-        /// Получаем всех пользователей из SQLite бд
-        final failureOrUsers = await getUsersSqlUseCase(NoParams());
-        failureOrUsers.fold((l) async {
+        try {
           emit(
             state.copyWith(
-              status: StateStatus.failure,
-              process: 'Произошла ошибка во время миграции Истории подключений',
-              errorTitle: S.of(externalContext).error,
-              errorMessage: 'Произошла ошибка во время миграции',
+              process: 'Идёт оптимизация данных...',
+              errorTitle: null,
+              errorMessage: null,
             ),
           );
-          return;
-        }, (usersReturned) => users = usersReturned);
 
-        /// Перебираем полученных пользователей
-        for (var elementUser in users) {
-          late UserModel user = elementUser;
-
-          /// Добавляем настройки в Hive бд если их нет
-          if (user.userSettingsId == null) {
-            final settingsId = const Uuid().v4();
-            final failureOrSettings = await insertUserSettingsByPkUseCase(UserSettingsModel(id: settingsId));
-            failureOrSettings.fold((l) {
-              emit(
-                state.copyWith(
-                  status: StateStatus.failure,
-                  process: 'Произошла ошибка во время миграции Настроек',
-                  errorTitle: S.of(externalContext).error,
-                  errorMessage: 'Произошла ошибка во время миграции',
-                ),
-              );
-              return;
-            }, (settings) => user = user.copyWith(userSettingsId: settingsId));
-          }
-
-          /// Добавляем пользователя в Hive бд
-          final failureOrInsertUser = await insertUserHiveUseCase(UserParams(
-            id: user.id,
-            userSettingsId: user.id,
-            userDetailId: user.userDetailId,
-            personName: user.personName,
-            deviceName: user.deviceName,
-            isAutoConnect: user.isAutoConnect,
-          ));
-          failureOrInsertUser.fold((l) {
+          /// Получаем всех пользователей из SQLite бд
+          final failureOrUsers = await getUsersSqlUseCase(NoParams());
+          failureOrUsers.fold((l) async {
             emit(
               state.copyWith(
                 status: StateStatus.failure,
@@ -273,31 +233,54 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
               ),
             );
             return;
-          }, (inserted) {});
+          }, (usersReturned) => users = usersReturned);
 
-          // Получаем историю этого пользователя из SQLite бд
-          final failureOrHistory = await getUserHistoryUserByPkSqlUseCase(GetUserHistoryParams(userId: user.id));
-          List<UserHistoryModel> historis = [];
-          failureOrHistory.fold((l) async {
-            emit(
-              state.copyWith(
-                status: StateStatus.failure,
-                process: 'Произошла ошибка во время миграции Истории тренировок',
-                errorTitle: S.of(externalContext).error,
-                errorMessage: 'Произошла ошибка во время миграции',
-              ),
-            );
-            return;
-          }, (historisReturned) => historis = historisReturned);
+          /// Перебираем полученных пользователей
+          for (var elementUser in users) {
+            late UserModel user = elementUser;
 
-          // Перебираем полученную историю пользователя и добавляем её в Hive бд
-          for (var elementHistory in historis) {
-            // Сжимаем список что бы не было перегрузки на экране историй
-            List<int> yHeart = compressArray(elementHistory.yHeart);
-            UserHistoryModel history = elementHistory.copyWith(yHeart: yHeart);
+            /// Добавляем настройки в Hive бд если их нет
+            if (user.userSettingsId == null) {
+              final settingsId = const Uuid().v4();
+              final failureOrSettings = await insertUserSettingsByPkUseCase(UserSettingsModel(id: settingsId));
+              failureOrSettings.fold((l) {
+                emit(
+                  state.copyWith(
+                    status: StateStatus.failure,
+                    process: 'Произошла ошибка во время миграции Настроек',
+                    errorTitle: S.of(externalContext).error,
+                    errorMessage: 'Произошла ошибка во время миграции',
+                  ),
+                );
+                return;
+              }, (settings) => user = user.copyWith(userSettingsId: settingsId));
+            }
 
-            final failureOrInsertHistory = await insertUserHistoryHiveUseCase(history);
-            failureOrInsertHistory.fold((l) {
+            /// Добавляем пользователя в Hive бд
+            final failureOrInsertUser = await insertUserHiveUseCase(UserParams(
+              id: user.id,
+              userSettingsId: user.id,
+              userDetailId: user.userDetailId,
+              personName: user.personName,
+              deviceName: user.deviceName,
+              isAutoConnect: user.isAutoConnect,
+            ));
+            failureOrInsertUser.fold((l) {
+              emit(
+                state.copyWith(
+                  status: StateStatus.failure,
+                  process: 'Произошла ошибка во время миграции Истории подключений',
+                  errorTitle: S.of(externalContext).error,
+                  errorMessage: 'Произошла ошибка во время миграции',
+                ),
+              );
+              return;
+            }, (inserted) {});
+
+            // Получаем историю этого пользователя из SQLite бд
+            final failureOrHistory = await getUserHistoryUserByPkSqlUseCase(GetUserHistoryParams(userId: user.id));
+            List<UserHistoryModel> historis = [];
+            failureOrHistory.fold((l) async {
               emit(
                 state.copyWith(
                   status: StateStatus.failure,
@@ -307,23 +290,45 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
                 ),
               );
               return;
-            }, (inserted) {});
+            }, (historisReturned) => historis = historisReturned);
+
+            // Перебираем полученную историю пользователя и добавляем её в Hive бд
+            for (var elementHistory in historis) {
+              // Сжимаем список что бы не было перегрузки на экране историй
+              List<int> yHeart = compressArray(elementHistory.yHeart);
+              UserHistoryModel history = elementHistory.copyWith(yHeart: yHeart);
+
+              final failureOrInsertHistory = await insertUserHistoryHiveUseCase(history);
+              failureOrInsertHistory.fold((l) {
+                emit(
+                  state.copyWith(
+                    status: StateStatus.failure,
+                    process: 'Произошла ошибка во время миграции Истории тренировок',
+                    errorTitle: S.of(externalContext).error,
+                    errorMessage: 'Произошла ошибка во время миграции',
+                  ),
+                );
+                return;
+              }, (inserted) {});
+            }
           }
+
+          await clearUserSqlUseCase(NoParams());
+          await clearUserHistorySqlUseCase(NoParams());
+          await globalSettingsService.setMigratedHive(true);
+          await Future.delayed(const Duration(seconds: 1));
+          await registerHiveOrSqlModules(true);
+        } catch (e, s) {
+          ErrorHandler.getMessage(e, s);
+        } finally {
+          emit(
+            state.copyWith(
+              process: 'Готово',
+              errorTitle: null,
+              errorMessage: null,
+            ),
+          );
         }
-
-        await clearUserSqlUseCase(NoParams());
-        await clearUserHistorySqlUseCase(NoParams());
-        await globalSettingsService.setMigratedHive(true);
-        await Future.delayed(const Duration(seconds: 1));
-        await registerHiveOrSqlModules(true);
-
-        emit(
-          state.copyWith(
-            process: 'Готово',
-            errorTitle: null,
-            errorMessage: null,
-          ),
-        );
       }
 
       /// ------------------------------------------------------------------------------------------
