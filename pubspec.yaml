@@ -1,109 +1,148 @@
 name: svarog_heart_tracker
-description: A new Flutter project.
-
+description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 2.1.29+33
+version: 2.2.36+34
 
 environment:
-  sdk: '>=2.19.2 <3.0.0'
+  sdk: '>=3.1.3 <4.0.0'
 
 dependencies:
   flutter:
-    sdk: flutter
+    sdk: flutter # Flutter 3.19.3
+    
+  flutter_localizations:
+    sdk: flutter  
 
-  # Вспомогающие
-  uuid: ^3.0.7
-  async: ^2.8.2
-  collection: ^1.15.0-nullsafety.4
-  dartx: ^1.0.0
-  flutter_dotenv: ^5.0.2
-  package_info: ^2.0.2
-  mask_text_input_formatter: ^2.4.0
-  shared_preferences: ^2.0.20
-  flutter_secure_storage: ^8.0.0
-  url_launcher: ^6.1.6
-  auto_size_text: ^3.0.0
+  # Нейронка
+  tflite_flutter: ^0.10.4
 
-  # Виджеты
-  flutter_svg: ^2.0.0+1
-  aligned_dialog: ^0.0.6
+  # Отрисовка графиков
   fl_chart: ^0.61.0
 
-  # Анимации
-  lottie: ^2.2.0
-  spring: ^2.0.2 
+  # Для геренации id
+  uuid: ^3.0.7
 
-  # Кодо-генерация
-  artemis: ^7.1.1-beta.1
-  json_annotation: ^4.0.1
-  json_serializable: ^6.5.4
-  # flutter_native_splash: ^2.2.19
-  flutter_launcher_icons: ^0.11.0
+  # Поиск путя для бд
+  path_provider: ^2.1.3
 
-  # GetX
-  get: ^4.6.5
-  get_cli: ^1.8.1
-  get_storage: ^2.0.3
+  # Хранение данных
+  sqflite: ^2.3.3
+  hive: ^2.2.3
+  hive_generator: ^2.0.1
 
-  # Основные
-  flutter_blue_plus: ^1.4.0
-  permission_handler: ^10.2.0
-  sentry_flutter: ^6.22.0
-  sqflite: ^2.2.6
+  # Виджет динамического текста (подумать как избавиться)
+  auto_size_text: ^3.0.0
 
+  # Переход в браузер по ссылкам
+  url_launcher: ^6.2.6
 
+  # Маска для текстового поля
+  mask_text_input_formatter: ^2.9.0
 
+  # Краш анатлитика
+  sentry_flutter: ^7.19.0
+
+  # Работа с блютузом
+  flutter_blue_plus: ^1.32.2
+
+  # Navigator 2.0
+  auto_route: ^7.9.2
+
+  # dio - отвечает за работу с get, post,delete и тд запросами
+  dio: ^5.3.3
+
+  # flutter_svg - отображение векторной графики(.svg файлы)
+  flutter_svg: ^2.0.7
+
+  # Предоставляет подробную информацию о устройстве/эмуляторе
+  device_info: ^2.0.3
+
+  # package_info - получение информации о приложении: версия,имя и тд
+  package_info: ^2.0.2
+
+  # bloc
+  bloc: ^8.1.2
+  flutter_bloc: ^8.1.3
+
+  # Локальные уведомления
+  flutter_local_notifications: ^17.1.2
+
+  # Иньекция Singleton зависимостей
+  get_it: ^7.6.4
+
+  # shared_preferences - сохранение небольших данных в локальную память устройства
+  shared_preferences: ^2.2.2
+
+  # dartz - используется для работы с состояниями: если приходит ошибка, кладем ее в left(error),инача right(responseModel)
+  dartz: ^0.10.1
+
+  # freezed пакет для генерации и следит за мутирвонием данных:
+  freezed: ^2.4.5
+  freezed_annotation: ^2.4.1
+
+  # для генерации .g файлов, чтобы использовать fromJson и toJson генерацию
+  json_serializable: ^6.7.1
+
+  # collection - для работы с коллекциями
+  collection: ^1.17.1
+
+  # оверрайдид "==" и "hashCode", чтобы можно было сравнивать классы
+  equatable: ^2.0.5
+
+  # используется для настройки локализации
+  intl_utils: ^2.8.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  # Navigator 2.0
+  auto_route_generator: ^7.3.2
+
+  # build_runner - генерация freezed файлов
+  build_runner: ^2.3.3
+
+  #  flutter_gen_runner - используется для генерации классов ассетов
+  flutter_gen_runner: ^5.3.0
+
+  # TODO стоит добавить эти метрики, чтобы убрать не используемые файлы
+  # dart_code_metrics: ^5.7.2
+
   flutter_lints: ^2.0.0
 
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/icons/appIcon.png"
-  min_sdk_android: 19
 
-flutter: 
-  assets: 
-    - .env
-    - assets/images/
-    - assets/icons/
-    - assets/locales/
-
-  fonts: 
-    - family: Robot
-      fonts: 
-        - asset: assets/fonts/Roboto-Regular.ttf
-    - family: BaseIcons
-      fonts: 
-        - asset: assets/icons/BaseIcons.ttf
-
+flutter:
   uses-material-design: true
 
-analyzer: 
-  plugins: 
-    - dart_code_metrics
+  assets:
+    - assets/icons/
+    - assets/images/
+    - assets/fonts/
+    - assets/model.tflite
 
-dart_code_metrics: 
-  metrics: 
-    cyclomatic-complexity: 20
-    maximum-nesting-level: 5
-    number-of-parameters: 4
-    source-lines-of-code: 50
-  anti-patterns: 
-    - long-method
-    - long-parameter-list
-  metrics-exclude: 
-    - test/**
-  rules: 
-    - newline-before-return
-    - no-boolean-literal-compare
-    - no-empty-block
-    - prefer-trailing-comma
-    - prefer-conditional-expressions
-    - no-equal-then-else
 
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 800
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 600
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+
+flutter_gen:
+  output: lib/core/common/
+  line_length: 120
+  integrations:
+    flutter_svg: true
+
+# настройка локализации
+flutter_intl:
+  enabled: true
+  main_locale: ru
+  arb_dir: lib/core/l10n/arb
+  output_dir: lib/core/l10n/generated
