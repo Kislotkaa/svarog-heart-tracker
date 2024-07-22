@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:svarog_heart_tracker/core/constant/constants.dart';
 import 'package:svarog_heart_tracker/core/error_handler/failure_cache.dart';
 import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_settings_repository.dart';
@@ -18,8 +19,8 @@ class InsertUserSettingsByPkUseCase extends UseCase<UserSettingsModel?, UserSett
 
 class UserSettingsParams {
   UserSettingsParams({
-    this.greenZone = 145, // Порог зелёной зоны
-    this.orangeZone = 160, // Порог красной зоны
+    this.greenZone = HeartZone.greenZone, // Порог зелёной зоны
+    this.orangeZone = HeartZone.orangeZone, // Порог красной зоны
   });
 
   final int greenZone;

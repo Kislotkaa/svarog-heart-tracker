@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:svarog_heart_tracker/core/constant/constants.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
+import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_snackbar.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_text_field_widget.dart';
@@ -12,6 +14,7 @@ import 'package:svarog_heart_tracker/core/ui_kit/button/base_button_widget.dart'
 import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/toggle/base_toggle_widget.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/bloc/user_edit_detail/user_edit_bloc.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/widgets/base_zone_edit_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 @RoutePage()
@@ -27,6 +30,8 @@ class _UserEditPageState extends State<UserEditPage> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
+  final TextEditingController greenZoneController = TextEditingController();
+  final TextEditingController orangeZoneController = TextEditingController();
 
   @override
   void initState() {
@@ -35,6 +40,8 @@ class _UserEditPageState extends State<UserEditPage> {
       ageController: ageController,
       heightController: heightController,
       weightController: weightController,
+      greenZoneController: greenZoneController,
+      orangeZoneController: orangeZoneController,
     ));
     super.initState();
   }
@@ -58,7 +65,6 @@ class _UserEditPageState extends State<UserEditPage> {
           backgroundColor: appTheme.basicColor,
           appBar: BaseAppBarWidget(
             title: 'Редактирование ${state.user?.personName}(а)',
-            needClose: true,
           ),
           body: SafeArea(
             child: Stack(
@@ -84,8 +90,8 @@ class _UserEditPageState extends State<UserEditPage> {
                           height: 50,
                           isActive: state.genderFlag,
                           slidersCallBack: [
-                            (value) => sl<UserEditBloc>().add(const UserEditSetGenderEvent(0)),
-                            (value) => sl<UserEditBloc>().add(const UserEditSetGenderEvent(1)),
+                            (value) => sl<UserEditBloc>().add(const UserSaveGenderEvent(0)),
+                            (value) => sl<UserEditBloc>().add(const UserSaveGenderEvent(1)),
                           ],
                           sliders: const [
                             'Женский',
@@ -161,13 +167,17 @@ class _UserEditPageState extends State<UserEditPage> {
                             ),
                           ],
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.only(bottom: 16, top: 32),
-                        //   child: Text(
-                        //     'Настроки спортсмена',
-                        //     style: appTheme.textTheme.buttonExtrabold16,
-                        //   ),
-                        // ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16, top: 32),
+                          child: Text(
+                            'Настроки спортсмена',
+                            style: appTheme.textTheme.buttonExtrabold16,
+                          ),
+                        ),
+                        BaseZoneEditWidget(
+                          greenZoneController: greenZoneController,
+                          orangeZoneController: orangeZoneController,
+                        ),
                       ],
                     );
                   },
@@ -176,12 +186,16 @@ class _UserEditPageState extends State<UserEditPage> {
                   alignment: Alignment.bottomCenter,
                   child: BaseButtonWidget(
                     onPressed: () => sl<UserEditBloc>().add(
-                      UserEditSaveEvent(
-                        detailModel: UserDetailParams(
+                      UserSaveEvent(
+                        detailParams: UserDetailParams(
                           gender: state.genderFlag,
                           age: int.tryParse(ageController.text),
                           height: double.tryParse(heightController.text),
                           weight: double.tryParse(weightController.text),
+                        ),
+                        settingsParams: UserSettingsParams(
+                          greenZone: int.tryParse(greenZoneController.text) ?? HeartZone.greenZone,
+                          orangeZone: int.tryParse(orangeZoneController.text) ?? HeartZone.orangeZone,
                         ),
                       ),
                     ),

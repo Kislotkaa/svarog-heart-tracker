@@ -7,23 +7,28 @@ class BaseIconButtonWidget extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.icon,
+    this.margin,
   });
+  final EdgeInsets? margin;
   final IconData icon;
   final Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return IconButton.filled(
-      padding: const EdgeInsets.all(16),
-      color: appTheme.basicColor,
-      style: ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(appTheme.revertBasicColor),
+    return Padding(
+      padding: margin ?? EdgeInsets.zero,
+      child: IconButton.filled(
+        padding: const EdgeInsets.all(16),
+        color: appTheme.basicColor,
+        style: ButtonStyle(
+          backgroundColor: WidgetStatePropertyAll(appTheme.revertBasicColor),
+        ),
+        onPressed: () {
+          HapticFeedback.lightImpact();
+          onPressed.call();
+        },
+        icon: Icon(icon),
       ),
-      onPressed: () {
-        HapticFeedback.lightImpact();
-        onPressed.call();
-      },
-      icon: Icon(icon),
     );
   }
 }

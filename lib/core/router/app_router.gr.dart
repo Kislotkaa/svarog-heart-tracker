@@ -147,6 +147,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ZoneEditRoute.name: (routeData) {
+      final args = routeData.argsAs<ZoneEditRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: ZoneEditPage(
+          key: args.key,
+          greenZone: args.greenZone,
+          orangeZone: args.orangeZone,
+        ),
+      );
+    },
   };
 }
 
@@ -566,5 +577,47 @@ class UserEditRouteArgs {
   @override
   String toString() {
     return 'UserEditRouteArgs{key: $key, userId: $userId}';
+  }
+}
+
+/// generated route for
+/// [ZoneEditPage]
+class ZoneEditRoute extends PageRouteInfo<ZoneEditRouteArgs> {
+  ZoneEditRoute({
+    Key? key,
+    required TextEditingController greenZone,
+    required TextEditingController orangeZone,
+    List<PageRouteInfo>? children,
+  }) : super(
+          ZoneEditRoute.name,
+          args: ZoneEditRouteArgs(
+            key: key,
+            greenZone: greenZone,
+            orangeZone: orangeZone,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'ZoneEditRoute';
+
+  static const PageInfo<ZoneEditRouteArgs> page = PageInfo<ZoneEditRouteArgs>(name);
+}
+
+class ZoneEditRouteArgs {
+  const ZoneEditRouteArgs({
+    this.key,
+    required this.greenZone,
+    required this.orangeZone,
+  });
+
+  final Key? key;
+
+  final TextEditingController greenZone;
+
+  final TextEditingController orangeZone;
+
+  @override
+  String toString() {
+    return 'ZoneEditRouteArgs{key: $key, greenZone: $greenZone, orangeZone: $orangeZone}';
   }
 }

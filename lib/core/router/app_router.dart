@@ -5,6 +5,7 @@ import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_n
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/edit_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/user_edit_page.dart';
+import 'package:svarog_heart_tracker/feature/history_detail/presentation/pages/zone_edit_page.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/pages/new_devices_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/about_page.dart';
@@ -119,6 +120,14 @@ class AppRouter extends _$AppRouter {
         CustomRoute(
           path: '/choose_name_dialog',
           page: ChooseNameDialogRoute.page,
+          durationInMilliseconds: 150,
+          opaque: false,
+          barrierColor: appTheme.revertBasicColor.withOpacity(0.5),
+          transitionsBuilder: TransitionsBuilders.fadeIn,
+        ),
+        CustomRoute(
+          path: '/zone_edit_page',
+          page: ZoneEditRoute.page,
           durationInMilliseconds: 150,
           opaque: false,
           barrierColor: appTheme.revertBasicColor.withOpacity(0.5),

@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:hive/hive.dart';
+import 'package:svarog_heart_tracker/core/constant/constants.dart';
 
 part 'user_settings_model.g.dart';
 
@@ -9,8 +10,8 @@ part 'user_settings_model.g.dart';
 class UserSettingsModel {
   UserSettingsModel({
     required this.id,
-    this.greenZone = 145, // Порог зелёной зоны
-    this.orangeZone = 160, // Порог красной зоны
+    this.greenZone = HeartZone.greenZone, // Порог зелёной зоны
+    this.orangeZone = HeartZone.orangeZone, // Порог красной зоны
     this.timeNotification = 10, // Время в секундах до уведомления превышений порога красной зоны
     this.notificationEnable = true, // Оповещения этого пользователя активны?
   });

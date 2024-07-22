@@ -22,7 +22,7 @@ class BaseAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0.0,
       leadingWidth: 0,
       backgroundColor: appTheme.basicColor,
-      leading: const SizedBox(),
+      leading: const SizedBox.shrink(),
       centerTitle: false,
       title: Row(
         children: [

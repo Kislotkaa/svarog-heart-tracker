@@ -34,7 +34,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
   /// **[UserDetailModel]** required
   final InsertUserDetailByPkUseCase insertUserDetailByPkUseCase;
 
-  /// **[UserDetailModel]** required
+  /// **[UserSettingsModel]** required
   final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
 
   UserEditBloc({
@@ -124,6 +124,10 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
           return;
         },
         (settingsResult) {
+          if (settingsResult != null) {
+            event.greenZoneController.text = settingsResult.greenZone.toString();
+            event.orangeZoneController.text = settingsResult.orangeZone.toString();
+          }
           emit(
             state.copyWith(
               status: StateStatus.success,
@@ -134,7 +138,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
       );
     });
 
-    on<UserEditSetGenderEvent>((event, emit) {
+    on<UserSaveGenderEvent>((event, emit) {
       emit(
         state.copyWith(
           status: StateStatus.success,
@@ -145,7 +149,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
       );
     });
 
-    on<UserEditSaveEvent>((event, emit) async {
+    on<UserSaveEvent>((event, emit) async {
       final UserModel? user = state.user;
       if (user == null) return;
 
@@ -157,7 +161,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
         ),
       );
 
-      if (event.detailModel.age == null) {
+      if (event.detailParams.age == null) {
         emit(
           state.copyWith(
             status: StateStatus.notValid,
@@ -167,7 +171,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
         );
         return;
       }
-      if (event.detailModel.height == null) {
+      if (event.detailParams.height == null) {
         emit(
           state.copyWith(
             status: StateStatus.notValid,
@@ -177,7 +181,7 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
         );
         return;
       }
-      if (event.detailModel.weight == null) {
+      if (event.detailParams.weight == null) {
         emit(
           state.copyWith(
             status: StateStatus.notValid,
@@ -188,12 +192,23 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
         return;
       }
 
+      if (event.settingsParams.greenZone >= event.settingsParams.orangeZone) {
+        emit(
+          state.copyWith(
+            status: StateStatus.notValid,
+            errorTitle: 'Не верные границы',
+            errorMessage: 'Порог зелёной зоны, всегда должен быть меньше порога оранжевой',
+          ),
+        );
+        return;
+      }
+
       final userDetailModel = UserDetailModel(
         id: state.detail?.id ?? const Uuid().v4(),
-        gender: event.detailModel.gender,
-        age: event.detailModel.age!,
-        height: event.detailModel.height!,
-        weight: event.detailModel.weight!,
+        gender: event.detailParams.gender,
+        age: event.detailParams.age ?? state.detail?.age ?? 0,
+        height: event.detailParams.height ?? state.detail?.height ?? 0,
+        weight: event.detailParams.weight ?? state.detail?.weight ?? 0,
       );
 
       final failurOrDetail = await insertUserDetailByPkUseCase(userDetailModel);
@@ -215,11 +230,36 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
         );
       });
 
+      final userSettingsModel = UserSettingsModel(
+        id: state.settings?.id ?? const Uuid().v4(),
+        greenZone: event.settingsParams.greenZone,
+        orangeZone: event.settingsParams.orangeZone,
+      );
+
+      final failurOrSettings = await insertUserSettingsByPkUseCase(userSettingsModel);
+
+      failurOrSettings.fold((l) {
+        emit(
+          state.copyWith(
+            status: StateStatus.failure,
+            errorTitle: 'Ошибка',
+            errorMessage: l.data?.message,
+          ),
+        );
+      }, (settingsResult) {
+        emit(
+          state.copyWith(
+            status: StateStatus.success,
+            settings: settingsResult,
+          ),
+        );
+      });
+
       final failurOrUser = await updateUserByPkUseCase(
         UserParams(
           id: user.id,
           userDetailId: userDetailModel.id,
-          userSettingsId: user.userSettingsId,
+          userSettingsId: userSettingsModel.id,
           personName: user.personName,
           deviceName: user.deviceName,
           isAutoConnect: user.isAutoConnect,

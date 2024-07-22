@@ -12,18 +12,27 @@ class UserEditInitialEvent extends UserEditEvent {
   final TextEditingController ageController;
   final TextEditingController heightController;
   final TextEditingController weightController;
+  final TextEditingController greenZoneController;
+  final TextEditingController orangeZoneController;
 
-  const UserEditInitialEvent(this.userId,
-      {required this.ageController, required this.heightController, required this.weightController});
+  const UserEditInitialEvent(
+    this.userId, {
+    required this.ageController,
+    required this.heightController,
+    required this.weightController,
+    required this.greenZoneController,
+    required this.orangeZoneController,
+  });
 }
 
-class UserEditSaveEvent extends UserEditEvent {
-  final UserDetailParams detailModel;
+class UserSaveEvent extends UserEditEvent {
+  final UserDetailParams detailParams;
+  final UserSettingsParams settingsParams;
 
-  const UserEditSaveEvent({required this.detailModel});
+  const UserSaveEvent({required this.detailParams, required this.settingsParams});
 }
 
-class UserEditSetGenderEvent extends UserEditEvent {
+class UserSaveGenderEvent extends UserEditEvent {
   final int genderFlag;
-  const UserEditSetGenderEvent(this.genderFlag);
+  const UserSaveGenderEvent(this.genderFlag);
 }
