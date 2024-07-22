@@ -132,95 +132,23 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         ),
       );
 
-      /// TODO: Тестовые данные для проверки работы миграции!!!
-      // if (kDebugMode) {
-      //   await globalSettingsService.setMigratedHive(false);
-
-      //   await registerHiveOrSqlModules(globalSettingsService);
-
-      //   await clearUserSqlUseCase(NoParams());
-      //   await clearUserHistorySqlUseCase(NoParams());
-      //   await clearUserHiveUseCase(NoParams());
-      //   await clearUserHistoryHiveUseCase(NoParams());
-
-      //   final userSqlDataSource = UserDataSourceSqlImpl(sqlLiteService: sl());
-      //   final userHistorySqlDataSource = UserHistoryDataSourceSqlImpl(sqlLiteService: sl());
-
-      //   for (var i = 0; i < 3; i++) {
-      //     await userSqlDataSource.insertUser(
-      //       UserParams(
-      //         id: i.toString(),
-      //         personName: 'personName$i',
-      //         deviceName: 'deviceName$i',
-      //       ),
-      //     );
-      //   }
-
-      //   final users = await userSqlDataSource.getUsers();
-
-      //   for (var i = 0; i < users.length; i++) {
-      //     for (var j = 0; j < 3; j++) {
-      //       await userHistorySqlDataSource.insertHistory(UserHistoryModel(
-      //         id: '${users[i].id}.$j',
-      //         userId: users[i].id,
-      //         yHeart: [1, 2, 3, 4, 5, 6],
-      //         maxHeart: 6,
-      //         minHeart: 1,
-      //         avgHeart: 3,
-      //         redTimeHeart: 7,
-      //         orangeTimeHeart: 8,
-      //         greenTimeHeart: 9,
-      //         createAt: DateTime.now(),
-      //         finishedAt: DateTime.now(),
-      //       ));
-      //     }
-      //   }
-
-      //   for (var i = 0; i < users.length; i++) {
-      //     log('id:${users[i].id}');
-      //     log('userDetailId:${users[i].userDetailId}');
-      //     log('userSettingsId:${users[i].userSettingsId}');
-      //     log('personName:${users[i].personName}');
-      //     log('deviceName:${users[i].deviceName}');
-      //     log('isAutoConnect:${users[i].isAutoConnect}');
-
-      //     final history = await userHistorySqlDataSource.getUserHistoryByPk(users[i].id);
-      //     for (var elementHistory in history) {
-      //       log('------ id:${elementHistory.id}');
-      //       log('------ userId:${elementHistory.userId}');
-      //       log('------ yHeart:${elementHistory.yHeart.getRange(0, 5)}');
-      //       log('------ maxHeart:${elementHistory.maxHeart}');
-      //       log('------ minHeart:${elementHistory.minHeart}');
-      //       log('------ avgHeart:${elementHistory.avgHeart}');
-      //       log('------ redTimeHeart:${elementHistory.redTimeHeart}');
-      //       log('------ orangeTimeHeart:${elementHistory.orangeTimeHeart}');
-      //       log('------ greenTimeHeart:${elementHistory.greenTimeHeart}');
-      //       log('------ createAt:${elementHistory.createAt}');
-      //       log('------ finishedAt:${elementHistory.finishedAt}');
-      //       log('------ calories:${elementHistory.calories}');
-      //     }
-      //     print('@@@');
-      //   }
-      //   log('--------------------------------------');
-      // }
-
       /// Миграция на Hive под загрузку splash screen
       /// ------------------------------------------------------------------------------------------
       /// ВАЖНО НЕ УБИРАТЬ
+
       final isMigrateHive = globalSettingsService.appSettings.isMigratedHive;
 
       late List<UserModel> users = [];
 
       if (isMigrateHive == false) {
+        emit(
+          state.copyWith(
+            process: 'Идёт оптимизация данных...',
+            errorTitle: null,
+            errorMessage: null,
+          ),
+        );
         try {
-          emit(
-            state.copyWith(
-              process: 'Идёт оптимизация данных...',
-              errorTitle: null,
-              errorMessage: null,
-            ),
-          );
-
           /// Получаем всех пользователей из SQLite бд
           final failureOrUsers = await getUsersSqlUseCase(NoParams());
           failureOrUsers.fold((l) async {
