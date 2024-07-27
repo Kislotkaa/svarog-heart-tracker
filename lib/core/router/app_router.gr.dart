@@ -585,8 +585,8 @@ class UserEditRouteArgs {
 class ZoneEditRoute extends PageRouteInfo<ZoneEditRouteArgs> {
   ZoneEditRoute({
     Key? key,
-    required TextEditingController greenZone,
-    required TextEditingController orangeZone,
+    required int greenZone,
+    required int orangeZone,
     List<PageRouteInfo>? children,
   }) : super(
           ZoneEditRoute.name,
@@ -612,9 +612,9 @@ class ZoneEditRouteArgs {
 
   final Key? key;
 
-  final TextEditingController greenZone;
+  final int greenZone;
 
-  final TextEditingController orangeZone;
+  final int orangeZone;
 
   @override
   String toString() {

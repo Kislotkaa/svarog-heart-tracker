@@ -83,5 +83,40 @@ class GlobalSettingsBloc extends Bloc<GlobalSettingsEvent, GlobalSettingsState> 
         }
       },
     );
+
+    on<GlobalSettingsChangeZoneEvent>(
+      (event, emit) async {
+        emit(
+          state.copyWith(
+            status: StateStatus.loading,
+            errorMessage: null,
+            errorTitle: null,
+          ),
+        );
+        try {
+          final settings = globalSettingsService.appSettings.copyWith(
+            greenZone: event.greenZone,
+            orangeZone: event.orangeZone,
+          );
+
+          await globalSettingsService.updateSettings(settings);
+          emit(
+            state.copyWith(
+              status: StateStatus.success,
+              globalSettingsModel: settings,
+            ),
+          );
+        } catch (e, s) {
+          emit(
+            state.copyWith(
+              status: StateStatus.failure,
+              errorMessage: e.toString(),
+              errorTitle: 'Ошибка',
+            ),
+          );
+          ErrorHandler.getMessage(e, s);
+        }
+      },
+    );
   }
 }

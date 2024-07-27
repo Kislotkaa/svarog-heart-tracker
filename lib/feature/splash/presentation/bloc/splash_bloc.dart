@@ -5,21 +5,17 @@ import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/l10n/generated/l10n.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/datasourse/user_history_datasource.dart';
-import 'package:svarog_heart_tracker/core/service/database/datasourse/user_settings_datasource.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_history_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/repository/user_repository.dart';
-import 'package:svarog_heart_tracker/core/service/database/repository/user_settings_repository.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_all_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/clear_user_history_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
@@ -27,7 +23,6 @@ import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/locator.dart';
-import 'package:uuid/uuid.dart';
 
 part 'splash_event.dart';
 part 'splash_state.dart';
@@ -82,15 +77,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final InsertUserHistoryUseCase insertUserHistoryHiveUseCase = InsertUserHistoryUseCase(
     UserHistoryRepositoryImpl(
       userHistoryDataSource: UserHistoryDataSourceHiveImpl(
-        hiveService: sl(),
-      ),
-    ),
-  );
-
-  /// **[UserSettingsModel]** required
-  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase = InsertUserSettingsByPkUseCase(
-    UserSettingsRepositoryImpl(
-      userSettingsDataSource: UserSettingsDataSourceHiveImpl(
         hiveService: sl(),
       ),
     ),
@@ -166,23 +152,6 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           /// Перебираем полученных пользователей
           for (var elementUser in users) {
             late UserModel user = elementUser;
-
-            /// Добавляем настройки в Hive бд если их нет
-            if (user.userSettingsId == null) {
-              final settingsId = const Uuid().v4();
-              final failureOrSettings = await insertUserSettingsByPkUseCase(UserSettingsModel(id: settingsId));
-              failureOrSettings.fold((l) {
-                emit(
-                  state.copyWith(
-                    status: StateStatus.failure,
-                    process: 'Произошла ошибка во время миграции Настроек',
-                    errorTitle: S.of(externalContext).error,
-                    errorMessage: 'Произошла ошибка во время миграции',
-                  ),
-                );
-                return;
-              }, (settings) => user = user.copyWith(userSettingsId: settingsId));
-            }
 
             /// Добавляем пользователя в Hive бд
             final failureOrInsertUser = await insertUserHiveUseCase(UserParams(

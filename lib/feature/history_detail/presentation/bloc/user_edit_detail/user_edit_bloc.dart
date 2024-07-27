@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
 import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/update_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/get_user_detail_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/insert_user_detail_by_pk.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:uuid/uuid.dart';
 
@@ -25,25 +22,17 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
   /// **[String]** required
   final GetUserDetailByPkUseCase getUserDetailByPkUseCase;
 
-  /// **[String]** required
-  final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
-
   /// **[UserParams]** required
   final UpdateUserByPkUseCase updateUserByPkUseCase;
 
   /// **[UserDetailModel]** required
   final InsertUserDetailByPkUseCase insertUserDetailByPkUseCase;
 
-  /// **[UserDetailModel]** required
-  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
-
   UserEditBloc({
     required this.getUserByPkUseCase,
     required this.getUserDetailByPkUseCase,
-    required this.getUserSettingsByPkUseCase,
     required this.updateUserByPkUseCase,
     required this.insertUserDetailByPkUseCase,
-    required this.insertUserSettingsByPkUseCase,
   }) : super(const UserEditState.initial()) {
     on<UserEditInitialEvent>((event, emit) async {
       emit(state.copyWith(
@@ -105,29 +94,6 @@ class UserEditBloc extends Bloc<UserEditEvent, UserEditState> {
             state.copyWith(
               status: StateStatus.success,
               detail: detailResult,
-            ),
-          );
-        },
-      );
-
-      final failurOrSettings = await getUserSettingsByPkUseCase(user?.userSettingsId ?? '');
-
-      failurOrSettings.fold(
-        (l) {
-          emit(
-            state.copyWith(
-              status: StateStatus.failure,
-              errorTitle: 'Ошибка',
-              errorMessage: l.data?.message,
-            ),
-          );
-          return;
-        },
-        (settingsResult) {
-          emit(
-            state.copyWith(
-              status: StateStatus.success,
-              settings: settingsResult,
             ),
           );
         },

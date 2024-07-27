@@ -64,8 +64,6 @@ class ConnectDeviceBloc extends Bloc<ConnectDeviceEvent, ConnectDeviceState> {
           insertHistoryUseCase: sl(),
           insertUserUseCase: sl(),
           getUserByPkUseCase: sl(),
-          getUserSettingsByPkUseCase: sl(),
-          insertUserSettingsByPkUseCase: sl(),
         );
         sl<HomeBloc>().add(HomeAddDeviceControllerEvent(deviceController: deviceController));
         emit(

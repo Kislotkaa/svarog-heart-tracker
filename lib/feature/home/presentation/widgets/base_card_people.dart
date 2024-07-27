@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 import 'package:svarog_heart_tracker/feature/home/utils/device_controller.dart';
+import 'package:svarog_heart_tracker/locator.dart';
 
 class BaseCardPeople extends StatefulWidget {
   const BaseCardPeople({
@@ -18,6 +20,7 @@ class BaseCardPeople extends StatefulWidget {
 class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final Tween<double> _tween = Tween(begin: 0.65, end: 0.85);
+  final appSettings = sl<GlobalSettingsService>().appSettings;
 
   @override
   void initState() {
@@ -34,6 +37,8 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    print(appSettings.greenZone);
+    print(appSettings.orangeZone);
     return StreamBuilder<dynamic>(
         stream: widget.deviceController.stream,
         builder: (context, snapshot) {
@@ -46,13 +51,13 @@ class _BaseCardPeopleState extends State<BaseCardPeople> with SingleTickerProvid
               color: appTheme.grayColor,
               size: 62,
             );
-          } else if (widget.deviceController.realHeart < 145) {
+          } else if (widget.deviceController.realHeart < appSettings.greenZone) {
             iconHeart = Icon(
               Icons.favorite,
               color: appTheme.greenColor,
               size: 62,
             );
-          } else if (widget.deviceController.realHeart < 160) {
+          } else if (widget.deviceController.realHeart < appSettings.orangeZone) {
             iconHeart = Icon(
               Icons.favorite,
               color: appTheme.yellowColor,

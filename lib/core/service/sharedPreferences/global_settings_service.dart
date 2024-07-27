@@ -1,17 +1,22 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:svarog_heart_tracker/core/constant/sprefs_keys.dart';
 import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
+import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 class GlobalSettingsService {
   final SharedPreferences sharedPreferences;
   late GlobalSettingsModel appSettings = GlobalSettingsModel();
-
   GlobalSettingsService({required this.sharedPreferences});
 
-  GlobalSettingsService init() {
+  Future<GlobalSettingsService> init() async {
     final result = sharedPreferences.getString(SPrefsKeys.GLOBAL_SETTINGS);
     if (result != null && result.isNotEmpty) {
-      appSettings = GlobalSettingsModel.fromJson(result);
+      try {
+        appSettings = GlobalSettingsModel.fromJson(result);
+      } catch (e, s) {
+        setToDefault();
+        ErrorHandler.getMessage(e, s);
+      }
     }
     return this;
   }

@@ -5,7 +5,6 @@ import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/clear_database_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/clear_all_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/clear_all_user_detail.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/clear_all_user_settings.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/clear_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/get_cache_start_app_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/start_app/usecase/set_cache_start_app_usecase.dart';
@@ -32,9 +31,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   /// **[NoParams]** required
   final ClearAllUserDetailUseCase clearAllUserDetailByPkUseCase;
-
-  /// **[NoParams]** required
-  final ClearAllUserSettingsUseCase clearAllUserSettingsUseCase;
   SettingsBloc({
     required this.clearCacheStartAppUseCase,
     required this.setCacheStartAppUseCase,
@@ -42,7 +38,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     required this.clearAllUserHistoryUseCase,
     required this.clearAllUsersUseCase,
     required this.clearAllUserDetailByPkUseCase,
-    required this.clearAllUserSettingsUseCase,
   }) : super(const SettingsState.initial()) {
     on<SettingsDeleteAccountEvent>(
       (event, emit) async {
@@ -89,7 +84,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         await clearAllUserHistoryUseCase(NoParams());
         await clearAllUsersUseCase(NoParams());
         await clearAllUserDetailByPkUseCase(NoParams());
-        await clearAllUserSettingsUseCase(NoParams());
 
         emit(
           state.copyWith(

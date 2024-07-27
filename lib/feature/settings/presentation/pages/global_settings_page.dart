@@ -5,6 +5,7 @@ import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_setti
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/bloc/global_settings/global_settings_bloc.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_slider_global_settings_widget.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/widgets/base_zone_edit_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
 @RoutePage()
@@ -69,6 +70,10 @@ class GlobalSettingsPage extends StatelessWidget {
                       timeCheckDevice: value,
                     ),
                   ),
+                ),
+                BaseZoneEditWidget(
+                  greenZoneValue: state.globalSettingsModel?.greenZone,
+                  orangeZoneValue: state.globalSettingsModel?.orangeZone,
                 ),
               ],
             );

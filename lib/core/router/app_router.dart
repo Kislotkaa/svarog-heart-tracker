@@ -16,6 +16,7 @@ import 'package:svarog_heart_tracker/feature/home/presentation/pages/home_page.d
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/global_settings_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/how_to_use_page.dart';
 import 'package:svarog_heart_tracker/feature/settings/presentation/pages/settings_page.dart';
+import 'package:svarog_heart_tracker/feature/settings/presentation/pages/zone_edit_page.dart';
 import 'package:svarog_heart_tracker/feature/splash/presentation/pages/splash_page.dart';
 import 'package:svarog_heart_tracker/feature/unknown/pages/unknown_page.dart';
 import 'package:svarog_heart_tracker/locator.dart';

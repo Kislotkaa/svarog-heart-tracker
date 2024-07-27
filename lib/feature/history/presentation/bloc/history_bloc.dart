@@ -6,7 +6,6 @@ import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_users_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_detail/remove_user_by_pk_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/remove_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/usecase/usecase.dart';
 
 part 'history_event.dart';
@@ -25,9 +24,6 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
   /// **[String]** required
   final RemoveUserDetailByPkUseCase removeUserDetailByPkUseCase;
 
-  /// **[String]** required
-  final RemoveUserSettingsByPkUseCase removeUserSettingsByPkUseCase;
-
   // /// **[String]** required
   // final RemoveUserHistoryByPkUseCase removeUserHistoryByPkUseCase;
 
@@ -35,7 +31,6 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     required this.getUsersUseCase,
     required this.removeUserByPkUseCase,
     required this.removeUserDetailByPkUseCase,
-    required this.removeUserSettingsByPkUseCase,
     required this.getUserByPkUseCase,
   }) : super(const HistoryState.initial()) {
     on<HistoryInitialEvent>((event, emit) async {
@@ -117,10 +112,6 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
 
       if (user?.userDetailId != null) {
         await removeUserDetailByPkUseCase(user!.userDetailId!);
-      }
-
-      if (user?.userSettingsId != null) {
-        await removeUserSettingsByPkUseCase(user!.userSettingsId!);
       }
     });
   }

@@ -5,7 +5,6 @@ class UserEditState extends Equatable {
   final int genderFlag;
   final UserModel? user;
   final UserDetailModel? detail;
-  final UserSettingsModel? settings;
   final String? errorMessage;
   final String? errorTitle;
 
@@ -16,7 +15,6 @@ class UserEditState extends Equatable {
     this.user,
     this.genderFlag = 1,
     this.detail,
-    this.settings,
     this.errorMessage,
     this.errorTitle,
   });
@@ -26,7 +24,6 @@ class UserEditState extends Equatable {
     UserModel? user,
     int? genderFlag,
     UserDetailModel? detail,
-    UserSettingsModel? settings,
     String? errorMessage,
     String? errorTitle,
   }) =>
@@ -35,7 +32,6 @@ class UserEditState extends Equatable {
         user: user ?? this.user,
         genderFlag: genderFlag ?? this.genderFlag,
         detail: detail ?? this.detail,
-        settings: settings ?? this.settings,
         errorMessage: errorMessage,
         errorTitle: errorTitle,
       );
@@ -48,7 +44,6 @@ class UserEditState extends Equatable {
         user,
         genderFlag,
         detail,
-        settings,
         errorMessage,
         errorTitle,
       ];

@@ -6,19 +6,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/insert_user_history_usecase.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/get_user_settings_by_pk.dart';
-import 'package:svarog_heart_tracker/core/service/database/usecase/user_settings/insert_user_settings_by_pk.dart';
 import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_settings_service.dart';
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
 import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
-import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -32,14 +27,7 @@ class DeviceController {
     required this.getHistoryByPkUseCase,
     required this.insertHistoryUseCase,
     required this.getUserByPkUseCase,
-    required this.getUserSettingsByPkUseCase,
-    required this.insertUserSettingsByPkUseCase,
   });
-
-  /// Для получения и обновления настроек пользователя
-  final GetUserSettingsByPkUseCase getUserSettingsByPkUseCase;
-  final InsertUserSettingsByPkUseCase insertUserSettingsByPkUseCase;
-  late UserSettingsModel userSettings;
 
   /// Для обновления настроек пользователя
   final GetUserByPkUseCase getUserByPkUseCase;
@@ -106,9 +94,9 @@ class DeviceController {
           await saveHeartRateDB(ignoreTimer: true);
           sl<ConnectDeviceBloc>().add(ConnectDeviceDisconnectEvent(deviceController: this));
         }
-      } else if (realHeart < userSettings.greenZone) {
+      } else if (realHeart < globalSettingsService.appSettings.greenZone) {
         secondsGreen++;
-      } else if (realHeart < userSettings.orangeZone) {
+      } else if (realHeart < globalSettingsService.appSettings.orangeZone) {
         secondsOrange++;
       } else {
         secondsRed++;
@@ -243,51 +231,6 @@ class DeviceController {
     }
   }
 
-  Future<void> getAndSaveUser() async {
-    /// Получаем модель пользователя подключения
-    final failurOrUser = await getUserByPkUseCase(id);
-    late UserModel? userModel;
-    failurOrUser.fold(
-      (l) {
-        userModel = null;
-      },
-      (user) {
-        userModel = user;
-      },
-    );
-
-    final userSettingsId = userModel?.userSettingsId;
-
-    /// Получаем настройки пользователя
-    bool needUpdateSettingsId = false;
-    final failurOrSettings = await getUserSettingsByPkUseCase(userSettingsId ?? '');
-    failurOrSettings.fold((l) {}, (model) {
-      if (model == null) {
-        userSettings = UserSettingsModel(id: const Uuid().v4());
-        needUpdateSettingsId = true;
-        return;
-      }
-      userSettings = model;
-    });
-
-    if (needUpdateSettingsId) {
-      /// Если настроек нет то создадим их
-      final failurOrUpdating = await insertUserSettingsByPkUseCase(userSettings);
-      failurOrUpdating.fold((l) {}, (settings) {});
-
-      /// сразу обнови settingsId у пользователя
-      final failurOrUserReq = await insertUserUseCase(UserParams(
-        id: id,
-        userDetailId: userModel?.userDetailId,
-        userSettingsId: needUpdateSettingsId ? userSettings.id : userModel?.userSettingsId,
-        deviceName: device.advName,
-        personName: userModel?.personName ?? name,
-        isAutoConnect: userModel?.isAutoConnect,
-      ));
-      failurOrUserReq.fold((l) {}, (userRequared) {});
-    }
-  }
-
   Future<void> getServiceDevice() async {
     try {
       services = await device.discoverServices();
@@ -309,7 +252,6 @@ class DeviceController {
   }
 
   Future<void> onInit() async {
-    await getAndSaveUser();
     await getServiceDevice();
   }
 

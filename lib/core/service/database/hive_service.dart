@@ -11,7 +11,6 @@ import 'package:svarog_heart_tracker/core/constant/db_keys.dart';
 import 'package:svarog_heart_tracker/core/models/user_detail_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
-import 'package:svarog_heart_tracker/core/models/user_settings_model.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
 
 class HiveService {
@@ -172,7 +171,6 @@ class HiveService {
     Hive.registerAdapter(UserModelAdapter());
     Hive.registerAdapter(UserHistoryModelAdapter());
     Hive.registerAdapter(UserDetailModelAdapter());
-    Hive.registerAdapter(UserSettingsModelAdapter());
   }
 
   Future<void> _registreBox() async {
@@ -180,7 +178,6 @@ class HiveService {
     listLazyBox.add(await Hive.openLazyBox<UserModel>(DB_USERS_KEY));
     listLazyBox.add(await Hive.openLazyBox<UserHistoryModel>(DB_USER_HISTORY_KEY));
     listLazyBox.add(await Hive.openLazyBox<UserDetailModel>(DB_USER_DETAIL_KEY));
-    listLazyBox.add(await Hive.openLazyBox<UserSettingsModel>(DB_USER_SETTINGS_KEY));
     listBox = listLazyBox;
   }
 }

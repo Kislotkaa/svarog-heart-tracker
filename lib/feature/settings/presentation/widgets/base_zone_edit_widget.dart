@@ -6,22 +6,22 @@ import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 class BaseZoneEditWidget extends StatelessWidget {
   const BaseZoneEditWidget({
     super.key,
-    required this.greenZoneController,
-    required this.orangeZoneController,
+    required this.greenZoneValue,
+    required this.orangeZoneValue,
   });
 
-  final TextEditingController greenZoneController;
-  final TextEditingController orangeZoneController;
+  final int? greenZoneValue;
+  final int? orangeZoneValue;
 
   @override
   Widget build(BuildContext context) {
-    final int greenZone = int.tryParse(greenZoneController.text) ?? HeartZone.greenZone;
-    final int orangeZone = int.tryParse(orangeZoneController.text) ?? HeartZone.orangeZone;
+    final int greenZone = greenZoneValue ?? HeartZone.greenZone;
+    final int orangeZone = orangeZoneValue ?? HeartZone.orangeZone;
 
     return GestureDetector(
       onTap: () => router.push(ZoneEditRoute(
-        greenZone: greenZoneController,
-        orangeZone: orangeZoneController,
+        greenZone: greenZone,
+        orangeZone: orangeZone,
       )),
       child: ClipRRect(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -63,7 +63,7 @@ class BaseZoneEditWidget extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        flex: orangeZone,
+                        flex: orangeZone - greenZone,
                         child: Container(
                           color: appTheme.yellowColor,
                           alignment: Alignment.centerRight,
@@ -85,7 +85,7 @@ class BaseZoneEditWidget extends StatelessWidget {
                       '$greenZone',
                       style: appTheme.textTheme.captionSemibold14,
                     ),
-                    Spacer(flex: orangeZone),
+                    Spacer(flex: orangeZone - greenZone),
                     Text(
                       '$orangeZone',
                       style: appTheme.textTheme.captionSemibold14,

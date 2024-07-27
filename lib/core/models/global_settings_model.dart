@@ -1,10 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:svarog_heart_tracker/core/constant/constants.dart';
+
 class GlobalSettingsModel {
   final double timeSavedData; // Время после которого сохраняются данные
   final double timeDisconnect; // Время после которого происходит отключение
   final double timeCheckDevice; // Раз во сколько секунд использовать Bluetooth проверять устройства поблизости?
+  final int greenZone; // Порог зелёной зоны
+  final int orangeZone; // Порог оранжевой
   final int copressSized; // До какого размера сжимать данные графика
   final bool isMigratedHive; // Была ли миграция на Hive
 
@@ -12,6 +16,8 @@ class GlobalSettingsModel {
     this.timeSavedData = 180, // Минимум 10 - Максимум 600
     this.timeDisconnect = 20, // Минимум 10 - Максимум 240
     this.timeCheckDevice = 6, // Минимум 4 - Максимум 30
+    this.greenZone = HeartZone.greenZone, // Минимум 4 - Максимум 30
+    this.orangeZone = HeartZone.orangeZone, // Минимум 4 - Максимум 30
     this.copressSized = 100,
     this.isMigratedHive = false,
   });
@@ -20,6 +26,8 @@ class GlobalSettingsModel {
     double? timeSavedData,
     double? timeDisconnect,
     double? timeCheckDevice,
+    int? greenZone,
+    int? orangeZone,
     int? copressSized,
     bool? isMigratedHive,
   }) {
@@ -27,6 +35,8 @@ class GlobalSettingsModel {
       timeSavedData: timeSavedData ?? this.timeSavedData,
       timeDisconnect: timeDisconnect ?? this.timeDisconnect,
       timeCheckDevice: timeCheckDevice ?? this.timeCheckDevice,
+      greenZone: greenZone ?? this.greenZone,
+      orangeZone: orangeZone ?? this.orangeZone,
       copressSized: copressSized ?? this.copressSized,
       isMigratedHive: isMigratedHive ?? this.isMigratedHive,
     );
@@ -37,6 +47,8 @@ class GlobalSettingsModel {
       'timeSavedData': timeSavedData,
       'timeDisconnect': timeDisconnect,
       'timeCheckDevice': timeCheckDevice,
+      'greenZone': greenZone,
+      'orangeZone': orangeZone,
       'copressSized': copressSized,
       'isMigratedHive': isMigratedHive,
     };
@@ -47,6 +59,8 @@ class GlobalSettingsModel {
       timeSavedData: map['timeSavedData'] as double,
       timeDisconnect: map['timeDisconnect'] as double,
       timeCheckDevice: map['timeCheckDevice'] as double,
+      greenZone: map['greenZone'] as int,
+      orangeZone: map['orangeZone'] as int,
       copressSized: map['copressSized'] as int,
       isMigratedHive: map['isMigratedHive'] as bool,
     );
@@ -59,7 +73,7 @@ class GlobalSettingsModel {
 
   @override
   String toString() {
-    return 'GlobalSettingsModel(timeSavedData: $timeSavedData, timeDisconnect: $timeDisconnect, timeCheckDevice: $timeCheckDevice, copressSized: $copressSized, isMigratedHive: $isMigratedHive)';
+    return 'GlobalSettingsModel(timeSavedData: $timeSavedData, timeDisconnect: $timeDisconnect, timeCheckDevice: $timeCheckDevice, greenZone: $greenZone, orangeZone: $orangeZone, copressSized: $copressSized, isMigratedHive: $isMigratedHive)';
   }
 
   @override
@@ -69,6 +83,8 @@ class GlobalSettingsModel {
     return other.timeSavedData == timeSavedData &&
         other.timeDisconnect == timeDisconnect &&
         other.timeCheckDevice == timeCheckDevice &&
+        other.greenZone == greenZone &&
+        other.orangeZone == orangeZone &&
         other.copressSized == copressSized &&
         other.isMigratedHive == isMigratedHive;
   }
@@ -78,6 +94,8 @@ class GlobalSettingsModel {
     return timeSavedData.hashCode ^
         timeDisconnect.hashCode ^
         timeCheckDevice.hashCode ^
+        greenZone.hashCode ^
+        orangeZone.hashCode ^
         copressSized.hashCode ^
         isMigratedHive.hashCode;
   }
