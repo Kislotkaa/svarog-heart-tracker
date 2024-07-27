@@ -117,6 +117,14 @@ class AppRouter extends _$AppRouter {
           transitionsBuilder: TransitionsBuilders.fadeIn,
         ),
         CustomRoute(
+          path: '/zone_edit',
+          page: ZoneEditRoute.page,
+          durationInMilliseconds: 150,
+          opaque: false,
+          barrierColor: appTheme.revertBasicColor.withOpacity(0.5),
+          transitionsBuilder: TransitionsBuilders.fadeIn,
+        ),
+        CustomRoute(
           path: '/choose_name_dialog',
           page: ChooseNameDialogRoute.page,
           durationInMilliseconds: 150,
