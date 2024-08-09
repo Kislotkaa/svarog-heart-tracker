@@ -6,18 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/constant/enums.dart';
-import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/router/app_router.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/app_bar/base_app_bar_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/base_cap_widget.dart';
 import 'package:svarog_heart_tracker/core/ui_kit/loading/base_linear_progress_indicator.dart';
+import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/confirm_dialog_page.dart';
+import 'package:svarog_heart_tracker/feature/new_devices/data/new_device_model.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connected_device/connected_device_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/previously_connected/previously_connected_bloc.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/scan_device/scan_device_bloc.dart';
-import 'package:svarog_heart_tracker/feature/dialogs/presentation/pages/choose_name_dialog_page.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/widgets/base_list_new_device_widget.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 
@@ -187,7 +187,6 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
 
     subscriptionScanDevice = Stream.periodic(const Duration(seconds: 1)).listen((event) {
       var result = scanDeviceBloc.appBluetoothService.scanResult;
-
       late List<NewDeviceModel> scanResult = [];
 
       for (var element in result) {
