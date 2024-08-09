@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:svarog_heart_tracker/core/models/global_settings_model.dart';
 import 'package:svarog_heart_tracker/core/models/user_history_model.dart';
+import 'package:svarog_heart_tracker/core/models/user_model.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/get_user_by_pk_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user/insert_user_usecase.dart';
 import 'package:svarog_heart_tracker/core/service/database/usecase/user_history/get_user_history_by_pk_usecase.dart';
@@ -14,6 +15,7 @@ import 'package:svarog_heart_tracker/core/service/sharedPreferences/global_setti
 import 'package:svarog_heart_tracker/core/utils/characteristic.dart';
 import 'package:svarog_heart_tracker/core/utils/compress_data.dart';
 import 'package:svarog_heart_tracker/core/utils/error_handler.dart';
+import 'package:svarog_heart_tracker/feature/home/data/user_params.dart';
 import 'package:svarog_heart_tracker/feature/new_devices/presentation/bloc/connect_device/connect_device_bloc.dart';
 import 'package:svarog_heart_tracker/locator.dart';
 import 'package:uuid/uuid.dart';
@@ -251,7 +253,32 @@ class DeviceController {
     }
   }
 
+  Future<void> getAndSaveUser() async {
+    /// Получаем модель пользователя подключения
+    final failurOrUser = await getUserByPkUseCase(id);
+    late UserModel? userModel;
+    failurOrUser.fold(
+      (l) {
+        userModel = null;
+      },
+      (user) {
+        userModel = user;
+      },
+    );
+
+    final failurOrUserReq = await insertUserUseCase(UserParams(
+      id: id,
+      userDetailId: userModel?.userDetailId,
+      userSettingsId: userModel?.userSettingsId,
+      deviceName: device.advName,
+      personName: userModel?.personName ?? name,
+      isAutoConnect: userModel?.isAutoConnect,
+    ));
+    failurOrUserReq.fold((l) {}, (userRequared) {});
+  }
+
   Future<void> onInit() async {
+    await getAndSaveUser();
     await getServiceDevice();
   }
 
