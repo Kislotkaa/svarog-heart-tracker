@@ -1,3 +1,3 @@
 #!/bin/sh
 
-flutter build apk --split-per-abi lib/main.dart
+flutter build apk lib/main.dart
