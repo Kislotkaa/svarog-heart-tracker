@@ -14,7 +14,8 @@ class AppBluetoothService {
     if (!FlutterBluePlus.isScanningNow) {
       await FlutterBluePlus.startScan(
         withServices: [Guid('180d')],
-        androidScanMode: AndroidScanMode.lowPower,
+        androidScanMode: AndroidScanMode.lowLatency,
+        androidUsesFineLocation: true,
         timeout: duration,
       );
     }

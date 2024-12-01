@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:svarog_heart_tracker/core/service/theme/theme_cubit.dart';
 
 class BaseVersionWidget extends StatelessWidget {

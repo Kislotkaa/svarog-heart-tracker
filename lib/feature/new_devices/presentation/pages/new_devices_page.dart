@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
@@ -181,6 +182,12 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
     return 'Empty';
   }
 
+  void logTo(List<ScanResult> list) {
+    for (final result in list) {
+      log(result.advertisementData.serviceUuids.toString());
+    }
+  }
+
   void initScanDevice() {
     final scanDeviceBloc = sl<ScanDeviceBloc>();
     scanDeviceBloc.add(const ScanDeviceInitialEvent());
@@ -188,7 +195,7 @@ class _NewDevicesPageState extends State<NewDevicesPage> {
     subscriptionScanDevice = Stream.periodic(const Duration(seconds: 1)).listen((event) {
       var result = scanDeviceBloc.appBluetoothService.scanResult;
       late List<NewDeviceModel> scanResult = [];
-
+      logTo(result);
       for (var element in result) {
         String? deviceName = element.advertisementData.advName;
         String? deviceNumber = element.device.remoteId.str;

@@ -30,8 +30,13 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.notanapps.svarog_heart_tracker"
-    compileSdk 34 // flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    compileSdkVersion 34
+    // flutter.compileSdkVersion
+    ndkVersion "27.0.12077973"
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     compileOptions {
         coreLibraryDesugaringEnabled true
@@ -48,9 +53,8 @@ android {
     }
 
     defaultConfig {
-        
         applicationId "com.notanapps.svarog_heart_tracker"
-        minSdkVersion 26 // flutter.minSdkVersion
+        minSdkVersion 23 // flutter.minSdkVersion
         targetSdkVersion 34 // flutter.targetSdkVersion
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
@@ -78,5 +82,5 @@ flutter {
 }
 
 dependencies {
-  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.3'
 }

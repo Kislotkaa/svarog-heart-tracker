@@ -2,7 +2,7 @@ name: svarog_heart_tracker
 description: "A new Flutter project."
 publish_to: 'none' 
 
-version: 2.2.39+37
+version: 2.2.40+38
 
 environment:
   sdk: '>=3.1.3 <4.0.0'
@@ -15,7 +15,7 @@ dependencies:
     sdk: flutter  
 
   # Нейронка
-  tflite_flutter: ^0.10.4
+  tflite_flutter: ^0.11.0
 
   # Отрисовка графиков
   fl_chart: ^0.68.0
@@ -24,7 +24,7 @@ dependencies:
   uuid: ^3.0.7
 
   # Поиск путя для бд
-  path_provider: ^2.1.3
+  path_provider: ^2.1.5
 
   # Хранение данных
   sqflite: ^2.3.3
@@ -41,10 +41,10 @@ dependencies:
   mask_text_input_formatter: ^2.9.0
 
   # Краш анатлитика
-  sentry_flutter: ^7.19.0
+  sentry_flutter: ^8.10.1
 
   # Работа с блютузом
-  flutter_blue_plus: ^1.32.11
+  flutter_blue_plus: ^1.34.5
 
   # Navigator 2.0
   auto_route: ^7.9.2
@@ -55,11 +55,8 @@ dependencies:
   # flutter_svg - отображение векторной графики(.svg файлы)
   flutter_svg: ^2.0.7
 
-  # Предоставляет подробную информацию о устройстве/эмуляторе
-  device_info: ^2.0.3
-
-  # package_info - получение информации о приложении: версия,имя и тд
-  package_info: ^2.0.2
+  # package_info_plus - получение информации о приложении: версия,имя и тд
+  package_info_plus: ^8.1.1
 
   # bloc
   bloc: ^8.1.2
@@ -79,10 +76,10 @@ dependencies:
 
   # freezed пакет для генерации и следит за мутирвонием данных:
   freezed: ^2.4.5
-  freezed_annotation: ^2.4.1
+  freezed_annotation: ^2.4.4
 
   # для генерации .g файлов, чтобы использовать fromJson и toJson генерацию
-  json_serializable: ^6.7.1
+  json_serializable: ^6.9.0
 
   # collection - для работы с коллекциями
   collection: ^1.17.1

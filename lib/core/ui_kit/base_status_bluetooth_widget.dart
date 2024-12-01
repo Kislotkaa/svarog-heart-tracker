@@ -163,7 +163,7 @@ class _BaseStatusBluetoothWidgetState extends State<BaseStatusBluetoothWidget> {
     return GestureDetector(
       onTap: () {
         AppSnackbar.showTextFloatingSnackBar(
-          title: 'Статус: Поисп',
+          title: 'Статус: Поиск',
           description: 'Модуль Bluetooth ищет устройства побблизости',
           overlayState: Overlay.of(context),
           status: SnackStatusEnum.access,
